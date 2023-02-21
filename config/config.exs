@@ -52,7 +52,7 @@ config :phoenix, :json_library, Jason
 config :ash, :use_all_identities_in_manage_relationship?, false
 
 config :orange_cms,
-  ash_apis: [OrangeCms.Blog]
+  ash_apis: [OrangeCms.Content]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
