@@ -1,4 +1,4 @@
-defmodule OrangecmsWeb.ConnCase do
+defmodule OrangeCmsWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule OrangecmsWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use OrangecmsWeb.ConnCase, async: true`, although
+  by setting `use OrangeCmsWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,17 +22,17 @@ defmodule OrangecmsWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import OrangecmsWeb.ConnCase
+      import OrangeCmsWeb.ConnCase
 
-      alias OrangecmsWeb.Router.Helpers, as: Routes
+      alias OrangeCmsWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint OrangecmsWeb.Endpoint
+      @endpoint OrangeCmsWeb.Endpoint
     end
   end
 
   setup tags do
-    Orangecms.DataCase.setup_sandbox(tags)
+    OrangeCms.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

@@ -1,4 +1,4 @@
-defmodule OrangecmsWeb.ErrorHelpers do
+defmodule OrangeCmsWeb.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -39,9 +39,9 @@ defmodule OrangecmsWeb.ErrorHelpers do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(OrangecmsWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(OrangeCmsWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(OrangecmsWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(OrangeCmsWeb.Gettext, "errors", msg, opts)
     end
   end
 end

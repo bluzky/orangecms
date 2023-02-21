@@ -1,5 +1,5 @@
-defmodule OrangecmsWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :orangecms
+defmodule OrangeCmsWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :orange_cms
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -18,7 +18,7 @@ defmodule OrangecmsWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :orangecms,
+    from: :orange_cms,
     gzip: false,
     only: ~w(assets fonts images favicon.ico robots.txt)
 
@@ -28,7 +28,7 @@ defmodule OrangecmsWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :orangecms
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :orange_cms
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
@@ -46,5 +46,5 @@ defmodule OrangecmsWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug OrangecmsWeb.Router
+  plug OrangeCmsWeb.Router
 end

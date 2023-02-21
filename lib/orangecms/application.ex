@@ -1,4 +1,4 @@
-defmodule Orangecms.Application do
+defmodule OrangeCms.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,20 +9,20 @@ defmodule Orangecms.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      Orangecms.Repo,
+      OrangeCms.Repo,
       # Start the Telemetry supervisor
-      OrangecmsWeb.Telemetry,
+      OrangeCmsWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Orangecms.PubSub},
+      {Phoenix.PubSub, name: OrangeCms.PubSub},
       # Start the Endpoint (http/https)
-      OrangecmsWeb.Endpoint
-      # Start a worker by calling: Orangecms.Worker.start_link(arg)
-      # {Orangecms.Worker, arg}
+      OrangeCmsWeb.Endpoint
+      # Start a worker by calling: OrangeCms.Worker.start_link(arg)
+      # {OrangeCms.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Orangecms.Supervisor]
+    opts = [strategy: :one_for_one, name: OrangeCms.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -30,7 +30,7 @@ defmodule Orangecms.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    OrangecmsWeb.Endpoint.config_change(changed, removed)
+    OrangeCmsWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

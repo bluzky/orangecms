@@ -1,11 +1,11 @@
-defmodule OrangecmsWeb.Gettext do
+defmodule OrangeCmsWeb.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 
   By using [Gettext](https://hexdocs.pm/gettext),
   your module gains a set of macros for translations, for example:
 
-      import OrangecmsWeb.Gettext
+      import OrangeCmsWeb.Gettext
 
       # Simple translation
       gettext("Here is the string to translate")
@@ -20,5 +20,5 @@ defmodule OrangecmsWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :orangecms
+  use Gettext, otp_app: :orange_cms
 end

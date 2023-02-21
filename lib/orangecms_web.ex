@@ -1,12 +1,12 @@
-defmodule OrangecmsWeb do
+defmodule OrangeCmsWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use OrangecmsWeb, :controller
-      use OrangecmsWeb, :view
+      use OrangeCmsWeb, :controller
+      use OrangeCmsWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,11 +19,11 @@ defmodule OrangecmsWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: OrangecmsWeb
+      use Phoenix.Controller, namespace: OrangeCmsWeb
 
       import Plug.Conn
-      import OrangecmsWeb.Gettext
-      alias OrangecmsWeb.Router.Helpers, as: Routes
+      import OrangeCmsWeb.Gettext
+      alias OrangeCmsWeb.Router.Helpers, as: Routes
     end
   end
 
@@ -31,7 +31,7 @@ defmodule OrangecmsWeb do
     quote do
       use Phoenix.View,
         root: "lib/orangecms_web/templates",
-        namespace: OrangecmsWeb
+        namespace: OrangeCmsWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -45,7 +45,7 @@ defmodule OrangecmsWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {OrangecmsWeb.LayoutView, "live.html"}
+        layout: {OrangeCmsWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
     end
@@ -80,7 +80,7 @@ defmodule OrangecmsWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import OrangecmsWeb.Gettext
+      import OrangeCmsWeb.Gettext
     end
   end
 
@@ -95,9 +95,9 @@ defmodule OrangecmsWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import OrangecmsWeb.ErrorHelpers
-      import OrangecmsWeb.Gettext
-      alias OrangecmsWeb.Router.Helpers, as: Routes
+      import OrangeCmsWeb.ErrorHelpers
+      import OrangeCmsWeb.Gettext
+      alias OrangeCmsWeb.Router.Helpers, as: Routes
     end
   end
 

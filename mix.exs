@@ -1,13 +1,13 @@
-defmodule Orangecms.MixProject do
+defmodule OrangeCms.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :orangecms,
+      app: :orange_cms,
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:gettext] ++ Mix.compilers(),
+      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -19,7 +19,7 @@ defmodule Orangecms.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Orangecms.Application, []},
+      mod: {OrangeCms.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -48,7 +48,10 @@ defmodule Orangecms.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:ash, "~> 2.6"},
+      {:ash_postgres, "~> 1.3"},
+      {:ash_phoenix, "~> 1.2"}
     ]
   end
 

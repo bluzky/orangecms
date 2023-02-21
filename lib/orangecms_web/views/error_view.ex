@@ -1,5 +1,5 @@
-defmodule OrangecmsWeb.ErrorView do
-  use OrangecmsWeb, :view
+defmodule OrangeCmsWeb.ErrorView do
+  use OrangeCmsWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
