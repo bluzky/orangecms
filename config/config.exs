@@ -7,14 +7,14 @@
 # General application configuration
 import Config
 
-config :orangecms,
-  ecto_repos: [Orangecms.Repo]
+config :orange_cms,
+  ecto_repos: [OrangeCms.Repo]
 
 # Configures the endpoint
-config :orangecms, OrangecmsWeb.Endpoint,
+config :orange_cms, OrangeCmsWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: OrangecmsWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Orangecms.PubSub,
+  render_errors: [view: OrangeCmsWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: OrangeCms.PubSub,
   live_view: [signing_salt: "LdIL2k9X"]
 
 # Configures the mailer
@@ -24,7 +24,7 @@ config :orangecms, OrangecmsWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :orangecms, Orangecms.Mailer, adapter: Swoosh.Adapters.Local
+config :orange_cms, OrangeCms.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
@@ -46,6 +46,13 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+# For backwards compatibility, the following configuration is required.
+# see https://ash-hq.org/docs/guides/ash/latest/get-started#temporary-config for more details
+config :ash, :use_all_identities_in_manage_relationship?, false
+
+config :orange_cms,
+  ash_apis: [OrangeCms.Blog]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

@@ -1,3 +1,3 @@
-defmodule OrangecmsWeb.PageView do
-  use OrangecmsWeb, :view
+defmodule OrangeCmsWeb.PageView do
+  use OrangeCmsWeb, :view
 end

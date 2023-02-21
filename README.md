@@ -1,4 +1,4 @@
-# Orangecms
+# OrangeCms
 
 To start your Phoenix server:
 

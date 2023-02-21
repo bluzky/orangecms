@@ -1,5 +1,5 @@
-defmodule OrangecmsWeb.PageControllerTest do
-  use OrangecmsWeb.ConnCase
+defmodule OrangeCmsWeb.PageControllerTest do
+  use OrangeCmsWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")
