@@ -7,5 +7,6 @@ defmodule OrangeCms.Content.Registry do
 
   entries do
     entry OrangeCms.Content.ContentType
+    entry OrangeCms.Content.ContentEntry
   end
 end
