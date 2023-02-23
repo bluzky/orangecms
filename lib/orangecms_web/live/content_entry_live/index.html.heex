@@ -1,0 +1,46 @@
+<!--
+  This component uses @tailwindcss/forms
+
+  yarn add @tailwindcss/forms
+  npm install @tailwindcss/forms
+
+  plugins: [require('@tailwindcss/forms')]
+-->
+
+
+<div class="grid grid-cols-12 gap-4">
+      <div class="col-span-8 rounded-lg bg-white p-8 shadow-lg lg:p-12">
+        <form action="" class="space-y-4">
+          <div>
+            <label for="name">Title</label>
+            <input
+              class="w-full rounded-lg border-gray-200 p-3 text-sm"
+              placeholder="Name"
+              type="text"
+              id="name"
+            />
+          </div>
+
+          <div>
+            <label class="sr-only" for="message">Message</label>
+
+            <textarea
+              class="w-full rounded-lg border-gray-200 p-3 text-sm"
+              placeholder="Message"
+              rows="8"
+              id="message"
+            ></textarea>
+          </div>
+
+          <div class="mt-4">
+            <button
+              type="submit"
+              class="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+
+</div>

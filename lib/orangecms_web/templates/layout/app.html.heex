@@ -1,5 +1,13 @@
-<main class="container">
+<div class="min-h-screen max-h-screen flex flex-row">
+<%= render "sidebar.html", assigns: @conn.assigns %>
+
+  <main class=" flex-1 min-h-full max-h-full overflow-scroll bg-slate-50 p-8">
   <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
   <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
   <%= @inner_content %>
 </main>
+</div>
+
+
+
+

@@ -38,11 +38,17 @@ defmodule OrangeCms.Content.ContentEntry do
     end
 
     attribute :json_body, :map do
-      allow_nil? false
+      default %{}
     end
 
     attribute :frontmatter, :map do
       default %{}
     end
+  end
+
+  alias OrangeCms.Content.ContentType
+
+  relationships do
+    belongs_to :content_type, ContentType
   end
 end

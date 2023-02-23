@@ -45,7 +45,7 @@ defmodule OrangeCmsWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {OrangeCmsWeb.LayoutView, "live.html"}
+        layout: {OrangeCmsWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end
@@ -90,7 +90,8 @@ defmodule OrangeCmsWeb do
       use Phoenix.HTML
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
-      import Phoenix.LiveView.Helpers
+      import Phoenix.Component
+      import Phoenix.HTML.Form
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
