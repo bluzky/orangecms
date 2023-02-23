@@ -14,10 +14,14 @@ defmodule OrangeCmsWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", OrangeCmsWeb do
+  scope "/app", OrangeCmsWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    scope "/content_entries", ContentEntryLive do
+      live "/", Index
+      live "/new", New
+      live "/:id", Edit
+    end
   end
 
   # Other scopes may use custom stacks.

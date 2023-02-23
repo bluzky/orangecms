@@ -11,6 +11,10 @@ defmodule OrangeCms.Content.FieldDef do
       allow_nil? false
     end
 
+    attribute :type, :string do
+      default "string"
+    end
+
     attribute :default_value, :string
 
     attribute :is_required, :boolean do

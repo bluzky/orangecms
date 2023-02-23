@@ -35,6 +35,12 @@ defmodule OrangeCms.Content.ContentType do
       # against the `id` of each element in the resource
       filter expr(id == ^arg(:id))
     end
+
+    read :by_key do
+      argument :key, :string, allow_nil?: false
+      get? true
+      filter expr(key == ^arg(:key))
+    end
   end
 
   alias OrangeCms.Content.FieldDef

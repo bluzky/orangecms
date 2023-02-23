@@ -9,3 +9,67 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+content_types = [
+  %{
+    name: "Page",
+    key: "page",
+    image_settings: %{},
+    field_defs: [],
+    anchor_field: :title
+  },
+  %{
+    name: "Post",
+    key: "post",
+    image_settings: %{},
+    field_defs: [
+      %{
+        name: "title",
+        key: "title",
+        type: "string"
+      },
+      %{
+        name: "description",
+        key: "description",
+        type: "text"
+      },
+      %{
+        name: "category",
+        key: "category",
+        type: "checkbox"
+      },
+      %{
+        name: "tag",
+        key: "tag",
+        type: "array"
+      },
+      %{
+        name: "author",
+        key: "author",
+        type: "select"
+      },
+      %{
+        name: "cover image",
+        key: "cover_img",
+        type: "upload"
+      },
+      %{
+        name: "Is draft?",
+        key: "draft",
+        type: "boolean"
+      },
+      %{
+        name: "Point",
+        key: "point",
+        type: "number"
+      }
+    ],
+    anchor_field: :title
+  }
+]
+
+Enum.each(content_types, fn item ->
+  OrangeCms.Content.ContentType
+  |> Ash.Changeset.for_create(:create, item)
+  |> OrangeCms.Content.create!()
+end)

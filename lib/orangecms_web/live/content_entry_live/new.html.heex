@@ -1,0 +1,39 @@
+<!--
+  This component uses @tailwindcss/forms
+
+  yarn add @tailwindcss/forms
+  npm install @tailwindcss/forms
+
+  plugins: [require('@tailwindcss/forms')]
+-->
+
+
+<div class="grid grid-cols-12 gap-4">
+      <div class="col-span-8 rounded-lg bg-white p-8 shadow-lg lg:p-12">
+        <.form :let={f} for={@form} phx-submit="create" phx-change="validate" class="space-y-4">
+
+          <div>
+            <label for="name">Title</label>
+            <%= text_input f, :title, class: "w-full rounded-lg border-gray-200 p-3 text-sm",
+              placeholder: "Name" %>
+          </div>
+
+          <div>
+            <label class="sr-only" for="message">Message</label>
+
+            <%= textarea f, :raw_body,
+              class: "w-full rounded-lg border-gray-200 p-3 text-sm",
+              rows: "20"
+            %>
+          </div>
+
+          <div class="mt-4">
+                  <%= submit "Save",  type: "submit",
+              class: "inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto" %>
+
+          </div>
+        </.form>
+
+      </div>
+
+</div>
