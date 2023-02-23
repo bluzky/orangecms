@@ -1,0 +1,23 @@
+{
+  "name": "orangecms",
+  "version": "1.0.0",
+  "description": "To start your Phoenix server:",
+  "main": "js/app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluzky/orangecms.git"
+  },
+  "author": "bluzky",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bluzky/orangecms/issues"
+  },
+  "homepage": "https://github.com/bluzky/orangecms#readme"
+}
