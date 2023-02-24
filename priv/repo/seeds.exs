@@ -36,7 +36,8 @@ content_types = [
       %{
         name: "category",
         key: "category",
-        type: "checkbox"
+        type: "checkbox",
+        options: ["category 1", "category 2", "category 3"]
       },
       %{
         name: "tag",
@@ -46,7 +47,8 @@ content_types = [
       %{
         name: "author",
         key: "author",
-        type: "select"
+        type: "select",
+        options: ["Ta La Soi", "Viet Anh", "author 3"]
       },
       %{
         name: "cover image",
@@ -62,6 +64,11 @@ content_types = [
         name: "Point",
         key: "point",
         type: "number"
+      },
+      %{
+        name: "published date",
+        key: "published_at",
+        type: "datetime"
       }
     ],
     anchor_field: :title

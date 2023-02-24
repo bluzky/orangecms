@@ -18,6 +18,13 @@
               placeholder: "Name" %>
           </div>
 
+          <% frontmatter = input_value(f, :frontmatter) %>
+          <div>
+            <div :for={field_def <- @content_type.field_defs} class="mb-4">
+                 <%= render field_def, frontmatter[field_def.key] %>
+            </div>
+          </div>
+
           <div>
             <label class="sr-only" for="message">Message</label>
 

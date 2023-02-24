@@ -1,5 +1,6 @@
 defmodule OrangeCmsWeb.ContentEntryLive.New do
   use OrangeCmsWeb, :live_view
+  import OrangeCmsWeb.ContentEntryLive.Components
 
   alias OrangeCms.Content
   alias OrangeCms.Content.ContentType
@@ -16,9 +17,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.New do
     content_entry =
       ContentEntry
       |> Ash.Query.for_read(:by_id, %{id: id})
-      |> Content.read!()
+      |> Content.read_one!()
       |> Content.load!(:content_type)
-      |> hd()
 
     {:noreply,
      assign(socket,
@@ -33,7 +33,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.New do
     content_type =
       ContentType
       |> Ash.Query.for_read(:by_key, %{key: content_type_key})
-      |> Content.read!()
+      |> Content.read_one!()
 
     {:noreply, assign(socket, content_type: content_type)}
   end
