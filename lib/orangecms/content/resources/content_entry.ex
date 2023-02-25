@@ -49,6 +49,9 @@ defmodule OrangeCms.Content.ContentEntry do
   alias OrangeCms.Content.ContentType
 
   relationships do
-    belongs_to :content_type, ContentType
+    belongs_to :content_type, ContentType do
+      allow_nil? false
+      attribute_writable? true
+    end
   end
 end

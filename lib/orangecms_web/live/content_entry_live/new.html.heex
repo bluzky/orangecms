@@ -21,7 +21,7 @@
           <% frontmatter = input_value(f, :frontmatter) %>
           <div>
             <div :for={field_def <- @content_type.field_defs} class="mb-4">
-                 <%= render field_def, frontmatter[field_def.key] %>
+                 <%= render_input field_def, frontmatter[field_def.key], %{options: [prefix: "frontmatter"]} %>
             </div>
           </div>
 
