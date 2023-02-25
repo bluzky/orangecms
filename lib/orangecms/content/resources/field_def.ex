@@ -17,6 +17,10 @@ defmodule OrangeCms.Content.FieldDef do
 
     attribute :default_value, :string
 
+    attribute :options, {:array, :string} do
+      default []
+    end
+
     attribute :is_required, :boolean do
       default false
     end

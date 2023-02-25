@@ -1,5 +1,6 @@
 defmodule OrangeCmsWeb.ContentEntryLive.New do
   use OrangeCmsWeb, :live_view
+  import OrangeCmsWeb.ContentEntryLive.Components
 
   alias OrangeCms.Content
   alias OrangeCms.Content.ContentType
@@ -16,9 +17,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.New do
     content_entry =
       ContentEntry
       |> Ash.Query.for_read(:by_id, %{id: id})
-      |> Content.read!()
+      |> Content.read_one!()
       |> Content.load!(:content_type)
-      |> hd()
 
     {:noreply,
      assign(socket,
@@ -33,13 +33,20 @@ defmodule OrangeCmsWeb.ContentEntryLive.New do
     content_type =
       ContentType
       |> Ash.Query.for_read(:by_key, %{key: content_type_key})
-      |> Content.read!()
+      |> Content.read_one!()
 
     {:noreply, assign(socket, content_type: content_type)}
   end
 
-  def handle_event("validate", %{"form" => params}, socket) do
-    form = AshPhoenix.Form.validate(socket.assigns.form, params)
+  def handle_event("validate", %{"frontmatter" => params, "form" => form_params}, socket) do
+    form =
+      AshPhoenix.Form.validate(
+        socket.assigns.form,
+        Map.merge(form_params, %{
+          frontmatter: params,
+          content_type_id: socket.assigns.content_type.id
+        })
+      )
 
     # You can also skip errors by setting `errors: false` if you only want to show errors on submit
     # form = AshPhoenix.Form.validate(socket.assigns.form, params, errors: false)
@@ -47,12 +54,22 @@ defmodule OrangeCmsWeb.ContentEntryLive.New do
     {:noreply, assign(socket, :form, form)}
   end
 
-  def handle_event("create", _params, socket) do
-    case AshPhoenix.Form.submit(socket.assigns.form) do
+  def handle_event("create", %{"frontmatter" => params, "form" => form_params}, socket) do
+    form =
+      AshPhoenix.Form.validate(
+        socket.assigns.form,
+        Map.merge(form_params, %{
+          frontmatter: params,
+          content_type_id: socket.assigns.content_type.id
+        })
+      )
+
+    case AshPhoenix.Form.submit(form) do
       {:ok, entry} ->
         {:noreply, assign(socket, form: AshPhoenix.Form.for_update(entry, :update, api: Content))}
 
       {:error, form} ->
+        IO.inspect(form)
         {:noreply, assign(socket, form: form)}
     end
   end
