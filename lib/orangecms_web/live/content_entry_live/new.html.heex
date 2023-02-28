@@ -10,7 +10,7 @@
 
 <div class="grid grid-cols-12 gap-4">
       <div class="col-span-8 rounded-lg bg-white p-8 shadow-lg lg:p-12">
-        <.form :let={f} for={@form} phx-submit="create" phx-change="validate" class="space-y-4">
+        <.form :let={f} for={@form} phx-submit="create"  class="space-y-4">
 
           <div>
             <label for="name">Title</label>
@@ -25,12 +25,14 @@
             </div>
           </div>
 
-          <div>
+          <div id="md-editor-container" phx-update="ignore">
             <label class="sr-only" for="message">Message</label>
 
             <%= textarea f, :raw_body,
               class: "w-full rounded-lg border-gray-200 p-3 text-sm",
-              rows: "20"
+                rows: "20",
+                id: "md-editor",
+                phx_hook: "MdEditor"
             %>
           </div>
 

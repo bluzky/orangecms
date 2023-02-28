@@ -81,7 +81,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
     <label {[for: @field_def.key]} class="relative h-8 w-14 cursor-pointer block">
-    <input type="checkbox" class="peer sr-only"  {[id: @field_def.key, name: field_name(@field_def, @options),checked: @value]}/>
+    <input type="checkbox" class="peer sr-only"  {[id: @field_def.key, name: field_name(@field_def, @options),checked: @value, checked_value: "true"]}/>
 
     <span
     class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"

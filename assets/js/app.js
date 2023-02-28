@@ -21,13 +21,46 @@ import "phoenix_html";
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
+import EasyMDE from "easymde";
+// import "easymde/dist/easymde.min.css";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
-let liveSocket = new LiveSocket("/live", Socket, {
-  params: { _csrf_token: csrfToken },
-});
+
+// phoenix hooks
+const Hooks = {
+  MdEditor: {
+    mounted() {
+      const easyMDE = new EasyMDE({
+        element: this.el,
+        autoDownloadFontAwesome: false,
+        lineNumbers: true,
+        status: true,
+        toolbar: false,
+        spellChecker: false,
+      });
+
+      easyMDE.codemirror.on("blur", () => {
+        this.el.value = easyMDE.value();
+      });
+
+      // Synchronise the form's textarea with the editor on submit
+      this.el.form.addEventListener("submit", (_event) => {
+        console.log(easyMDE.value());
+      });
+    },
+  },
+};
+
+const socketOptions = {
+  hooks: Hooks,
+  params: {
+    _csrf_token: csrfToken,
+  },
+};
+
+let liveSocket = new LiveSocket("/live", Socket, socketOptions);
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
@@ -42,3 +75,4 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+window.EasyMDE = EasyMDE;

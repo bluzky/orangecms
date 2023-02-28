@@ -1,0 +1,12 @@
+{
+  "name": "orangecms",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "devDependencies": {
+    "postcss-import": "^15.1.0"
+  },
+  "dependencies": {
+    "easymde": "^2.18.0"
+  }
+}
