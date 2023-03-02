@@ -1,0 +1,47 @@
+<!--
+  This component uses @tailwindcss/forms
+
+  yarn add @tailwindcss/forms
+  npm install @tailwindcss/forms
+
+  plugins: [require('@tailwindcss/forms')]
+-->
+
+
+<div class="grid grid-cols-12 gap-4">
+      <div class="col-span-8 rounded-lg bg-white p-8 shadow-lg lg:p-12">
+        <.form :let={f} for={@form} phx-submit="create"  class="space-y-4">
+
+          <div>
+            <label for="name">Title</label>
+            <.input type="text" field={f[:title]} class="w-full rounded-lg border-gray-200 p-3 text-sm"      placeholder="Name" />
+          </div>
+
+          <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
+          <div>
+            <div :for={field_def <- @content_type.field_defs} class="mb-4">
+                 <%= render_input field_def, frontmatter[field_def.key], %{options: [prefix: "frontmatter"]} %>
+            </div>
+          </div>
+
+          <div id="md-editor-container" phx-update="ignore">
+            <label class="sr-only" for="message">Message</label>
+
+            <.input type="textarea" field={f[:raw_body]}
+              class="w-full rounded-lg border-gray-200 p-3 text-sm"
+                rows="20"
+                id="md-editor"
+                phx-hook="MdEditor"
+            />
+          </div>
+
+          <div class="mt-4">
+                  <.button  type="submit",
+              class="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto" >Save </.button>
+
+          </div>
+        </.form>
+
+      </div>
+
+</div>

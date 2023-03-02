@@ -1,11 +1,13 @@
 {
-  "name": "orangecms",
+  "name": "orange_cms",
   "version": "1.0.0",
+  "description": "",
   "main": "app.js",
-  "license": "MIT",
-  "devDependencies": {
-    "postcss-import": "^15.1.0"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "easymde": "^2.18.0"
   }

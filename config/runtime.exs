@@ -12,7 +12,7 @@ import Config
 # If you use `mix release`, you need to explicitly enable the server
 # by passing the PHX_SERVER=true when you start it:
 #
-#     PHX_SERVER=true bin/orangecms start
+#     PHX_SERVER=true bin/orange_cms start
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
@@ -28,7 +28,7 @@ if config_env() == :prod do
       For example: ecto://USER:PASS@HOST/DATABASE
       """
 
-  maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
+  maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :orange_cms, OrangeCms.Repo,
     # ssl: true,
@@ -63,6 +63,38 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  # ## SSL Support
+  #
+  # To get SSL working, you will need to add the `https` key
+  # to your endpoint configuration:
+  #
+  #     config :orange_cms, OrangeCmsWeb.Endpoint,
+  #       https: [
+  #         ...,
+  #         port: 443,
+  #         cipher_suite: :strong,
+  #         keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
+  #         certfile: System.get_env("SOME_APP_SSL_CERT_PATH")
+  #       ]
+  #
+  # The `cipher_suite` is set to `:strong` to support only the
+  # latest and more secure SSL ciphers. This means old browsers
+  # and clients may not be supported. You can set it to
+  # `:compatible` for wider support.
+  #
+  # `:keyfile` and `:certfile` expect an absolute path to the key
+  # and cert in disk or a relative path inside priv, for example
+  # "priv/ssl/server.key". For all supported SSL configuration
+  # options, see https://hexdocs.pm/plug/Plug.SSL.html#configure/1
+  #
+  # We also recommend setting `force_ssl` in your endpoint, ensuring
+  # no data is ever sent via http, always redirecting to https:
+  #
+  #     config :orange_cms, OrangeCmsWeb.Endpoint,
+  #       force_ssl: [hsts: true]
+  #
+  # Check `Plug.SSL` for all available options in `force_ssl`.
+
   # ## Configuring the mailer
   #
   # In production you need to configure the mailer to use a different adapter.
@@ -80,4 +112,8 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  # For backwards compatibility, the following configuration is required.
+  # see https://ash-hq.org/docs/guides/ash/latest/get-started#temporary-config for more details
+  config :ash, :use_all_identities_in_manage_relationship?, false
 end

@@ -13,9 +13,12 @@ config :orange_cms,
 # Configures the endpoint
 config :orange_cms, OrangeCmsWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: OrangeCmsWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [
+    formats: [html: OrangeCmsWeb.ErrorHTML, json: OrangeCmsWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: OrangeCms.PubSub,
-  live_view: [signing_salt: "LdIL2k9X"]
+  live_view: [signing_salt: "iFmLWv47"]
 
 # Configures the mailer
 #
@@ -26,17 +29,26 @@ config :orange_cms, OrangeCmsWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :orange_cms, OrangeCms.Mailer, adapter: Swoosh.Adapters.Local
 
-# Swoosh API client is needed for adapters other than SMTP.
-config :swoosh, :api_client, false
-
 # Configure esbuild (the version is required)
 config :esbuild,
-  version: "0.14.29",
+  version: "0.14.41",
   default: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
+# Configure tailwind (the version is required)
+config :tailwind,
+  version: "3.2.4",
+  default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
   ]
 
 # Configures Elixir's Logger
@@ -53,17 +65,6 @@ config :ash, :use_all_identities_in_manage_relationship?, false
 
 config :orange_cms,
   ash_apis: [OrangeCms.Content]
-
-config :tailwind,
-  version: "3.1.8",
-  default: [
-    args: ~w(
-      --config=tailwind.config.js
-      --input=css/app.css
-      --output=../priv/static/assets/app.css
-    ),
-    cd: Path.expand("../assets", __DIR__)
-  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
