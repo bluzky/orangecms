@@ -9,7 +9,7 @@ config :orange_cms, OrangeCms.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "orangecms_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "orange_cms_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
@@ -17,14 +17,17 @@ config :orange_cms, OrangeCms.Repo,
 # you can enable the server option below.
 config :orange_cms, OrangeCmsWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "2amZOFgt01KssNj/AyroLZWIB7CMTrTd7ba5jUuVAfrNAiRIdprKzbemSrdZEzbj",
+  secret_key_base: "Pk9VqMbE/k3xZ5AYZ0Y9egVGdy5ZhpEXfaHSbTbUh6vyceWgwmKltkMAaJ7W5QQo",
   server: false
 
 # In test we don't send emails.
 config :orange_cms, OrangeCms.Mailer, adapter: Swoosh.Adapters.Test
 
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
+
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

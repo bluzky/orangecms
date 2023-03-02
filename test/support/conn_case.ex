@@ -19,15 +19,15 @@ defmodule OrangeCmsWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint OrangeCmsWeb.Endpoint
+
+      use OrangeCmsWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import OrangeCmsWeb.ConnCase
-
-      alias OrangeCmsWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint OrangeCmsWeb.Endpoint
     end
   end
 

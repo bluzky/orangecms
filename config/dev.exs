@@ -23,9 +23,8 @@ config :orange_cms, OrangeCmsWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "Wy9CB1DOEIGTKCFpdCnM04Fo90zkmN2lbZ+OEoBeb+YbrG5svlFLWOmn0GiWku/T",
+  secret_key_base: "Jwa9efdCeTCdhTKzuVdA+DS9v5fBgB8+KT+RcLJ3puS6n2CppCldhkATTUNBd/Qc",
   watchers: [
-    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
@@ -38,7 +37,6 @@ config :orange_cms, OrangeCmsWeb.Endpoint,
 #
 #     mix phx.gen.cert
 #
-# Note that this task requires Erlang/OTP 20 or later.
 # Run `mix help phx.gen.cert` for more information.
 #
 # The `http:` config above can be replaced with:
@@ -60,10 +58,12 @@ config :orange_cms, OrangeCmsWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/orangecms_web/(live|views)/.*(ex)$",
-      ~r"lib/orangecms_web/templates/.*(eex)$"
+      ~r"lib/orange_cms_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
+
+# Enable dev routes for dashboard and mailbox
+config :orange_cms, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
@@ -74,3 +74,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
