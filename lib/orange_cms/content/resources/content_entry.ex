@@ -14,6 +14,7 @@ defmodule OrangeCms.Content.ContentEntry do
     define :update, action: :update
     define :destroy, action: :destroy
     define :get, args: [:id], action: :by_id
+    define :get_by_type, args: [:content_type_id], action: :by_type
   end
 
   actions do
@@ -23,6 +24,12 @@ defmodule OrangeCms.Content.ContentEntry do
       argument :id, :uuid, allow_nil?: false
       get? true
       filter expr(id == ^arg(:id))
+    end
+
+    read :by_type do
+      argument :content_type_id, :uuid, allow_nil?: false
+      get? true
+      filter expr(content_type_id == ^arg(:content_type_id))
     end
   end
 
