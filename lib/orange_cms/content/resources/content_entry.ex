@@ -3,53 +3,52 @@ defmodule OrangeCms.Content.ContentEntry do
     data_layer: AshPostgres.DataLayer
 
   postgres do
-    table "content_entries"
-    repo OrangeCms.Repo
+    table("content_entries")
+    repo(OrangeCms.Repo)
   end
 
-  code_interface do
-    define_for OrangeCms.Content
-    define :create, action: :create
-    define :list, action: :read
-    define :update, action: :update
-    define :destroy, action: :destroy
-    define :get, args: [:id], action: :by_id
-    define :get_by_type, args: [:content_type_id], action: :by_type
-  end
+  # code_interface do
+  #   define_for OrangeCms.Content
+  #   define :create, action: :create
+  #   define :list, action: :read
+  #   define :update, action: :update
+  #   define :destroy, action: :destroy
+  #   define :get, args: [:id], action: :by_id
+  #   define :get_by_type, args: [:content_type_id], action: :by_type
+  # end
 
   actions do
-    defaults [:create, :read, :update, :destroy]
+    defaults([:create, :read, :update, :destroy])
 
     read :by_id do
-      argument :id, :uuid, allow_nil?: false
-      get? true
-      filter expr(id == ^arg(:id))
+      argument(:id, :uuid, allow_nil?: false)
+      get?(true)
+      filter(expr(id == ^arg(:id)))
     end
 
     read :by_type do
-      argument :content_type_id, :uuid, allow_nil?: false
-      get? true
-      filter expr(content_type_id == ^arg(:content_type_id))
+      argument(:content_type_id, :uuid, allow_nil?: false)
+      filter(expr(content_type_id == ^arg(:content_type_id)))
     end
   end
 
   attributes do
-    uuid_primary_key :id
+    uuid_primary_key(:id)
 
     attribute :title, :string do
-      allow_nil? false
+      allow_nil?(false)
     end
 
     attribute :raw_body, :string do
-      allow_nil? false
+      allow_nil?(false)
     end
 
     attribute :json_body, :map do
-      default %{}
+      default(%{})
     end
 
     attribute :frontmatter, :map do
-      default %{}
+      default(%{})
     end
   end
 
@@ -57,8 +56,8 @@ defmodule OrangeCms.Content.ContentEntry do
 
   relationships do
     belongs_to :content_type, ContentType do
-      allow_nil? false
-      attribute_writable? true
+      allow_nil?(false)
+      attribute_writable?(true)
     end
   end
 end

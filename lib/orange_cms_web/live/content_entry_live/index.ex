@@ -25,7 +25,21 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
       |> Content.read!()
 
     {:noreply,
-     assign(socket, content_entries: content_entries
+     assign(socket, content_entries: content_entries, content_type: content_type
      )}
+  end
+
+  def handle_event("create-entry", _params, socket) do
+    content_type = socket.assigns.content_type
+    ContentEntry
+    |> Ash.Changeset.for_create(:create, %{title: "untitled", raw_body: ".", content_type_id: content_type.id})
+    |> Content.create
+    |> case  do
+         {:ok, entry} ->
+           {:noreply, push_navigate(socket, to: ~p"/app/content/#{content_type.key}/#{entry.id}")}
+         {:error, error} ->
+IO.inspect error
+           {:noreply, put_flash(socket, :error, "Cannot create new #{content_type.name}")}
+       end
   end
 end

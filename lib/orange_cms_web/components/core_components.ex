@@ -10,6 +10,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   [heroicons_elixir](https://github.com/mveytsman/heroicons_elixir) project.
   """
   use Phoenix.Component
+  use OrangeCmsWeb, :verified_routes
 
   alias Phoenix.LiveView.JS
   import OrangeCmsWeb.Gettext

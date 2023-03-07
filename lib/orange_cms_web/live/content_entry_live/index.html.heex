@@ -13,16 +13,14 @@
         <.header>
   Listing Users
   <:actions>
-    <.link patch={~p"/users/new"}>
-      <.button>New User</.button>
-    </.link>
+      <.button phx-click="create-entry">New <%= @content_type.name %></.button>
   </:actions>
 </.header>
 
 <.table
-  id="users"
+  id="content-entries"
   rows={@content_entries}
-  row_click={fn entry -> JS.navigate(~p"/app/content_entries/new?#{%{id: entry.id}}") end}
+  row_click={fn entry -> JS.navigate(~p"/app/content/#{@content_type.key}/new?#{%{id: entry.id}}") end}
 >
   <:col :let={ entry} label="Title"><%= entry.title %></:col>
   <:col :let={entry} label="Action"><%= "Action" %></:col>

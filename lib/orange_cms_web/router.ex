@@ -15,14 +15,15 @@ defmodule OrangeCmsWeb.Router do
   end
 
   scope "/", OrangeCmsWeb do
-    pipe_through :browser
+    pipe_through [:browser]
 
     get "/", PageController, :home
 
-    scope "/app/content_entries", ContentEntryLive do
-      live "/", Index
-      live "/new", New
-      live "/:id", Edit
+    live_session :app, on_mount: [OrangeCmsWeb.MenuAssign] do
+      scope "/app/content/:type", ContentEntryLive do
+        live "/", Index
+        live "/:id", Edit
+      end
     end
   end
 
