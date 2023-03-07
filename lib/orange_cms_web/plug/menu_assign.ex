@@ -6,14 +6,24 @@ defmodule OrangeCmsWeb.MenuAssign do
   alias OrangeCms.Content
   alias OrangeCms.Content.ContentType
 
-  def on_mount(_, _params, _session, socket) do
+  def on_mount(_, params, _session, socket) do
+    type =
+      if socket.view in [OrangeCmsWeb.ContentEntryLive.Index, OrangeCmsWeb.ContentEntryLive.Edit] do
+        params["type"]
+      end
+
     ContentType
     |> Ash.Query.for_read(:read)
     |> Content.read()
-    |> IO.inspect()
     |> case do
       {:ok, content_types} ->
-        {:cont, Phoenix.Component.assign(socket, :content_types, content_types)}
+        current_type = Enum.find(content_types, &(&1.key == type))
+
+        {:cont,
+         Phoenix.Component.assign(socket,
+           content_types: content_types,
+           current_type: current_type
+         )}
 
       {:error, err} ->
         {:halt, socket}
