@@ -11,7 +11,7 @@
       <.link
         :for={item <- @content_types}
         navigate={~p"/app/content/#{item.key}"}
-        class={"flex items-center gap-2 rounded-lg px-4 py-2 text-gray-700 #{if item.key == @current_type.key, do: "bg-gray-100" }"}
+        class={"flex items-center gap-2 rounded-lg px-4 py-2 text-gray-700 #{if @current_type && item.key == @current_type.key, do: "bg-gray-100" }"}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

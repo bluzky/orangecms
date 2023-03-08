@@ -1,0 +1,47 @@
+<.header>
+  Listing Content types
+  <:actions>
+    <.link patch={~p"/app/settings/content_types/new"}>
+      <.button>New Content type</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="content_types"
+  rows={@streams.content_types}
+  row_click={fn {_id, content_type} -> JS.navigate(~p"/content_types/#{content_type}") end}
+>
+  <:col :let={{_id, content_type}} label="Name"><%= content_type.name %></:col>
+  <:col :let={{_id, content_type}} label="Key"><%= content_type.key %></:col>
+  <:col :let={{_id, content_type}} label="Anchor field"><%= content_type.anchor_field %></:col>
+  <:action :let={{_id, content_type}}>
+    <div class="sr-only">
+      <.link navigate={~p"/content_types/#{content_type}"}>Show</.link>
+    </div>
+    <.link patch={~p"/content_types/#{content_type}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, content_type}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: content_type.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="content_type-modal"
+  show
+  on_cancel={JS.navigate(~p"/app/settings/content_types")}
+>
+  <.live_component
+    module={OrangeCmsWeb.ContentTypeLive.FormComponent}
+    id={@content_type.id || :new}
+    title={@page_title}
+    action={@live_action}
+    content_type={@content_type}
+  />
+</.modal>
