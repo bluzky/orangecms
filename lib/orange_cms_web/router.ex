@@ -19,10 +19,18 @@ defmodule OrangeCmsWeb.Router do
 
     get "/", PageController, :home
 
-    live_session :app, on_mount: [OrangeCmsWeb.MenuAssign] do
-      scope "/app/content/:type", ContentEntryLive do
-        live "/", Index
-        live "/:id", Edit
+    scope "/app" do
+      live_session :app, on_mount: [OrangeCmsWeb.MenuAssign] do
+        scope "/content/:type", ContentEntryLive do
+          live "/", Index
+          live "/:id", Edit
+        end
+
+        scope "/settings/content_types" do
+          live "/", ContentTypeLive.Index, :index
+          live "/new", ContentTypeLive.Index, :new
+          live "/:id", ContentTypeLive.Edit
+        end
       end
     end
   end
