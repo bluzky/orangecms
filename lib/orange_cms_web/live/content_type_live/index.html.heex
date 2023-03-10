@@ -19,7 +19,7 @@
     <div class="sr-only">
       <.link navigate={~p"/content_types/#{content_type}"}>Show</.link>
     </div>
-    <.link patch={~p"/content_types/#{content_type}/edit"}>Edit</.link>
+    <.link patch={~p"/app/settings/content_types/#{content_type}"}>Edit</.link>
   </:action>
   <:action :let={{id, content_type}}>
     <.link

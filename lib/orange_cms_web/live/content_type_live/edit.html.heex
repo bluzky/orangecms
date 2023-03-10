@@ -1,28 +1,121 @@
 <.header>
-  Content type <%= @content_type.id %>
-  <:subtitle>This is a content_type record from your database.</:subtitle>
-  <:actions>
-    <.link patch={~p"/content_types/#{@content_type}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit content_type</.button>
-    </.link>
-  </:actions>
+    Content type: <%= @content_type.name %>
+    <:subtitle>This is a content_type record from your database.</:subtitle>
 </.header>
 
-<.list>
-  <:item title="Name"><%= @content_type.name %></:item>
-  <:item title="Key"><%= @content_type.key %></:item>
-  <:item title="Anchor field"><%= @content_type.anchor_field %></:item>
-</.list>
+<nav class="flex border-b border-gray-100 text-sm font-medium" id="tab-header">
+    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500 text-cyan-500 border-current"
+       id="general-hd"
+       phx-click={switch_tab("#general")} >
+        General
+    </a>
+
+    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500"
+       id="image-settings-hd"
+              phx-click={switch_tab("#image-settings")}>
+        Image settings
+    </a>
+
+    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500"
+       id="frontmatter-hd"
+       phx-click={switch_tab("#frontmatter")}>
+        Frontmatter
+    </a>
+</nav>
+
+<div id="general">
+
+    <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-6">
+            <div>
+                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                    Name
+                </label>
+
+                <input type="email" id="UserEmail" placeholder="john@rhcp.com" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+            </div>
+
+            <div>
+                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                    Key
+                </label>
+
+                <input type="email" id="UserEmail" placeholder="john@rhcp.com" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+            </div>
+
+            <div>
+                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                    Anchor field
+                </label>
+
+                <input type="email" id="UserEmail" placeholder="john@rhcp.com" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="image-settings" class="hidden">
+
+    <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-6">
+            <div>
+                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                    Path in repo
+                </label>
+
+                <input type="text" id="UserEmail" placeholder="" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+            </div>
+
+            <div>
+                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                    Served at
+                </label>
+
+                <input type="text" id="UserEmail" placeholder="Ex: assets/images/" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="frontmatter" class="hidden">
+
+    <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-6">
+            <div class="border rounded bg-gray-50 p-2">
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-6">
+                        <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                            Key
+                        </label>
+
+                        <input type="text" id="UserEmail" placeholder="" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+                    </div>
+
+                    <div class="col-span-6">
+                        <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                            Type
+                        </label>
+
+                        <select class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" >
+                          <option :for={type <- OrangeCms.Content.FieldType.values()} value={type}> <%= type %></option>
+                          </select>
+                    </div>
+
+                    <div class="col-span-12">
+                        <label for="UserEmail" class="block text-xs font-medium text-gray-700">
+                            Default value
+                        </label>
+
+                        <input type="text" id="UserEmail" placeholder="" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
 
 <.back navigate={~p"/content_types"}>Back to content_types</.back>
-
-<.modal :if={@live_action == :edit} id="content_type-modal" show on_cancel={JS.patch(~p"/content_types/#{@content_type}")}>
-  <.live_component
-    module={OrangeCmsWeb.ContentTypeLive.FormComponent}
-    id={@content_type.id}
-    title={@page_title}
-    action={@live_action}
-    content_type={@content_type}
-    patch={~p"/content_types/#{@content_type}"}
-  />
-</.modal>

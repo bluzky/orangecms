@@ -12,19 +12,13 @@ defmodule OrangeCms.Content.ContentType do
 
   # Defines convenience methods for
   # interacting with the resource programmatically.
-  # code_interface do
-  #   define_for(OrangeCms.Content)
-  #   define(:create, action: :create)
-  #   define(:read_all, action: :read)
-  #   define(:update, action: :update)
-  #   define(:destroy, action: :destroy)
-  #   define(:get, args: [:id], action: :by_id)
-  # end
-
   code_interface do
     define_for(OrangeCms.Content)
-
-    define(:open, action: :create, args: [:subject])
+    define(:create, action: :create)
+    define(:read_all, action: :read)
+    define(:update, action: :update)
+    define(:destroy, action: :destroy)
+    define(:get, args: [:id], action: :by_id)
   end
 
   actions do

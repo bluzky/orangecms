@@ -29,7 +29,7 @@ defmodule OrangeCmsWeb.Router do
         scope "/settings/content_types" do
           live "/", ContentTypeLive.Index, :index
           live "/new", ContentTypeLive.Index, :new
-          live "/:id/edit", ContentTypeLive.Edit
+          live "/:id", ContentTypeLive.Edit
         end
       end
     end

@@ -6,10 +6,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    ContentType
-    |> Ash.Query.for_read(:read, %{})
-    |> Content.read()
-    |> case do
+    case ContentType.read_all() do
       {:ok, entries} ->
         {:ok, stream(socket, :content_types, entries)}
 
