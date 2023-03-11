@@ -1,13 +1,7 @@
 <div class="min-h-screen max-h-screen flex flex-row">
 <.sidebar content_types={@content_types} current_type={@content_type} />
   <main class=" flex-1 min-h-full max-h-full overflow-scroll bg-slate-50 p-8">
-  <p class="alert alert-info" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="info"><%= live_flash(@flash, :info) %></p>
-
-  <p class="alert alert-danger" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+  <.flash_group flash={@flash} ./>
 
   <%= @inner_content %>
 </main>

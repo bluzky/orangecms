@@ -63,14 +63,13 @@ defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
         socket.assigns.form,
         content_type_params
       )
-      |> IO.inspect()
 
     case AshPhoenix.Form.submit(form) do
       {:ok, entry} ->
         {:noreply,
          socket
          |> put_flash(:info, "Content type created successfully")
-         |> push_navigate(to: ~p"/app/settings/content_types/#{entry.id}/edit")}
+         |> push_navigate(to: ~p"/app/settings/content_types/#{entry.id}")}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}

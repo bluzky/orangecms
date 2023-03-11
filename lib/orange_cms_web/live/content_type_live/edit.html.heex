@@ -4,118 +4,101 @@
 </.header>
 
 <nav class="flex border-b border-gray-100 text-sm font-medium" id="tab-header">
-    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500 text-cyan-500 border-current"
-       id="general-hd"
-       phx-click={switch_tab("#general")} >
+    <a href="#" class="-mb-px border-b p-4 hover:text-cyan-500 text-cyan-500 border-current" id="general-hd" phx-click={switch_tab("#general")}>
         General
     </a>
 
-    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500"
-       id="image-settings-hd"
-              phx-click={switch_tab("#image-settings")}>
+    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500" id="image-settings-hd" phx-click={switch_tab("#image-settings")}>
         Image settings
     </a>
 
-    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500"
-       id="frontmatter-hd"
-       phx-click={switch_tab("#frontmatter")}>
+    <a href="#" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500" id="frontmatter-hd" phx-click={switch_tab("#frontmatter")}>
         Frontmatter
     </a>
 </nav>
 
 <div id="general">
 
-    <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-6">
-            <div>
-                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                    Name
-                </label>
+    <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-6">
 
-                <input type="email" id="UserEmail" placeholder="john@rhcp.com" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+
+                <.input type="text" field={f[:name]} label="Name" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Name" />
+                <.input type="text" field={f[:key]} label="Key" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Key" />
+
+                <.input type="text" field={f[:anchor_field]} label="Anchor field" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Anchor field" />
+
+                <div class="flex mt-4">
+                    <button class="inline-block rounded border border-gray-600 bg-gray-600 hover:bg-gray-500 px-12 py-3 text-sm font-medium text-white ml-auto">
+                        Save
+                    </button>
+                </div>
             </div>
-
-            <div>
-                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                    Key
-                </label>
-
-                <input type="email" id="UserEmail" placeholder="john@rhcp.com" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
-            </div>
-
-            <div>
-                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                    Anchor field
-                </label>
-
-                <input type="email" id="UserEmail" placeholder="john@rhcp.com" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
-            </div>
-
         </div>
-    </div>
+    </.form>
 </div>
 
 <div id="image-settings" class="hidden">
 
-    <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-6">
-            <div>
-                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                    Path in repo
-                </label>
-
-                <input type="text" id="UserEmail" placeholder="" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
-            </div>
-
-            <div>
-                <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                    Served at
-                </label>
-
-                <input type="text" id="UserEmail" placeholder="Ex: assets/images/" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+    <.form :let={f} for={@form} phx-submit="create" class="space-y-4">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-6">
+                <.input type="text" field={f[:name]} label="Name" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Name" />
+                <.input type="text" field={f[:name]} label="Name" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Name" />
             </div>
         </div>
-    </div>
+    </.form>
 </div>
 
 <div id="frontmatter" class="hidden">
-
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-6">
-            <div class="border rounded bg-gray-50 p-2">
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-6">
-                        <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                            Key
-                        </label>
+            <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+                <.inputs_for :let={field} field={f[:field_defs]}>
+                    <details open={is_nil(field[:key].value) }>
+                        <summary><%= field[:name].value || field[:key].value %></summary>
 
-                        <input type="text" id="UserEmail" placeholder="" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
-                    </div>
 
-                    <div class="col-span-6">
-                        <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                            Type
-                        </label>
+                        <div class="border rounded bg-gray-50 p-2">
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-6">
+                                    <.input type="text" label="Key" field={field[:key]} />
+                                </div>
 
-                        <select class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" >
-                          <option :for={type <- OrangeCms.Content.FieldType.values()} value={type}> <%= type %></option>
-                          </select>
-                    </div>
+                                <div class="col-span-6">
 
-                    <div class="col-span-12">
-                        <label for="UserEmail" class="block text-xs font-medium text-gray-700">
-                            Default value
-                        </label>
+                                    <.input type="select" label="Type" field={field[:type]} options={OrangeCms.Content.FieldType.values()} />
+                                </div>
 
-                        <input type="text" id="UserEmail" placeholder="" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
-                    </div>
+                                <div class="col-span-12">
+                                    <.input type="text" label="Default" field={field[:default_value]} />
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </details>
+                </.inputs_for>
+
+                <div class="mt-3">
+                    <button class="whitespace-nowrap rounded-full bg-gray-200 px-5 py-1 text-sm mt-3 font-bold" phx-click="add_field" phx-value-path={f[:field_defs].name} type="button">
+                        + Add field
+                    </button>
                 </div>
-            </div>
 
+                <div class="flex mt-4">
+                    <button class="inline-block rounded border border-gray-600 bg-gray-600 hover:bg-gray-500 px-12 py-3 text-sm font-medium text-white ml-auto">
+                        Save
+                    </button>
+                </div>
+            </.form>
 
         </div>
     </div>
 </div>
 
 
-<.back navigate={~p"/content_types"}>Back to content_types</.back>
+<.back navigate={~p"/app/settings/content_types"}>Back to content_types</.back>

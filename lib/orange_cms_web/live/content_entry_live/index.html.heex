@@ -28,7 +28,7 @@
     <div class="sr-only">
       <.link navigate={~p"/users/#{entry}"}>Show</.link>
     </div>
-    <.link patch={~p"/users/#{entry}/edit"}>Edit</.link>
+    <.link patch={~p"/app/content/#{@content_type.key}/#{entry}"}>Edit</.link>
   </:action>
   <:action :let={ entry}>
     <.link

@@ -17,11 +17,61 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
      socket
      |> assign(:page_title, "Edit content type")
      |> assign(:content_type, content_type)
-     |> assign(:tab, "general")}
+     |> assign(
+       :form,
+       AshPhoenix.Form.for_update(content_type, :update,
+         api: Content,
+         forms: [
+           field_defs: [
+             type: :list,
+             data: content_type.field_defs,
+             resource: Content.FieldDef,
+             update_action: :update,
+             create_action: :create
+           ]
+         ]
+       )
+     )}
   end
 
-  def handle_event("switch_tab", %{"tab" => tab}, socket) do
-    {:noreply, assign(socket, :tab, tab)}
+  def handle_event("add_field", %{"path" => path}, socket) do
+    form = AshPhoenix.Form.add_form(socket.assigns.form, path, params: %{name: "New fiel"})
+    {:noreply, assign(socket, :form, form)}
+  end
+
+  def handle_event("save", %{"form" => form_params}, socket) do
+    form =
+      AshPhoenix.Form.validate(
+        socket.assigns.form,
+        form_params
+      )
+
+    case AshPhoenix.Form.submit(form) do
+      {:ok, content_type} ->
+        form =
+          AshPhoenix.Form.for_update(content_type, :update,
+            api: Content,
+            forms: [
+              field_defs: [
+                type: :list,
+                data: content_type.field_defs,
+                resource: Content.FieldDef,
+                update_action: :update,
+                create_action: :create
+              ]
+            ]
+          )
+
+        socket =
+          socket
+          |> assign(form: form)
+          |> put_flash(:info, "Update Content type successfully!")
+
+        {:noreply, socket}
+
+      {:error, form} ->
+        {:noreply, assign(socket, form: form)}
+    end
   end
 
   def switch_tab(js \\ %JS{}, tab) do

@@ -17,7 +17,7 @@ defmodule OrangeCms.Content.ContentType do
     define(:create, action: :create)
     define(:read_all, action: :read)
     define(:update, action: :update)
-    define(:destroy, action: :destroy)
+    define(:delete, action: :destroy)
     define(:get, args: [:id], action: :by_id)
   end
 
