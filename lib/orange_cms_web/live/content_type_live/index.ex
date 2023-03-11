@@ -39,9 +39,16 @@ defmodule OrangeCmsWeb.ContentTypeLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    content_type = Content.get_content_type!(id)
-    {:ok, _} = Content.delete_content_type(content_type)
+    content_type = ContentType.get!(id)
+    :ok = ContentType.delete(content_type)
 
-    {:noreply, stream_delete(socket, :content_types, content_type)}
+    content_types = socket.assigns.content_types |> Enum.reject(&(&1.id == id))
+
+    socket =
+      socket
+      |> assign(:content_types, content_types)
+      |> stream_delete(:content_types, content_type)
+
+    {:noreply, socket}
   end
 end

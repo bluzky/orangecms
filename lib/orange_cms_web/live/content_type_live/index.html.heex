@@ -32,7 +32,7 @@
 </.table>
 
 <.modal
-  :if={@live_action in [:new, :edit]}
+  :if={@live_action in [:new]}
   id="content_type-modal"
   show
   on_cancel={JS.navigate(~p"/app/settings/content_types")}
