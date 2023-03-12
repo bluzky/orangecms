@@ -3,9 +3,7 @@ defmodule OrangeCms.Content.FieldDef do
     data_layer: :embedded
 
   attributes do
-    attribute :name, :string do
-      allow_nil?(false)
-    end
+    attribute(:name, :string)
 
     attribute :key, :string do
       allow_nil?(false)
@@ -25,5 +23,9 @@ defmodule OrangeCms.Content.FieldDef do
     attribute :is_required, :boolean do
       default(false)
     end
+  end
+
+  changes do
+    change(set_new_attribute(:name, arg("key")), on: [:create, :update], only_when_valid?: true)
   end
 end

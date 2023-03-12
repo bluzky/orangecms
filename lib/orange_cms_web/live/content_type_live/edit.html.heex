@@ -54,13 +54,13 @@
 <div id="frontmatter" class="hidden">
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-6">
-            <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+            <.form :let={f} for={@form} phx-submit="save" phx-change="validate" class="space-y-4">
                 <.inputs_for :let={field} field={f[:field_defs]}>
-                    <details open={is_nil(field[:key].value) }>
+                    <details open={field.source.added? or field.source.changed?}>
                         <summary><%= field[:name].value || field[:key].value %></summary>
 
 
-                        <div class="border rounded bg-gray-50 p-2">
+                        <div class="border rounded bg-gray-50 p-2 mt-2">
                             <div class="grid grid-cols-12 gap-4">
                                 <div class="col-span-6">
                                     <.input type="text" label="Key" field={field[:key]} />
@@ -75,10 +75,11 @@
                                     <.input type="text" label="Default" field={field[:default_value]} />
                                 </div>
                             </div>
+
+                            <div class="flex">
+                              <a href="#" class="whitespace-nowrap rounded-full bg-red-100 px-2 py-1 text-red-700 text-sm mt-2 ml-auto" phx-click="remove_field" phx-value-path={field.name} data-confirm="Are you sure?">Delete field</a>
+                              </div>
                         </div>
-
-
-
 
                     </details>
                 </.inputs_for>

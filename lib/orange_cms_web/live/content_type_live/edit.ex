@@ -35,7 +35,22 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
   end
 
   def handle_event("add_field", %{"path" => path}, socket) do
-    form = AshPhoenix.Form.add_form(socket.assigns.form, path, params: %{name: "New fiel"})
+    form = AshPhoenix.Form.add_form(socket.assigns.form, path, params: %{name: "New field"})
+    {:noreply, assign(socket, :form, form)}
+  end
+
+  def handle_event("remove_field", %{"path" => path}, socket) do
+    form = AshPhoenix.Form.remove_form(socket.assigns.form, path)
+    {:noreply, assign(socket, :form, form)}
+  end
+
+  def handle_event("validate", %{"form" => form_params}, socket) do
+    form =
+      AshPhoenix.Form.validate(
+        socket.assigns.form,
+        form_params
+      )
+
     {:noreply, assign(socket, :form, form)}
   end
 
