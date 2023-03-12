@@ -54,7 +54,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
     {:noreply, assign(socket, :form, form)}
   end
 
-  def handle_event("create", %{"frontmatter" => params, "form" => form_params}, socket) do
+  def handle_event("save", %{"frontmatter" => params, "form" => form_params}, socket) do
     form =
       AshPhoenix.Form.validate(
         socket.assigns.form,
@@ -66,7 +66,10 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
 
     case AshPhoenix.Form.submit(form) do
       {:ok, entry} ->
-        {:noreply, assign(socket, form: AshPhoenix.Form.for_update(entry, :update, api: Content))}
+        {:noreply,
+         socket
+         |> assign(form: AshPhoenix.Form.for_update(entry, :update, api: Content))
+         |> put_flash(:info, "Save entry successfully!")}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}

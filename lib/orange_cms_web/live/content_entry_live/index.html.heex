@@ -13,24 +13,21 @@
         <.header>
   Listing Users
   <:actions>
-      <.button phx-click="create-entry">New <%= @content_type.name %></.button>
+      <.button phx-click="create_entry">New <%= @content_type.name %></.button>
   </:actions>
 </.header>
 
 <.table
   id="content-entries"
-  rows={@content_entries}
-  row_click={fn entry -> JS.navigate(~p"/app/content/#{@content_type.key}/new?#{%{id: entry.id}}") end}
+  rows={@streams.content_entries}
+  row_click={fn {_id, entry} -> JS.navigate(~p"/app/content/#{@content_type.key}/#{entry}") end}
 >
-  <:col :let={ entry} label="Title"><%= entry.title %></:col>
-  <:col :let={entry} label="Action"><%= "Action" %></:col>
-  <:action :let={ entry}>
-    <div class="sr-only">
-      <.link navigate={~p"/users/#{entry}"}>Show</.link>
-    </div>
-    <.link patch={~p"/app/content/#{@content_type.key}/#{entry}"}>Edit</.link>
+  <:col :let={{_id, entry}} label="Title"><%= entry.title %></:col>
+  <:col :let={{_id, entry}} label="Action"><%= "Action" %></:col>
+  <:action :let={{_id, entry}}>
+    <.link navigate={~p"/app/content/#{@content_type.key}/#{entry}"}>Edit</.link>
   </:action>
-  <:action :let={ entry}>
+  <:action :let={{_id, entry}}>
     <.link
       phx-click={JS.push("delete", value: %{id: entry.id})}
       data-confirm="Are you sure?"

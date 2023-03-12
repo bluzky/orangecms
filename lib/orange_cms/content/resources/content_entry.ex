@@ -7,15 +7,15 @@ defmodule OrangeCms.Content.ContentEntry do
     repo(OrangeCms.Repo)
   end
 
-  # code_interface do
-  #   define_for OrangeCms.Content
-  #   define :create, action: :create
-  #   define :list, action: :read
-  #   define :update, action: :update
-  #   define :destroy, action: :destroy
-  #   define :get, args: [:id], action: :by_id
-  #   define :get_by_type, args: [:content_type_id], action: :by_type
-  # end
+  code_interface do
+    define_for(OrangeCms.Content)
+    define(:create, action: :create)
+    define(:read_all, action: :read)
+    define(:update, action: :update)
+    define(:delete, action: :destroy)
+    define(:get, args: [:id], action: :by_id)
+    define(:get_by_type, args: [:content_type_id], action: :by_type)
+  end
 
   actions do
     defaults([:create, :read, :update, :destroy])
@@ -28,6 +28,7 @@ defmodule OrangeCms.Content.ContentEntry do
 
     read :by_type do
       argument(:content_type_id, :uuid, allow_nil?: false)
+      prepare(build(sort: [created_at: :desc]))
       filter(expr(content_type_id == ^arg(:content_type_id)))
     end
   end
@@ -50,6 +51,9 @@ defmodule OrangeCms.Content.ContentEntry do
     attribute :frontmatter, :map do
       default(%{})
     end
+
+    create_timestamp(:created_at)
+    update_timestamp(:updated_at)
   end
 
   alias OrangeCms.Content.ContentType

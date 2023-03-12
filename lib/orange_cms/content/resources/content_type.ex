@@ -19,6 +19,7 @@ defmodule OrangeCms.Content.ContentType do
     define(:update, action: :update)
     define(:delete, action: :destroy)
     define(:get, args: [:id], action: :by_id)
+    define(:get_by_key, args: [:key], action: :by_key)
   end
 
   actions do
@@ -67,5 +68,8 @@ defmodule OrangeCms.Content.ContentType do
     attribute :anchor_field, :string do
       allow_nil?(true)
     end
+
+    create_timestamp(:created_at)
+    update_timestamp(:updated_at)
   end
 end
