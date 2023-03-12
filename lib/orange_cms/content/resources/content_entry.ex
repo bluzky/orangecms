@@ -1,6 +1,9 @@
 defmodule OrangeCms.Content.ContentEntry do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    extensions: [
+      AshGraphql.Resource
+    ]
 
   postgres do
     table("content_entries")
@@ -27,9 +30,10 @@ defmodule OrangeCms.Content.ContentEntry do
     end
 
     read :by_type do
-      argument(:content_type_id, :uuid, allow_nil?: false)
+      argument(:content_type_id, :uuid)
+      argument(:type, :string)
       prepare(build(sort: [created_at: :desc]))
-      filter(expr(content_type_id == ^arg(:content_type_id)))
+      filter(expr(content_type_id == ^arg(:content_type_id) or content_type.key == ^arg(:type)))
     end
   end
 
@@ -62,6 +66,16 @@ defmodule OrangeCms.Content.ContentEntry do
     belongs_to :content_type, ContentType do
       allow_nil?(false)
       attribute_writable?(true)
+    end
+  end
+
+  # graphql for list entry and get entry
+  graphql do
+    type(:content_entry)
+
+    queries do
+      get(:get_entry, :read)
+      list(:list_entries, :by_type)
     end
   end
 end

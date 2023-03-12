@@ -66,6 +66,8 @@ config :ash, :use_all_identities_in_manage_relationship?, false
 config :orange_cms,
   ash_apis: [OrangeCms.Content]
 
+config :ash_graphql, :json_type, :json
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

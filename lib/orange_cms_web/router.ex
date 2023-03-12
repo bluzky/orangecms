@@ -14,6 +14,17 @@ defmodule OrangeCmsWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    forward "/gql",
+            Absinthe.Plug,
+            schema: OrangeCms.Content.Schema
+
+    forward "/playground",
+            Absinthe.Plug.GraphiQL,
+            schema: OrangeCms.Content.Schema,
+            interface: :playground
+  end
+
   scope "/", OrangeCmsWeb do
     pipe_through [:browser]
 
