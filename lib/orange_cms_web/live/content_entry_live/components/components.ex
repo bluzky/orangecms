@@ -13,7 +13,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   }
 
   def render_input(field_def, value, assigns \\ %{}) do
-    func = Map.get(@input_map, field_def.type) || @input_map["string"]
+    func = Map.get(@input_map, to_string(field_def.type)) || @input_map["string"]
 
     Phoenix.LiveView.HTMLEngine.component(
       func,
@@ -28,10 +28,10 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   def input_wrapper(assigns) do
     ~H"""
     <div>
-    <label {[for: @field_def.key]} class="block text-xs font-bold text-gray-700">
-    <%= @field_def.name %>
-    </label>
-    <%= render_slot(@inner_block) %>
+      <label {[for: @field_def.key]} class="block text-xs font-bold text-gray-700">
+        <%= @field_def.name || @field_def.key %>
+      </label>
+      <%= render_slot(@inner_block) %>
     </div>
     """
   end
@@ -43,23 +43,22 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   def string_input(assigns) do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
-    <input
-    {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
-    type="text"
-    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-    />
+      <input
+        {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
+        type="text"
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      />
     </.input_wrapper>
-
     """
   end
 
   def text_input(assigns) do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
-    <textarea
-    {[id: @field_def.key, rows: 3, name: field_name(@field_def, @options)]}
-    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-    ><%= @value %></textarea>
+      <textarea
+        {[id: @field_def.key, rows: 3, name: field_name(@field_def, @options)]}
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      ><%= @value %></textarea>
     </.input_wrapper>
     """
   end
@@ -67,30 +66,31 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   def number_input(assigns) do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
-    <input
-    {[id: @field_def.key, name: field_name(@field_def, @options), value: @value || @field_def.default_value]}
-    type="number"
-    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-    />
+      <input
+        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value || @field_def.default_value]}
+        type="number"
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      />
     </.input_wrapper>
-
     """
   end
 
   def boolean_input(assigns) do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
-    <label {[for: @field_def.key]} class="relative h-8 w-14 cursor-pointer block">
-    <input type="checkbox" class="peer sr-only"  {[id: @field_def.key, name: field_name(@field_def, @options),checked: @value, checked_value: "true"]}/>
+      <label {[for: @field_def.key]} class="relative h-8 w-14 cursor-pointer block">
+        <input
+          type="checkbox"
+          class="peer sr-only"
+          {[id: @field_def.key, name: field_name(@field_def, @options),checked: @value, value: "true"]}
+        />
 
-    <span
-    class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"
-    ></span>
+        <span class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500">
+        </span>
 
-    <span
-    class="absolute inset-0 m-1 h-6 w-6 rounded-full bg-white transition peer-checked:translate-x-6"
-    ></span>
-    </label>
+        <span class="absolute inset-0 m-1 h-6 w-6 rounded-full bg-white transition peer-checked:translate-x-6">
+        </span>
+      </label>
     </.input_wrapper>
     """
   end
@@ -98,8 +98,11 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   def datetime_input(assigns) do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
-    <input type="datetime-local" {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}     class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-    />
+      <input
+        type="datetime-local"
+        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      />
     </.input_wrapper>
     """
   end
@@ -107,9 +110,15 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   def select(assigns) do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
-      <select {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}     class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" >
-        <option :for={item <- @field_def.options} {[value: item, selected: item == @value]}>
-                <%= item %>
+      <select
+        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      >
+        <option
+          :for={item <- OrangeCms.Content.load!(@field_def, :options) |> Map.get(:options)}
+          {[value: item, selected: item == @value]}
+        >
+          <%= item %>
         </option>
       </select>
     </.input_wrapper>
@@ -119,17 +128,16 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   def array_input(assigns) do
     ~H"""
     <div>
-    <label {[for: @field_def.key]} class="block text-xs font-medium text-gray-700">
-    <%= @field_def.name %>
-    </label>
+      <label {[for: @field_def.key]} class="block text-xs font-medium text-gray-700">
+        <%= @field_def.name %>
+      </label>
 
-    <input
-    {[id: @field_def.key, value: @value]}
-    type="text"
-    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-    />
+      <input
+        {[id: @field_def.key, value: @value]}
+        type="text"
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      />
     </div>
-
     """
   end
 
@@ -141,24 +149,27 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
         []
       end
 
-    IO.inspect(value)
     assigns = assign(assigns, :value, value)
 
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
       <div class="flex gap-4">
-      <label :for={item <- @field_def.options} {[for: item]} class="flex gap-2">
-              <input
-                type="checkbox"
-                {[ name: field_name(@field_def, @options, true), id: item, value: item, checked: Enum.member?(@value, item)]}
-                class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
-              />
+        <label
+          :for={item <- OrangeCms.Content.load!(@field_def, :options) |> Map.get(:options)}
+          {[for: item]}
+          class="flex gap-2"
+        >
+          <input
+            type="checkbox"
+            {[ name: field_name(@field_def, @options, true), id: item, value: item, checked: Enum.member?(@value, item)]}
+            class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+          />
 
-              <span class="text-sm text-gray-700">
-                <%= item %>
-              </span>
-    </label>
-    </div>
+          <span class="text-sm text-gray-700">
+            <%= item %>
+          </span>
+        </label>
+      </div>
     </.input_wrapper>
     """
   end
@@ -166,17 +177,16 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   def upload_input(assigns) do
     ~H"""
     <div>
-    <label {[for: @field_def.key]} class="block text-xs font-medium text-gray-700">
-    <%= @field_def.name %>
-    </label>
+      <label {[for: @field_def.key]} class="block text-xs font-medium text-gray-700">
+        <%= @field_def.name %>
+      </label>
 
-    <input
-    {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
-    type="text"
-    class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-    />
+      <input
+        {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
+        type="text"
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      />
     </div>
-
     """
   end
 

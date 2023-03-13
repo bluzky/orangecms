@@ -46,6 +46,8 @@ defmodule OrangeCms.Content.ContentEntry do
 
     attribute :raw_body, :string do
       allow_nil?(false)
+      constraints(allow_empty?: true, trim?: false)
+      default("")
     end
 
     attribute :json_body, :map do

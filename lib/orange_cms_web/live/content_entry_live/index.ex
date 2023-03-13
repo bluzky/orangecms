@@ -29,8 +29,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
 
     ContentEntry
     |> Ash.Changeset.for_create(:create, %{
-      title: "untitled",
-      raw_body: ".",
+      title: "My awesome title",
+      raw_body: "",
       content_type_id: content_type.id
     })
     |> Content.create()

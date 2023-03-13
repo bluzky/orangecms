@@ -33,6 +33,7 @@ const Hooks = {
     mounted() {
       const easyMDE = new EasyMDE({
         element: this.el,
+        minHeight: "500px",
         autoDownloadFontAwesome: false,
         lineNumbers: true,
         status: true,

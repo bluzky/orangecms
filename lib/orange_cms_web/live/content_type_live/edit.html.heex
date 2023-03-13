@@ -72,7 +72,11 @@
                                 </div>
 
                                 <div class="col-span-12">
+                                  <%= if field[:type].value  in [:checkbox, :select] do %>
+                                    <.input type="text" label="Options" field={field[:options_str]} placeholder="Separated by commas" />
+                                  <% else%>
                                     <.input type="text" label="Default" field={field[:default_value]} />
+                                    <% end %>
                                 </div>
                             </div>
 
