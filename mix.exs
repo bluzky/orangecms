@@ -55,7 +55,9 @@ defmodule OrangeCms.MixProject do
       {:ash_postgres, "~> 1.3"},
       {:ash_phoenix, "~> 1.2"},
       {:ash_graphql, "~> 0.22"},
-      {:absinthe_plug, "~> 1.5"}
+      {:absinthe_plug, "~> 1.5"},
+      # {:eva_icons, github: "bluzky/eva_icons", branch: "main"}
+      {:lucide_icons, "~> 1.0.0"}
     ]
   end
 
