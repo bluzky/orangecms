@@ -11,9 +11,9 @@
 <div class="grid grid-cols-12 gap-4">
       <div class="col-span-8 rounded-lg bg-white p-8 shadow-lg lg:p-12">
         <.header>
-  Listing Users
+  Listing <%= @content_type.name %>
   <:actions>
-      <.button phx-click="create_entry">New <%= @content_type.name %></.button>
+      <.button class="btn btn-primary"  phx-click="create_entry">New <%= @content_type.name %></.button>
   </:actions>
 </.header>
 

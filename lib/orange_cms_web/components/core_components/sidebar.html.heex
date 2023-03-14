@@ -1,168 +1,121 @@
-  <div class="flex flex-col flex-none justify-between w-64 bg-white min-h-full max-h-full overflow-scroll border-r">
+<div class="drawer-side">
+    <label for="my-drawer" class="drawer-overlay"></label>
+    <aside class="w-80 bg-base-200 flex flex-col justify-between">
 
-  <div class="px-4 py-6">
-    <span
-      class="grid h-10 w-32 place-content-center rounded-lg bg-orange-100 text-xs text-orange-600"
-    >
-      Orange Cms
-    </span>
+      <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm"><a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
+                <div class="font-title text-primary inline-flex text-lg transition-all duration-200 md:text-3xl"><span class="lowercase">daisy</span> <span class="text-base-content uppercase">UI</span></div>
+            </a> <a href="/docs/changelog" class="link link-hover font-mono text-xs text-opacity-50">
+                <div data-tip="Changelog" class="tooltip tooltip-bottom">2.51.3</div>
+            </a>
+        </div>
 
-    <nav aria-label="Main Nav" class="mt-6 flex flex-col space-y-1">
-      <.link
-        :for={item <- @content_types}
-        navigate={~p"/app/content/#{item.key}"}
-        class={"flex items-center gap-2 rounded-lg px-4 py-2 text-gray-700 #{if @current_type && item.key == @current_type.key, do: "bg-gray-100" }"}
-      >
-        <Lucideicons.newspaper class="h-5 w-5 opacity-75" stroke="currentColor"/>
+      <div class="h-4"></div>
 
-        <span class="text-sm font-medium"> <%= item.name %> </span>
-      </.link>
+        <ul class="menu">
+            <li>
+                <.link :for={item <- @content_types} navigate={~p"/app/content/#{item.key}"} class={"#{if @current_type && item.key==@current_type.key, do: "active" }"}>
+                    <Lucideicons.newspaper class="h-5 w-5 opacity-75" stroke="currentColor" />
 
-      <details class="group [&_summary::-webkit-details-marker]:hidden">
-        <summary
-          class="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-        >
-          <div class="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 opacity-75"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
+                    <span> <%= item.name %> </span>
+                </.link>
+            </li>
 
-            <span class="text-sm font-medium"> Teams </span>
-          </div>
+            <li>
+                <details class="group [&_summary::-webkit-details-marker]:hidden flex-col">
+                    <summary class="flex cursor-pointer items-center justify-between">
+                        <div class="flex  items-center gap-2 ">
+                            <Lucideicons.users class="h-5 w-5 opacity-75" stroke="currentColor" />
 
-          <span class="shrink-0 transition duration-300 group-open:-rotate-180">
-            <Lucideicons.chevron_down class="h-5 w-5 opacity-75" stroke="currentColor"/>
-          </span>
-        </summary>
+                            <span class=""> Teams </span>
+                        </div>
 
-        <nav aria-label="Teams Nav" class="mt-2 flex flex-col px-4">
-          <a
-            href="#"
-            class="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <Lucideicons.slash class="h-5 w-5 opacity-75" stroke="currentColor"/>
+                        <span class="shrink-0 transition duration-300 group-open:-rotate-180">
+                            <Lucideicons.chevron_down class="h-5 w-5 opacity-75" stroke="currentColor" />
+                        </span>
+                    </summary>
 
-            <span class="text-sm font-medium"> Banned Users </span>
-          </a>
+                    <ul class="menu menu-compact">
+                        <li>
+                            <a href="#">
+                                <Lucideicons.slash class="h-5 w-5 opacity-75" stroke="currentColor" />
+                                <span> Banned Users </span>
+                            </a>
+                        </li>
 
-          <a
-            href="#"
-            class="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <Lucideicons.calendar class="h-5 w-5 opacity-75" stroke="currentColor"/>
-            <span class="text-sm font-medium"> Calendar </span>
-          </a>
-        </nav>
-      </details>
+                        <li>
+                            <a href="#">
+                                <Lucideicons.calendar class="h-5 w-5 opacity-75" stroke="currentColor" />
+                                <span> Calendar </span>
+                            </a>
+                        </li>
+                    </ul>
+                </details>
+            </li>
 
-      
+            <li>
+                <details class="group [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex cursor-pointer items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <Lucideicons.settings class="h-5 w-5 opacity-75" stroke="currentColor" />
 
-      <details class="group [&_summary::-webkit-details-marker]:hidden">
-        <summary
-          class="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-        >
-          <div class="flex items-center gap-2">
-                    <Lucideicons.settings class="h-5 w-5 opacity-75" stroke="currentColor"/>
+                            <span> Settings </span>
+                        </div>
 
-            <span class="text-sm font-medium"> Settings </span>
-          </div>
+                        <span class="shrink-0 transition duration-300 group-open:-rotate-180">
+                            <Lucideicons.chevron_down class="h-5 w-5 opacity-75" stroke="currentColor" />
+                        </span>
+                    </summary>
 
-          <span class="shrink-0 transition duration-300 group-open:-rotate-180">
-                                <Lucideicons.chevron_down class="h-5 w-5 opacity-75" stroke="currentColor"/>
-          </span>
-        </summary>
+                    <ul class="menu menu-compact">
+                        <li>
+                            <a href="#">
+                                <Lucideicons.book class="h-5 w-5 opacity-75" stroke="currentColor" />
+                                <span> Users </span>
+                            </a>
+                        </li>
 
-        <nav aria-label="Account Nav" class="mt-2 flex flex-col px-4">
-          <a
-            href="#"
-            class="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 opacity-75"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-              />
-            </svg>
+                        <li>
+                            <a href={~p"/app/settings/content_types"}>
+                                <Lucideicons.book class="h-5 w-5 opacity-75" stroke="currentColor" />
+                                <span> Content type </span>
+                            </a>
+                        </li>
 
-            <span class="text-sm font-medium"> Users </span>
-          </a>
+                        <li>
+                            <a href={~p"/app/settings/content-types"}>
+                                <Lucideicons.shield_check class="h-5 w-5 opacity-75" stroke="currentColor" />
 
-          <a
-            href={~p"/app/settings/content_types"}
-            class="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <Lucideicons.book class="h-5 w-5 opacity-75" stroke="currentColor"/>
-            <span class="text-sm font-medium"> Content type </span>
-          </a>
+                                <span> Integrations </span>
+                            </a>
+                        </li>
 
-          <a
-            href={~p"/app/settings/content-types"}
-            class="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <Lucideicons.shield_check class="h-5 w-5 opacity-75" stroke="currentColor"/>
+                        <li>
+                            <a href="#">
+                                <Lucideicons.shield_check class="h-5 w-5 opacity-75" stroke="currentColor" />
 
-            <span class="text-sm font-medium"> Integrations </span>
-          </a>
+                                <span> Tokens </span>
+                            </a>
+                        </li>
+                    </ul>
+                </details>
+            </li>
+        </ul>
 
-          <a
-            href="#"
-            class="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-                        <Lucideicons.shield_check class="h-5 w-5 opacity-75" stroke="currentColor"/>
 
-            <span class="text-sm font-medium"> Tokens </span>
-          </a>
+<div class="h-4 mt-auto"></div>
+        <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
+            <a href="#" class="flex items-center gap-2 p-4">
+                <img alt="Man" src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" class="h-10 w-10 rounded-full object-cover" />
 
-          <form action="/logout">
-            <button
-              type="submit"
-              class="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-            >
-                          <Lucideicons.shield_check class="h-5 w-5 opacity-75" stroke="currentColor"/>
+                <div>
+                    <p class="text-xs">
+                        <strong class="block font-medium">Eric Frusciante</strong>
 
-              <span class="text-sm font-medium"> Logout </span>
-            </button>
-          </form>
-        </nav>
-      </details>
-    </nav>
-  </div>
+                        <span> eric@frusciante.com </span>
+                    </p>
+                </div>
+            </a>
+        </div>
+    </aside>
 
-  <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
-    <a href="#" class="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
-      <img
-        alt="Man"
-        src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-        class="h-10 w-10 rounded-full object-cover"
-      />
-
-      <div>
-        <p class="text-xs">
-          <strong class="block font-medium">Eric Frusciante</strong>
-
-          <span> eric@frusciante.com </span>
-        </p>
-      </div>
-    </a>
-  </div>
-
-  </div>
+</div>
