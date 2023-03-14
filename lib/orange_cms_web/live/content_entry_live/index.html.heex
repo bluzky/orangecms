@@ -8,35 +8,25 @@
 -->
 
 
-<div class="grid grid-cols-12 gap-4">
-      <div class="col-span-8 rounded-lg bg-white p-8 shadow-lg lg:p-12">
-        <.header>
-  Listing <%= @content_type.name %>
-  <:actions>
-      <.button class="btn btn-primary"  phx-click="create_entry">New <%= @content_type.name %></.button>
-  </:actions>
-</.header>
+<div class="p-6 border rounded-xl">
+    <.header>
+        Listing <%= @content_type.name %>
+        <:actions>
+            <.button class="btn btn-primary" phx-click="create_entry">New <%= @content_type.name %></.button>
+        </:actions>
+    </.header>
 
-<.table
-  id="content-entries"
-  rows={@streams.content_entries}
-  row_click={fn {_id, entry} -> JS.navigate(~p"/app/content/#{@content_type.key}/#{entry}") end}
->
-  <:col :let={{_id, entry}} label="Title"><%= entry.title %></:col>
-  <:col :let={{_id, entry}} label="Action"><%= "Action" %></:col>
-  <:action :let={{_id, entry}}>
-    <.link navigate={~p"/app/content/#{@content_type.key}/#{entry}"}>Edit</.link>
-  </:action>
-  <:action :let={{_id, entry}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: entry.id})}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table>
-
-      </div>
-
+    <.table id="content-entries" rows={@streams.content_entries} row_click={fn {_id, entry} -> JS.navigate(~p"/app/content/#{@content_type.key}/#{entry}") end}
+        >
+        <:col :let={{_id, entry}} label="Title"><%= entry.title %></:col>
+        <:col :let={{_id, entry}} label="Action"><%= "Action" %></:col>
+        <:action :let={{_id, entry}}>
+            <.link navigate={~p"/app/content/#{@content_type.key}/#{entry}"}>Edit</.link>
+        </:action>
+        <:action :let={{_id, entry}}>
+            <.link phx-click={JS.push("delete", value: %{id: entry.id})} data-confirm="Are you sure?">
+                Delete
+            </.link>
+        </:action>
+    </.table>
 </div>

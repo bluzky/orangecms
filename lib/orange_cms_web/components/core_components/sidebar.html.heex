@@ -11,7 +11,8 @@
 
       <div class="h-4"></div>
 
-        <ul class="menu">
+      <div class="px-4">
+        <ul class="menu text-sm font-medium">
             <li>
                 <.link :for={item <- @content_types} navigate={~p"/app/content/#{item.key}"} class={"#{if @current_type && item.key==@current_type.key, do: "active" }"}>
                     <Lucideicons.newspaper class="h-5 w-5 opacity-75" stroke="currentColor" />
@@ -100,7 +101,7 @@
                 </details>
             </li>
         </ul>
-
+</div>
 
 <div class="h-4 mt-auto"></div>
         <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
