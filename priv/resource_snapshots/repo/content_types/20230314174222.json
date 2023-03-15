@@ -82,6 +82,30 @@
       "size": null,
       "source": "updated_at",
       "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "content_types_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": "update",
+        "schema": "public",
+        "table": "projects"
+      },
+      "size": null,
+      "source": "project_id",
+      "type": "text"
     }
   ],
   "base_filter": null,
@@ -89,7 +113,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "F1A2A97574CAF3C2F42F269841C1B3AE33BC27B2C13B2FC8D926CD9BC5C33078",
+  "hash": "181D988FC93A71F6CC63736B2CCBE61908DC662B6899EBD6E3783BE0171815FD",
   "identities": [],
   "multitenancy": {
     "attribute": null,

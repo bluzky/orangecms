@@ -1,10 +1,8 @@
 <div class="drawer drawer-mobile">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" checked />
-    <main class="drawer-content p-5">
+    <main class="drawer-content p-6">
         <.flash_group flash={@flash} . />
-
         <%= @inner_content %>
-
     </main>
-    <.sidebar content_types={@content_types} current_type={@content_type} />
+    <.sidebar {assigns} />
 </div>

@@ -12,10 +12,7 @@ defmodule OrangeCmsWeb.MenuAssign do
         params["type"]
       end
 
-    ContentType
-    |> Ash.Query.for_read(:read)
-    |> Content.read()
-    |> case do
+    case ContentType.read_all() do
       {:ok, content_types} ->
         current_type = Enum.find(content_types, &(&1.key == type))
 

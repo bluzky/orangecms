@@ -10,18 +10,22 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
+project = OrangeCms.Projects.Project.create!(%{name: "test project"})
+
 content_types = [
   %{
     name: "Page",
     key: "page",
     image_settings: %{},
     field_defs: [],
-    anchor_field: :title
+    anchor_field: :title,
+    project_id: project.id
   },
   %{
     name: "Post",
     key: "post",
     image_settings: %{},
+    project_id: project.id,
     field_defs: [
       %{
         name: "title",

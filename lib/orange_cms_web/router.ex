@@ -25,19 +25,26 @@ defmodule OrangeCmsWeb.Router do
             interface: :playground
   end
 
-  scope "/", OrangeCmsWeb do
+  scope "/app", OrangeCmsWeb do
     pipe_through [:browser]
 
-    get "/", PageController, :home
+    # get "/", PageController, :home
 
-    scope "/app" do
-      live_session :app, on_mount: [OrangeCmsWeb.MenuAssign] do
+    scope "/p" do
+      live "/", ProjectLive.Index, :index
+      live "/new", ProjectLive.Index, :new
+    end
+
+    scope "/p/:project_id" do
+      live_session :app, on_mount: [OrangeCmsWeb.LoadProject, OrangeCmsWeb.MenuAssign] do
+        live "/", ProjectLive.Show
+
         scope "/content/:type", ContentEntryLive do
           live "/", Index
           live "/:id", Edit
         end
 
-        scope "/settings/content_types" do
+        scope "/content_types" do
           live "/", ContentTypeLive.Index, :index
           live "/new", ContentTypeLive.Index, :new
           live "/:id", ContentTypeLive.Edit

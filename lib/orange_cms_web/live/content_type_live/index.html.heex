@@ -1,7 +1,8 @@
+<div class="p-6 border rounded-xl">
 <.header>
   Listing Content types
   <:actions>
-    <.link patch={~p"/app/settings/content_types/new"}>
+    <.link patch={scoped_path assigns, "/content_types/new"}>
       <.button>New Content type</.button>
     </.link>
   </:actions>
@@ -10,16 +11,16 @@
 <.table
   id="content_types"
   rows={@streams.content_types}
-  row_click={fn {_id, content_type} -> JS.navigate(~p"/content_types/#{content_type}") end}
+  row_click={fn {_id, content_type} -> JS.navigate(scoped_path assigns, "/content_types/#{content_type.id}") end}
 >
   <:col :let={{_id, content_type}} label="Name"><%= content_type.name %></:col>
   <:col :let={{_id, content_type}} label="Key"><%= content_type.key %></:col>
   <:col :let={{_id, content_type}} label="Anchor field"><%= content_type.anchor_field %></:col>
   <:action :let={{_id, content_type}}>
     <div class="sr-only">
-      <.link navigate={~p"/content_types/#{content_type}"}>Show</.link>
+      <.link navigate={scoped_path assigns, "/content_types/#{content_type.id}"}>Show</.link>
     </div>
-    <.link navigate={~p"/app/settings/content_types/#{content_type}"}>Edit</.link>
+    <.link navigate={scoped_path assigns, "/content_types/#{content_type.id}"}>Edit</.link>
   </:action>
   <:action :let={{id, content_type}}>
     <.link
@@ -30,12 +31,13 @@
     </.link>
   </:action>
 </.table>
+</div>
 
 <.modal
   :if={@live_action in [:new]}
   id="content_type-modal"
   show
-  on_cancel={JS.navigate(~p"/app/settings/content_types")}
+  on_cancel={JS.navigate(scoped_path assigns, "/content_types")}
 >
   <.live_component
     module={OrangeCmsWeb.ContentTypeLive.FormComponent}
@@ -43,5 +45,6 @@
     title={@page_title}
     action={@live_action}
     content_type={@content_type}
+    current_project={@current_project}
   />
 </.modal>

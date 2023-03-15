@@ -2,107 +2,23 @@
     <label for="my-drawer" class="drawer-overlay"></label>
     <aside class="w-80 bg-base-200 flex flex-col justify-between">
 
-      <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm"><a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
+        <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm"><a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
                 <div class="font-title text-primary inline-flex text-lg transition-all duration-200 md:text-3xl"><span class="lowercase">daisy</span> <span class="text-base-content uppercase">UI</span></div>
             </a> <a href="/docs/changelog" class="link link-hover font-mono text-xs text-opacity-50">
                 <div data-tip="Changelog" class="tooltip tooltip-bottom">2.51.3</div>
             </a>
         </div>
 
-      <div class="h-4"></div>
-
-        <ul class="menu">
-            <li>
-                <.link :for={item <- @content_types} navigate={~p"/app/content/#{item.key}"} class={"#{if @current_type && item.key==@current_type.key, do: "active" }"}>
-                    <Lucideicons.newspaper class="h-5 w-5 opacity-75" stroke="currentColor" />
-
-                    <span> <%= item.name %> </span>
-                </.link>
-            </li>
-
-            <li>
-                <details class="group [&_summary::-webkit-details-marker]:hidden flex-col">
-                    <summary class="flex cursor-pointer items-center justify-between">
-                        <div class="flex  items-center gap-2 ">
-                            <Lucideicons.users class="h-5 w-5 opacity-75" stroke="currentColor" />
-
-                            <span class=""> Teams </span>
-                        </div>
-
-                        <span class="shrink-0 transition duration-300 group-open:-rotate-180">
-                            <Lucideicons.chevron_down class="h-5 w-5 opacity-75" stroke="currentColor" />
-                        </span>
-                    </summary>
-
-                    <ul class="menu menu-compact">
-                        <li>
-                            <a href="#">
-                                <Lucideicons.slash class="h-5 w-5 opacity-75" stroke="currentColor" />
-                                <span> Banned Users </span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <Lucideicons.calendar class="h-5 w-5 opacity-75" stroke="currentColor" />
-                                <span> Calendar </span>
-                            </a>
-                        </li>
-                    </ul>
-                </details>
-            </li>
-
-            <li>
-                <details class="group [&_summary::-webkit-details-marker]:hidden">
-                    <summary class="flex cursor-pointer items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <Lucideicons.settings class="h-5 w-5 opacity-75" stroke="currentColor" />
-
-                            <span> Settings </span>
-                        </div>
-
-                        <span class="shrink-0 transition duration-300 group-open:-rotate-180">
-                            <Lucideicons.chevron_down class="h-5 w-5 opacity-75" stroke="currentColor" />
-                        </span>
-                    </summary>
-
-                    <ul class="menu menu-compact">
-                        <li>
-                            <a href="#">
-                                <Lucideicons.book class="h-5 w-5 opacity-75" stroke="currentColor" />
-                                <span> Users </span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href={~p"/app/settings/content_types"}>
-                                <Lucideicons.book class="h-5 w-5 opacity-75" stroke="currentColor" />
-                                <span> Content type </span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href={~p"/app/settings/content-types"}>
-                                <Lucideicons.shield_check class="h-5 w-5 opacity-75" stroke="currentColor" />
-
-                                <span> Integrations </span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <Lucideicons.shield_check class="h-5 w-5 opacity-75" stroke="currentColor" />
-
-                                <span> Tokens </span>
-                            </a>
-                        </li>
-                    </ul>
-                </details>
-            </li>
-        </ul>
+        <div class="h-4"></div>
 
 
-<div class="h-4 mt-auto"></div>
+        <%= if not is_nil(assigns[:current_project]) do %>
+        <.project_sidebar {assigns} />
+        <% else %>
+        <.home_sidebar {assigns} />
+        <% end %>
+
+        <div class="h-4 mt-auto"></div>
         <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
             <a href="#" class="flex items-center gap-2 p-4">
                 <img alt="Man" src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" class="h-10 w-10 rounded-full object-cover" />
