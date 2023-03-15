@@ -14,6 +14,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
   import OrangeCmsWeb.Gettext
+  import OrangeCmsWeb.ViewHelper
 
   embed_templates "core_components/*"
 

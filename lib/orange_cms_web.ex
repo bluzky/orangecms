@@ -86,6 +86,7 @@ defmodule OrangeCmsWeb do
       # Core UI components and translation
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext
+      import OrangeCmsWeb.ViewHelper
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

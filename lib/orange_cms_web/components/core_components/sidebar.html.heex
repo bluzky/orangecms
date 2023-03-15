@@ -11,10 +11,14 @@
 
       <div class="h-4"></div>
 
+      <%
+content_types = (assigns[:content_types] || [])
+        current_type = assigns[:current_type]
+        %>
       <div class="px-4">
         <ul class="menu text-sm font-medium">
             <li>
-                <.link :for={item <- @content_types} navigate={~p"/app/content/#{item.key}"} class={"#{if @current_type && item.key==@current_type.key, do: "active" }"}>
+                <.link :for={item <- content_types} navigate={scoped_path(assigns, "/content/#{item.key}")} class={"#{if current_type && item.key == current_type.key, do: "active" }"}>
                     <Lucideicons.newspaper class="h-5 w-5 opacity-75" stroke="currentColor" />
 
                     <span> <%= item.name %> </span>
@@ -76,7 +80,7 @@
                         </li>
 
                         <li>
-                            <a href={~p"/app/settings/content_types"}>
+                            <a href={scoped_path(assigns, "/content_types")}>
                                 <Lucideicons.book class="h-5 w-5 opacity-75" stroke="currentColor" />
                                 <span> Content type </span>
                             </a>

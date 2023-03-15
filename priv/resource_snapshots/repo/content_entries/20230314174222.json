@@ -22,7 +22,7 @@
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "\"\"",
       "generated?": false,
       "primary_key?": false,
       "references": null,
@@ -52,6 +52,26 @@
     },
     {
       "allow_nil?": false,
+      "default": "fragment(\"now()\")",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "created_at",
+      "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"now()\")",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": false,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
@@ -65,14 +85,38 @@
           "strategy": null
         },
         "name": "content_entries_content_type_id_fkey",
-        "on_delete": null,
-        "on_update": null,
+        "on_delete": "delete",
+        "on_update": "update",
         "schema": "public",
         "table": "content_types"
       },
       "size": null,
       "source": "content_type_id",
       "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "content_entries_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": "update",
+        "schema": "public",
+        "table": "projects"
+      },
+      "size": null,
+      "source": "project_id",
+      "type": "text"
     }
   ],
   "base_filter": null,
@@ -80,7 +124,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "1153163E8C7F11D3A405DCE4DA206AF5E1ACE980562882825687C5B18E464AEB",
+  "hash": "ED907FDBE37FADDD1B2AE0F1947F3FE254E093910CF9912E73D40286A9116B8E",
   "identities": [],
   "multitenancy": {
     "attribute": null,

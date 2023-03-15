@@ -31,14 +31,15 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
     |> Ash.Changeset.for_create(:create, %{
       title: "My awesome title",
       raw_body: "",
-      content_type_id: content_type.id
+      content_type_id: content_type.id,
+      project_id: socket.assigns.current_project.id
     })
     |> Content.create()
     |> case do
       {:ok, entry} ->
         {:noreply,
          socket
-         |> push_navigate(to: ~p"/app/content/#{content_type.key}/#{entry.id}")
+         |> push_navigate(to: scoped_path(socket, "/content/#{content_type.key}/#{entry.id}"))
          |> put_flash(:info, "Create entry successfully!")}
 
       {:error, error} ->

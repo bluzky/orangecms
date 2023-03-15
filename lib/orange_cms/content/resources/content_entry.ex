@@ -8,12 +8,25 @@ defmodule OrangeCms.Content.ContentEntry do
   postgres do
     table("content_entries")
     repo(OrangeCms.Repo)
+
+    references do
+      reference(:project,
+        on_delete: :delete,
+        on_update: :update,
+        name: "content_entries_project_id_fkey"
+      )
+
+      reference(:content_type,
+        on_delete: :delete,
+        on_update: :update,
+        name: "content_entries_content_type_id_fkey"
+      )
+    end
   end
 
   code_interface do
     define_for(OrangeCms.Content)
     define(:create, action: :create)
-    define(:read_all, action: :read)
     define(:update, action: :update)
     define(:delete, action: :destroy)
     define(:get, args: [:id], action: :by_id)
@@ -62,12 +75,27 @@ defmodule OrangeCms.Content.ContentEntry do
     update_timestamp(:updated_at)
   end
 
+  multitenancy do
+    strategy(:attribute)
+    attribute(:project_id)
+  end
+
   alias OrangeCms.Content.ContentType
+  alias OrangeCms.Projects.Project
 
   relationships do
     belongs_to :content_type, ContentType do
       allow_nil?(false)
       attribute_writable?(true)
+    end
+  end
+
+  relationships do
+    belongs_to :project, Project do
+      allow_nil?(false)
+      attribute_type(:string)
+      attribute_writable?(true)
+      api(OrangeCms.Projects)
     end
   end
 

@@ -69,7 +69,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Content type created successfully")
-         |> push_navigate(to: ~p"/app/settings/content_types/#{entry.id}")}
+         |> push_navigate(to: scoped_path(socket, "/content_types/#{entry.id}"))}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}
