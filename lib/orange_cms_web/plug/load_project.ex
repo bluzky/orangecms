@@ -7,17 +7,19 @@ defmodule OrangeCmsWeb.LoadProject do
 
   def on_mount(_, params, _session, socket) do
     project_id = params["project_id"]
+    projects = Project.read_all!()
 
-    case Project.get(project_id) do
-      {:ok, project} ->
+    case Enum.find(projects, &(&1.id == project_id)) do
+      %{} = project ->
         Ash.set_tenant(project.id)
 
         {:cont,
          Phoenix.Component.assign(socket,
-           current_project: project
+           current_project: project,
+           projects: projects
          )}
 
-      {:error, _err} ->
+      nil ->
         {:halt,
          socket
          |> put_flash(:error, "No project selected!")
