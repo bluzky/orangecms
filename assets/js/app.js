@@ -35,7 +35,6 @@ const Hooks = {
         element: this.el,
         minHeight: "500px",
         autoDownloadFontAwesome: false,
-        lineNumbers: true,
         status: true,
         toolbar: false,
         spellChecker: false,

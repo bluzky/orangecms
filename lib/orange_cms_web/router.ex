@@ -37,7 +37,9 @@ defmodule OrangeCmsWeb.Router do
 
     scope "/p/:project_id" do
       live_session :app, on_mount: [OrangeCmsWeb.LoadProject, OrangeCmsWeb.MenuAssign] do
-        live "/", ProjectLive.Show
+        live "/", ProjectLive.Show, :show
+        live "/setup_github", ProjectLive.Show, :setup_github
+        live "/fetch_content", ProjectLive.Show, :fetch_content
 
         scope "/content/:type", ContentEntryLive do
           live "/", Index

@@ -260,8 +260,7 @@ defmodule OrangeCmsWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "phx-submit-loading:opacity-75 btn",
         @class
       ]}
       {@rest}
@@ -577,6 +576,48 @@ defmodule OrangeCmsWeb.CoreComponents do
         <Heroicons.arrow_left solid class="w-3 h-3 stroke-current inline" />
         <%= render_slot(@inner_block) %>
       </.link>
+    </div>
+    """
+  end
+
+  @doc """
+  Render alert
+  """
+
+  attr :kind, :any
+  attr :icon, :string
+  slot :inner_block, required: true
+
+  def alert(assigns) do
+    assigns = assign(assigns, kind: to_string(assigns.kind))
+
+    assigns =
+      if is_nil(assigns[:icon]) do
+        icon =
+          case to_string(assigns.kind) do
+            "success" -> :check_circle
+            "warning" -> :alert_triangle
+            "error" -> :x_circle
+            _ -> :info
+          end
+
+        assign(assigns, :icon, icon)
+      else
+        assigns
+      end
+
+    # We have to specify full class name for tailwind to extract class name
+    ~H"""
+    <div class={[
+      "alert shadow-lg",
+      @kind == "success" && "alert-success",
+      @kind == "warning" && "alert-warning",
+      @kind == "error" && "alert-error"
+    ]}>
+      <div>
+        <%= apply(Lucideicons, :"#{@icon}", [%{__changed__: nil, __given__: nil}]) %>
+        <%= render_slot(@inner_block) %>
+      </div>
     </div>
     """
   end

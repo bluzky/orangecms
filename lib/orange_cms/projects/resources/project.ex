@@ -46,6 +46,12 @@ defmodule OrangeCms.Projects.Project do
       default(:headless_cms)
     end
 
+    attribute :github_config, :map do
+      default(%{})
+    end
+
+    attribute(:set_up_completed, :boolean, default: false)
+
     create_timestamp(:created_at)
     update_timestamp(:updated_at)
   end

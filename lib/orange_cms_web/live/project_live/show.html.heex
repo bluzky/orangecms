@@ -1,3 +1,30 @@
 <.header>
     Project <%= @project.name %> dashboard
 </.header>
+
+
+<.modal :if={@live_action in [:setup_github]} id="project-modal" show on_cancel={JS.navigate(~p"/app/p")}>
+    <:title>
+        Configure github repo
+    </:title>
+
+    <:inner_block>
+        <.simple_form :let={f} for={@form} id="setup_github" phx-change="form_changed" phx-submit="import_content">
+            <.input type="text" field={f[:token]} label="Paste your personal github token here" />
+            <%= if @repositories do %>
+            <.input type="select" field={f[:repository]} label="Specify your github repo" options={@repositories |> Enum.filter(& &1["permissions"]["push"]) |> Enum.map(& &1["full_name"])} />
+                <.input type="text" field={f[:content_dir]} label="Specify path to your content directory" phx-debounce="blur" />
+                <% end %>
+                
+                <%= if @message do %>
+                <% {kind, content} = @message %>
+                <.alert kind={kind}>
+                    <%= content %>
+                </.alert>
+                <% end %>
+                <div class="text-center">
+                <.button {%{disabled: (not @ready_next)}}>Import content</.button>
+                </div>
+        </.simple_form>
+    </:inner_block>
+</.modal>

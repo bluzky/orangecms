@@ -58,7 +58,9 @@ defmodule OrangeCms.MixProject do
       {:absinthe_plug, "~> 1.5"},
       # {:eva_icons, github: "bluzky/eva_icons", branch: "main"}
       {:lucide_icons, "~> 1.0.0"},
-      {:nanoid, "~> 2.0"}
+      {:nanoid, "~> 2.0"},
+      {:tentacat, "~> 2.2"},
+      {:yaml_elixir, "~> 2.9"}
     ]
   end
 
