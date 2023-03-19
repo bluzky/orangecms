@@ -13,11 +13,25 @@ defmodule OrangeCmsWeb.LoadProject do
       %{} = project ->
         Ash.set_tenant(project.id)
 
-        {:cont,
-         Phoenix.Component.assign(socket,
-           current_project: project,
-           projects: projects
-         )}
+        socket =
+          Phoenix.Component.assign(socket,
+            current_project: project,
+            projects: projects
+          )
+
+        cond do
+          !project.set_up_completed and
+              not (socket.view == OrangeCmsWeb.ProjectLive.Show and
+                       socket.assigns.live_action in [:setup_github, :fetch_content]) ->
+            {:halt, push_navigate(socket, to: ~p"/app/p/#{project.id}/setup_github")}
+
+          project.set_up_completed and socket.view == OrangeCmsWeb.ProjectLive.Show and
+              socket.assigns.live_action in [:setup_github, :fetch_content] ->
+            {:halt, push_navigate(socket, to: ~p"/app/p/#{project.id}")}
+
+          true ->
+            {:cont, socket}
+        end
 
       nil ->
         {:halt,

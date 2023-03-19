@@ -10,12 +10,6 @@ defmodule OrangeCms.Content.ContentEntry do
     repo(OrangeCms.Repo)
 
     references do
-      reference(:project,
-        on_delete: :delete,
-        on_update: :update,
-        name: "content_entries_project_id_fkey"
-      )
-
       reference(:content_type,
         on_delete: :delete,
         on_update: :update,

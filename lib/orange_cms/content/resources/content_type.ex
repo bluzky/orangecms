@@ -2,12 +2,13 @@ defmodule OrangeCms.Content.ContentType do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer
 
-  # The Postgres keyword is specific to the AshPostgres module.
   postgres do
-    # Tells Postgres what to call the table
     table("content_types")
-    # Tells Ash how to interface with the Postgres table
     repo(OrangeCms.Repo)
+
+    custom_indexes do
+      index(["id", "project_id"], unique: true)
+    end
 
     references do
       reference(:project,
@@ -18,8 +19,6 @@ defmodule OrangeCms.Content.ContentType do
     end
   end
 
-  # Defines convenience methods for
-  # interacting with the resource programmatically.
   code_interface do
     define_for(OrangeCms.Content)
     define(:create, action: :create)
@@ -65,6 +64,10 @@ defmodule OrangeCms.Content.ContentType do
 
     attribute :image_settings, :map do
       allow_nil?(true)
+    end
+
+    attribute :github_config, :map do
+      default(%{})
     end
 
     attribute :field_defs, {:array, FieldDef} do

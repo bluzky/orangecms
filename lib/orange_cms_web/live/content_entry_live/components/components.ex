@@ -153,7 +153,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
 
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
-      <div class="flex gap-4">
+      <div class="flex flex-wrap gap-4">
         <label
           :for={item <- OrangeCms.Content.load!(@field_def, :options) |> Map.get(:options)}
           {[for: item]}
