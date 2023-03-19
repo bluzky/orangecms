@@ -66,6 +66,10 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
 
     case AshPhoenix.Form.submit(form) do
       {:ok, entry} ->
+        # publish to github
+
+        OrangeCms.Shared.Github.publish(entry, socket.assigns.current_project)
+
         {:noreply,
          socket
          |> assign(form: AshPhoenix.Form.for_update(entry, :update, api: Content))
