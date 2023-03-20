@@ -65,6 +65,8 @@ defmodule OrangeCms.Content.ContentEntry do
       default(%{})
     end
 
+    attribute(:integration_info, OrangeCms.Content.ContentGithubInfo, default: %{})
+
     create_timestamp(:created_at)
     update_timestamp(:updated_at)
   end
