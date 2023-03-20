@@ -33,16 +33,14 @@ defmodule OrangeCms.Shared.Yaml do
 
   def document!({lines, data}) when is_list(lines) do
     comments = Enum.map_join(lines, "", &"# #{&1}\n")
-    "---\n" <> comments <> Encoder.to_s!(data) <> "\n"
+    comments <> Encoder.to_s!(data)
   end
 
   def document!({comment, data}), do: document!({[comment], data})
 
   #  Encode keyword list that keep the order of the key
   def document!([{_key, _value} | _] = document) when is_list(document) do
-    "---\n" <>
-      Enum.map_join(document, "\n", fn {k, v} -> document!(%{"#{k}" => v}) end) <>
-      "\n"
+    Enum.map_join(document, "\n", fn {k, v} -> document!(%{"#{k}" => v}) end)
   end
 
   def document!(data) do

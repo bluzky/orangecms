@@ -68,12 +68,19 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
       {:ok, entry} ->
         # publish to github
 
-        OrangeCms.Shared.Github.publish(entry, socket.assigns.current_project)
+        case OrangeCms.Shared.Github.publish(entry, socket.assigns.current_project) do
+          {:ok, new_entry} ->
+            {:noreply,
+             socket
+             |> assign(form: AshPhoenix.Form.for_update(new_entry, :update, api: Content))
+             |> put_flash(:info, "Published entry successfully!")}
 
-        {:noreply,
-         socket
-         |> assign(form: AshPhoenix.Form.for_update(entry, :update, api: Content))
-         |> put_flash(:info, "Save entry successfully!")}
+          {:error, _error} ->
+            {:noreply,
+             socket
+             |> assign(form: AshPhoenix.Form.for_update(entry, :update, api: Content))
+             |> put_flash(:error, "Failed to publish to github!")}
+        end
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}
