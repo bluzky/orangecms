@@ -72,6 +72,7 @@ defmodule OrangeCms.Content.ContentType do
 
     attribute :field_defs, {:array, FieldDef} do
       default([])
+      constraints(load: [:options])
     end
 
     attribute :anchor_field, :string do
