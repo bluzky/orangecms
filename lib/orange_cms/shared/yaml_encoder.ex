@@ -96,6 +96,10 @@ defmodule OrangeCms.Shared.YamlEncoder do
     data |> DateTime.shift_zone!("Etc/UTC") |> DateTime.to_iso8601()
   end
 
+  defp encode_as_io_list(%NaiveDateTime{} = data, _) do
+    NaiveDateTime.to_iso8601(data)
+  end
+
   defp encode_as_io_list(data, level) when is_map(data) do
     indentation = indent(level)
 

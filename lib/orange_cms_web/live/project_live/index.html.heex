@@ -26,6 +26,6 @@
     </div>
 </div>
 
-<.modal :if={@live_action in [:new, :edit]} id="project-modal" show on_cancel={JS.navigate(~p"/app/p")}>
-    <.live_component module={OrangeCmsWeb.ProjectLive.FormComponent} id={@project.id || :new} title={@page_title} action={@live_action} project={@project} patch={~p"/app/p"} />
+<.modal :if={@live_action in [:new, :edit]} id="project-modal" show on_cancel={JS.navigate(~p"/app")}>
+    <.live_component module={OrangeCmsWeb.ProjectLive.FormComponent} id={@project.id || :new} title={@page_title} action={@live_action} project={@project} patch={~p"/app"} />
 </.modal>

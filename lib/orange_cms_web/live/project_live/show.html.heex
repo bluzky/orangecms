@@ -3,7 +3,7 @@
 </.header>
 
 
-<.modal :if={@live_action in [:setup_github]} id="project-modal" show on_cancel={JS.navigate(~p"/app/p")}>
+<.modal :if={@live_action in [:setup_github]} id="project-modal" show on_cancel={JS.navigate(~p"/app")}>
     <:title>
         Configure github repo
     </:title>
@@ -15,7 +15,6 @@
             <.input type="select" field={f[:repository]} label="Specify your github repo" options={@repositories |> Enum.filter(& &1["permissions"]["push"]) |> Enum.map(& &1["full_name"])} />
                 <.input type="text" field={f[:content_dir]} label="Specify path to your content directory" phx-debounce="blur" />
                 <% end %>
-                
                 <%= if @message do %>
                 <% {kind, content} = @message %>
                 <.alert kind={kind}>
