@@ -194,6 +194,7 @@ defmodule OrangeCms.Shared.Github do
         integration_info =
           Map.merge(content_entry.integration_info, %{
             full_path: get_in(file, ["content", "path"]),
+            name: get_in(file, ["content", "name"]),
             sha: get_in(file, ["content", "sha"])
           })
 
@@ -208,24 +209,31 @@ defmodule OrangeCms.Shared.Github do
   def create_file(content_entry, project) do
     [owner, repo] = String.split(project.github_config["repo_name"], "/")
 
+    file_name =
+      Calendar.strftime(DateTime.utc_now(), "%Y-%m-%d-") <>
+        (Slugger.slugify_downcase(content_entry.title) |> String.slice(0, 50)) <> ".md"
+
     path =
       Path.join(
         content_entry.content_type.github_config["content_dir"],
-        content_entry.integration_info["relative_path"]
+        file_name
+        # content_entry.integration_info["relative_path"]
       )
 
+    frontmatter = build_frontmatter_yaml(content_entry.content_type, content_entry)
+
     content =
-      build_frontmatter_yaml(content_entry.content_type, content_entry) <>
-        "---\n" <> content_entry.raw_body
+      "---\n" <>
+        frontmatter <>
+        "\n---\n" <> content_entry.raw_body
 
     body = %{
-      "message" => "Create file #{content_entry.integration_info["relative_path"]}",
+      "message" => "Create #{content_entry.integration_info.file_name}",
       "committer" => %{
         "name" => "Orange Cms Admin",
         "email" => "sys@orangecms.io"
       },
-      "content" => "",
-      "sha" => "329688480d39049927147c162b9d2deaf885005f"
+      "content" => Base.encode64(content)
     }
 
     client(project.github_config["access_token"])
@@ -246,7 +254,7 @@ defmodule OrangeCms.Shared.Github do
         "\n---\n" <> content_entry.raw_body
 
     body = %{
-      "message" => "Update #{content_entry.integration_info.relative_path}",
+      "message" => "Update #{content_entry.integration_info.name}",
       "committer" => %{
         "name" => "Orange Cms Admin",
         "email" => "sys@orangecms.io"

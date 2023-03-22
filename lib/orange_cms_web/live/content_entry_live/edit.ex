@@ -64,8 +64,6 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
         })
       )
 
-    IO.inspect("submit")
-
     case AshPhoenix.Form.submit(form) do
       {:ok, entry} ->
         # publish to github

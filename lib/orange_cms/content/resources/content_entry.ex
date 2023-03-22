@@ -51,6 +51,8 @@ defmodule OrangeCms.Content.ContentEntry do
       allow_nil?(false)
     end
 
+    attribute(:slug, :string)
+
     attribute :raw_body, :string do
       allow_nil?(false)
       constraints(allow_empty?: true, trim?: false)
@@ -72,7 +74,8 @@ defmodule OrangeCms.Content.ContentEntry do
   end
 
   changes do
-    change({OrangeCms.Content.CastFrontmatter, []})
+    change({OrangeCms.Content.CastFrontmatter, []}, on: [:update])
+    change({OrangeCms.Content.CopyLinkedField, [fields: [:title, :slug]]})
   end
 
   multitenancy do

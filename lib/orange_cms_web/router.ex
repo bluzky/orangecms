@@ -30,9 +30,9 @@ defmodule OrangeCmsWeb.Router do
 
     # get "/", PageController, :home
 
-    scope "/p" do
+    scope "/" do
       live "/", ProjectLive.Index, :index
-      live "/new", ProjectLive.Index, :new
+      live "/p/new", ProjectLive.Index, :new
     end
 
     scope "/p/:project_id" do

@@ -8,6 +8,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     "number" => &__MODULE__.number_input/1,
     "boolean" => &__MODULE__.boolean_input/1,
     "datetime" => &__MODULE__.datetime_input/1,
+    "date" => &__MODULE__.date_input/1,
     "select" => &__MODULE__.select/1,
     "checkbox" => &__MODULE__.checkbox/1
   }
@@ -79,10 +80,13 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     ~H"""
     <.input_wrapper {[field_def: @field_def]}>
       <label {[for: @field_def.key]} class="relative h-8 w-14 cursor-pointer block">
+        <input type="hidden" name={field_name(@field_def, @options)} value="0" />
+
         <input
           type="checkbox"
           class="peer sr-only"
-          {[id: @field_def.key, name: field_name(@field_def, @options),checked: @value, value: "true"]}
+          onclick="this.previousSibling.value=1-this.previousSibling.value"
+          {[id: @field_def.key, name: field_name(@field_def, @options),checked: @value, value: "1"]}
         />
 
         <span class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500">
@@ -100,6 +104,18 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     <.input_wrapper {[field_def: @field_def]}>
       <input
         type="datetime-local"
+        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}
+        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+      />
+    </.input_wrapper>
+    """
+  end
+
+  def date_input(assigns) do
+    ~H"""
+    <.input_wrapper {[field_def: @field_def]}>
+      <input
+        type="date"
         {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}
         class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
       />

@@ -37,7 +37,7 @@ defmodule OrangeCmsWeb.LoadProject do
         {:halt,
          socket
          |> put_flash(:error, "No project selected!")
-         |> push_navigate(to: ~p"/app/projects")}
+         |> push_navigate(to: ~p"/app")}
     end
   end
 end

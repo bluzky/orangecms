@@ -60,7 +60,8 @@ defmodule OrangeCms.MixProject do
       {:lucide_icons, "~> 1.0.0"},
       {:nanoid, "~> 2.0"},
       {:tentacat, "~> 2.2"},
-      {:yaml_elixir, "~> 2.9"}
+      {:yaml_elixir, "~> 2.9"},
+      {:slugger, "~> 0.3.0"}
     ]
   end
 

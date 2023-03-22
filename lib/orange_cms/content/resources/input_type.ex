@@ -1,6 +1,17 @@
 defmodule OrangeCms.Content.InputType do
   use Ash.Type.Enum,
-    values: [:string, :text, :number, :boolean, :datetime, :select, :array, :checkbox, :upload]
+    values: [
+      :string,
+      :text,
+      :number,
+      :boolean,
+      :datetime,
+      :date,
+      :select,
+      :array,
+      :checkbox,
+      :upload
+    ]
 
   @default_stored_type :string
   @stored_type_map [
@@ -8,7 +19,8 @@ defmodule OrangeCms.Content.InputType do
     text: :string,
     number: :integer,
     boolean: :boolean,
-    datetime: :datetime,
+    datetime: :naive_datetime,
+    date: :date,
     select: :string,
     array: {:array, :string},
     checkbox: {:array, :string},
