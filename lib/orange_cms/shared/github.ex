@@ -238,13 +238,15 @@ defmodule OrangeCms.Shared.Github do
 
     path = content_entry.integration_info.full_path
 
+    frontmatter = build_frontmatter_yaml(content_entry.content_type, content_entry)
+
     content =
       "---\n" <>
-        build_frontmatter_yaml(content_entry.content_type, content_entry) <>
+        frontmatter <>
         "\n---\n" <> content_entry.raw_body
 
     body = %{
-      "message" => "Update file #{content_entry.integration_info.relative_path}",
+      "message" => "Update #{content_entry.integration_info.relative_path}",
       "committer" => %{
         "name" => "Orange Cms Admin",
         "email" => "sys@orangecms.io"
