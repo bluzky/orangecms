@@ -9,7 +9,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket, %{
-       form: AshPhoenix.Form.for_create(ContentEntry, :create, api: Content)
+       form: nil
      })}
   end
 
@@ -63,6 +63,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
           content_type_id: socket.assigns.content_type.id
         })
       )
+
+    IO.inspect("submit")
 
     case AshPhoenix.Form.submit(form) do
       {:ok, entry} ->

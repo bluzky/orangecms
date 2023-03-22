@@ -12,6 +12,8 @@
 
 project = OrangeCms.Projects.Project.create!(%{name: "test project"})
 
+Ash.set_tenant(project.id)
+
 content_types = [
   %{
     name: "Page",

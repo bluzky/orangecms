@@ -71,6 +71,10 @@ defmodule OrangeCms.Content.ContentEntry do
     update_timestamp(:updated_at)
   end
 
+  changes do
+    change({OrangeCms.Content.CastFrontmatter, []})
+  end
+
   multitenancy do
     strategy(:attribute)
     attribute(:project_id)

@@ -10,7 +10,7 @@ defmodule OrangeCms.Content.FieldDef do
     end
 
     attribute :type, :atom do
-      constraints(one_of: OrangeCms.Content.FieldType.values())
+      constraints(one_of: OrangeCms.Content.InputType.values())
       default(:string)
     end
 
@@ -30,10 +30,14 @@ defmodule OrangeCms.Content.FieldDef do
   calculations do
     calculate(:options, {:array, :string}, OrangeCms.Content.FieldDef.SplitOption)
   end
+
+  def cast_field(field, value) do
+    Ash.Type.cast_input(OrangeCms.Content.InputType.stored_type(field.type), value)
+  end
 end
 
 defmodule OrangeCms.Content.FieldDef.SplitOption do
-  use Ash.Resource.Change
+  use Ash.Calculation
 
   @impl true
   def select(_query, _opts, _context) do
