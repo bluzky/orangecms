@@ -10,7 +10,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     "datetime" => &__MODULE__.datetime_input/1,
     "date" => &__MODULE__.date_input/1,
     "select" => &__MODULE__.select/1,
-    "checkbox" => &__MODULE__.checkbox/1
+    "checkbox" => &__MODULE__.checkbox/1,
+    "upload" => &__MODULE__.upload/1
   }
 
   def render_input(field_def, value, assigns \\ %{}) do
@@ -190,18 +191,41 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     """
   end
 
-  def upload_input(assigns) do
+  def upload(assigns) do
     ~H"""
     <div>
-      <label {[for: @field_def.key]} class="block text-xs font-medium text-gray-700">
+      <label class="block text-xs font-medium text-gray-700">
         <%= @field_def.name %>
       </label>
-
-      <input
-        {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
-        type="text"
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      />
+      <div class="form-control">
+        <div
+          class="input-group input-group-sm"
+          phx-update="ignore"
+          {[id: "upload-wrapper-" <> @field_def.key ]}
+        >
+          <input
+            type="text"
+            {[for: @field_def.key]}
+            {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
+            placeholder="paste image link or select image to upload"
+            class="input input-sm flex-1"
+          />
+          <input
+            type="file"
+            class="hidden"
+            accept="image/*"
+            {[id: @field_def.key <> "upload"]}
+            phx-hook="FileUpload"
+            {["data-target": @field_def.key, "data-upload-path": "/app/api/upload_image/#{@project.id}", "data-error-display": @field_def.key <> "-error"]}
+          />
+          <label class="btn btn-sm btn-square" {[for: @field_def.key <> "upload"]}>
+            <Lucideicons.upload_cloud />
+          </label>
+        </div>
+        <label class="label">
+          <span class="label-text-alt text-red-500" {[id: @field_def.key <> "-error"]}></span>
+        </label>
+      </div>
     </div>
     """
   end

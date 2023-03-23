@@ -22,6 +22,7 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import EasyMDE from "easymde";
+import { FileUpload } from "./fileUpload";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -48,6 +49,11 @@ const Hooks = {
       this.el.form.addEventListener("submit", (_event) => {
         console.log(easyMDE.value());
       });
+    },
+  },
+  FileUpload: {
+    mounted() {
+      new FileUpload(this.el, { csrf_token: csrfToken });
     },
   },
 };

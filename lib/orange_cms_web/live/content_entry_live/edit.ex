@@ -7,8 +7,21 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
   alias OrangeCms.Content.ContentEntry
 
   def mount(_params, _session, socket) do
+    current_type = socket.assigns.current_type
+
+    socket =
+      Enum.reduce(current_type.field_defs, socket, fn field, socket ->
+        if field.type == :upload do
+          allow_upload(socket, field.key, accept: ~w(.png .jpg .jpeg), max_entries: 1)
+        else
+          socket
+        end
+      end)
+
     {:ok,
-     assign(socket, %{
+     socket
+     # |> allow_upload(:avatar, accept: ~w(.png .jpg .jpeg), max_entries: 1)
+     |> assign(%{
        form: nil
      })}
   end

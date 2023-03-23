@@ -2,7 +2,7 @@ defmodule OrangeCmsWeb.Router do
   use OrangeCmsWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "json"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {OrangeCmsWeb.Layouts, :root}
@@ -29,6 +29,9 @@ defmodule OrangeCmsWeb.Router do
     pipe_through [:browser]
 
     # get "/", PageController, :home
+    scope "/api" do
+      post "/upload_image/:project_id", UploadController, :upload_image
+    end
 
     scope "/" do
       live "/", ProjectLive.Index, :index

@@ -17,7 +17,7 @@
                     <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
                     <div>
                         <div :for={field_def <- @content_type.field_defs} class="mb-4">
-                            <%= render_input field_def, frontmatter[field_def.key], %{options: [prefix: "frontmatter"]} %>
+                            <%= render_input field_def, frontmatter[field_def.key], %{options: [prefix: "frontmatter"], project: @current_project} %>
                         </div>
                     </div>
                 </div>
