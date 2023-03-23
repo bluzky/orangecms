@@ -17,7 +17,7 @@
                     <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
                     <div>
                         <div :for={field_def <- @content_type.field_defs} class="mb-4">
-                            <%= render_input field_def, frontmatter[field_def.key], %{options: [prefix: "frontmatter"]} %>
+                            <%= render_input field_def, frontmatter[field_def.key], %{options: [prefix: "frontmatter"], project: @current_project} %>
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                     <div id="md-editor-container" phx-update="ignore" class="mt-4">
                         <label class="sr-only" for="message">Message</label>
 
-                        <.input type="textarea" field={f[:raw_body]} class="w-full rounded-lg border-gray-200 p-3 text-sm" rows="30" id="md-editor" phx-hook="MdEditor" />
+                        <.input type="textarea" field={f[:raw_body]} class="w-full rounded-lg border-gray-200 p-3 text-sm" rows="30" id="md-editor" phx-hook="MdEditor" data-upload-path= {~p"/app/api/upload_image/#{@current_project.id}"} />
                     </div>
 
                     <div class="mt-4">
