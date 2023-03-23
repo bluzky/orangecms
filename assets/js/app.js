@@ -22,7 +22,7 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import EasyMDE from "easymde";
-import { FileUpload } from "./fileUpload";
+import { FileUpload, uploadFile } from "./fileUpload";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -39,6 +39,23 @@ const Hooks = {
         status: true,
         toolbar: false,
         spellChecker: false,
+        uploadImage: true,
+
+        imagePathAbsolute: true,
+        imageUploadFunction: (file, onSuccess, onError) => {
+          const endpoint = this.el.getAttribute("data-upload-path");
+          uploadFile(
+            endpoint,
+            file,
+            { csrf_token: csrfToken },
+            (result) => {
+              onSuccess(result.data.url);
+            },
+            (error) => {
+              onError(error.message || "Cannot upload image");
+            }
+          );
+        },
       });
 
       easyMDE.codemirror.on("blur", () => {
