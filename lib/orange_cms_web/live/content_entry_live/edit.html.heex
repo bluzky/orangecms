@@ -13,7 +13,20 @@
         <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
 
             <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-4 p-4">
+                <div class="col-span-4 edit-sidebar hidden">
+                </div>
+                <div class="col-span-8 edit-content col-start-3">
+                    <div class="px-4 pt-8">
+                        <h2 class="text-3xl font-medium"><%= f[:title].value %></h2>
+                        <div class="mt-2"><span  class="p-1 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
+phx-click={toggle_class("hidden", to: ".edit-sidebar") |> toggle_class("col-start-3", to: ".edit-content")}
+                                                >
+  <Lucideicons.component class="h-4 w-4" />
+  Edit frontmatter
+</span></div>
+                    </div>
+                </div>
+                <div class="col-span-4 p-4 edit-sidebar hidden">
                     <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
                     <div>
                         <div :for={field_def <- @content_type.field_defs} class="mb-4">
@@ -22,18 +35,11 @@
                     </div>
                 </div>
 
-                <div class="col-span-8 p-4">
-                    <div>
-                        <label for="name">Title</label>
-                        <.input type="text" field={f[:title]} class="w-full rounded-lg border-gray-200 p-3 text-sm" placeholder="Name" />
-                    </div>
-
-
-
-                    <div id="md-editor-container" phx-update="ignore" class="mt-4">
+                <div class="col-span-8 px-4 edit-content col-start-3">
+                    <div id="md-editor-container" phx-update="ignore">
                         <label class="sr-only" for="message">Message</label>
 
-                        <.input type="textarea" field={f[:raw_body]} class="w-full rounded-lg border-gray-200 p-3 text-sm" rows="30" id="md-editor" phx-hook="MdEditor" data-upload-path= {~p"/app/api/upload_image/#{@current_project.id}"} />
+                        <.input type="textarea" field={f[:raw_body]} class="w-full rounded-lg border-gray-200 p-3 text-sm" rows="30" id="md-editor" phx-hook="MdEditor" data-upload-path={~p"/app/api/upload_image/#{@current_project.id}"} />
                     </div>
 
                     <div class="mt-4">

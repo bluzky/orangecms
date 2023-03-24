@@ -4,3 +4,10 @@
 
 /* This file is for your main application CSS */
 @import "easymde/dist/easymde.min.css";
+
+/* remove border for code mirror */
+
+.EasyMDEContainer .CodeMirror{
+    border: transparent;
+    padding: 0;
+}
