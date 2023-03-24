@@ -13,6 +13,15 @@ defmodule OrangeCms.Content.CastFrontmatter do
 
     field_map = Enum.into(content_type.field_defs, %{}, &{&1.key, &1})
 
+    # get default values
+    frontmatter_default =
+      content_type.field_defs
+      |> Enum.map(fn field ->
+        {field.key, OrangeCms.Content.FieldDef.default_value(field)}
+      end)
+      |> Enum.into(%{})
+
+    # cast value from params
     frontmatter_params =
       Enum.map(frontmatter_params, fn {k, v} ->
         case field_map[k] do
@@ -31,6 +40,12 @@ defmodule OrangeCms.Content.CastFrontmatter do
       |> Enum.reject(fn {_, v} -> is_nil(v) end)
       |> Enum.into(%{})
 
-    Changeset.change_attribute(changeset, :frontmatter, frontmatter_params)
+    # merge default values with values from params
+    # this will override default values
+    Changeset.change_attribute(
+      changeset,
+      :frontmatter,
+      Map.merge(frontmatter_default, frontmatter_params)
+    )
   end
 end

@@ -34,6 +34,33 @@ defmodule OrangeCms.Content.FieldDef do
   def cast_field(field, value) do
     Ash.Type.cast_input(OrangeCms.Content.InputType.stored_type(field.type), value)
   end
+
+  def default_value(field) do
+    case field do
+      %{default_value: nil} ->
+        nil
+
+      %{type: :string} ->
+        ## render template string with datetime 
+        Calendar.strftime(DateTime.utc_now(), field.default_value)
+
+      %{type: :date, default_value: "today()"} ->
+        Date.utc_today()
+
+      %{type: :datetime, default_value: "now()"} ->
+        NaiveDateTime.utc_now()
+
+      _ ->
+        case cast_field(field, field.default_value) do
+          {:ok, value} ->
+            value
+
+          _error ->
+            IO.inspect(field)
+            nil
+        end
+    end
+  end
 end
 
 defmodule OrangeCms.Content.FieldDef.SplitOption do

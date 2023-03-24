@@ -54,16 +54,17 @@
 <div id="frontmatter" class="hidden">
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-6">
-            <.form :let={f} for={@form} phx-submit="save" phx-change="validate" class="space-y-4">
+            <.form :let={f} for={@form} phx-submit="save" phx-change="validate" class="space-y-4" phx-hook="InitSorting" id="schema-form">
                 <.inputs_for :let={field} field={f[:field_defs]}>
-                    <details open={field.source.added? or field.source.changed?}>
-                        <summary><%= field[:name].value || field[:key].value %></summary>
+                    <details open={field.source.added? or field.source.changed?} id={"wrap-#{field[:key].value}"}>
+                      
+                        <summary class="relative font-bold"><span><%= field[:name].value || field[:key].value %></span> <span class="btn btn-ghost btn-sm absolute right-3 top-0"><Lucideicons.menu /></span></summary>
 
 
                         <div class="border rounded bg-gray-50 p-2 mt-2">
                             <div class="grid grid-cols-12 gap-4">
                                 <div class="col-span-6">
-                                    <.input type="text" label="Key" field={field[:key]} />
+                                    <.input type="text" label="Key" {[disabled: not field.source.added?]} field={field[:key]} />
                                 </div>
 
                                 <div class="col-span-6">
@@ -72,7 +73,7 @@
                                 </div>
 
                                 <div class="col-span-12">
-                                  <%= if field[:type].value  in [:checkbox, :select] do %>
+                                  <%= if field[:type].value  in [:checkbox, :select, :array] do %>
                                     <.input type="text" label="Options" field={field[:options_str]} placeholder="Separated by commas" />
                                   <% else%>
                                     <.input type="text" label="Default" field={field[:default_value]} />
