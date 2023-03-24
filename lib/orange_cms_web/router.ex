@@ -1,6 +1,8 @@
 defmodule OrangeCmsWeb.Router do
   use OrangeCmsWeb, :router
 
+  import Plug.BasicAuth
+
   pipeline :browser do
     plug :accepts, ["html", "json"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule OrangeCmsWeb.Router do
     plug :put_root_layout, {OrangeCmsWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :basic_auth, Application.get_env(:orange_cms, :basic_auth)
   end
 
   pipeline :api do
