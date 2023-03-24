@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "daisyui": "^2.51.3",
-    "easymde": "^2.18.0"
+    "easymde": "^2.18.0",
+    "sortablejs": "^1.15.0"
   }
 }

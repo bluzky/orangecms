@@ -21,6 +21,7 @@ import "phoenix_html";
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
+import Sortable from "sortablejs";
 import EasyMDE from "easymde";
 import { FileUpload, uploadFile } from "./fileUpload";
 
@@ -71,6 +72,21 @@ const Hooks = {
   FileUpload: {
     mounted() {
       new FileUpload(this.el, { csrf_token: csrfToken });
+    },
+  },
+  InitSorting: {
+    mounted() {
+      new Sortable(this.el, {
+        animation: 150,
+        ghostClass: "bg-yellow-100",
+        dragClass: "shadow-2xl",
+        // onEnd: (evt) => {
+        //   // const el = this.el.querySelector("input,select");
+        //   // if (el) {
+        //   //   el.form.submit();
+        //   // }
+        // },
+      });
     },
   },
 };
