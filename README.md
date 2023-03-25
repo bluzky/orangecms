@@ -1,18 +1,37 @@
-# OrangeCms
+# OrangeCMS - CMS admin for your static site 
 
-To start your Phoenix server:
+# ⚠️ Warning: This project is under heavy construction and refactoring
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+> **OrangeCMS is a admin app for static site on github. Instead of creating/editing file on your local and push to git repo. You are now can manage your content with Web UI and your editors don't have to know anything about git**
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## DEMO
+- [Admin page]()
+- [Content page]()
+- [Github repo]()
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
-## Learn more
+## Start dev server
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+- Requirement: elixir, nodejs installed on your machine
+
+- Install dependencies
+`mix deps.get`
+
+- Install node packages
+`cd assets && npm install`
+
+- Run migration
+`mix ash_postgres.migrate`
+
+- Start project
+`mix phx.server`
+
+
+## This project is impossible without these excellenct works:
+
+- [Phoenix framework](https://phoenixframework.org/)
+- [Ash framework](https://ash-hq.org/)
+- [Tailwind css](https://tailwindcss.com/)
+- [Daisy UI](https://daisyui.com/)
+- [Lucide icons](https://lucide.dev/)
+- And lots of other libraries
