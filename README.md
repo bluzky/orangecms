@@ -5,9 +5,9 @@
 > **OrangeCMS is a admin app for static site on github. Instead of creating/editing file on your local and push to git repo. You are now can manage your content with Web UI and your editors don't have to know anything about git**
 
 ## DEMO
-- [Admin page]()
-- [Content page]()
-- [Github repo]()
+- [Admin page](http://demo-orangecms.pawtools.org/app) username: demo, password: 123123
+- [Content page](http://orange-demo-site.pawtools.org/)
+- [Github repo](https://github.com/bluzky/orange-demo-site)
 
 
 ## Start dev server
