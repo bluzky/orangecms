@@ -11,3 +11,34 @@
     border: transparent;
     padding: 0;
 }
+
+ul.menu li{
+    @apply py-0.5;
+}
+ul.menu li > :where(:not(ul)){
+    @apply rounded-xl;
+}
+
+.btn{
+    @apply normal-case;
+}
+
+.btn-md{
+    @apply h-10 min-h-min
+}
+
+.form-control{
+    @apply mt-2.5;
+}
+
+.form-control .input, .form-control .select{
+    @apply h-10 min-h-min text-sm;
+}
+
+.tabs>.tab.tab-active{
+    @apply font-bold border-b-2;
+}
+
+.tab-content{
+    @apply p-4;
+}

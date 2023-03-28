@@ -219,7 +219,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
             {["data-target": @field_def.key, "data-upload-path": "/app/api/upload_image/#{@project.id}", "data-error-display": @field_def.key <> "-error"]}
           />
           <label class="btn btn-sm btn-square" {[for: @field_def.key <> "upload"]}>
-            <Lucideicons.upload_cloud />
+            <Heroicons.arrow_up_tray class="w-4 h-4" />
           </label>
         </div>
         <label class="label">
