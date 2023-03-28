@@ -58,7 +58,7 @@
                 <.inputs_for :let={field} field={f[:field_defs]}>
                     <details open={field.source.added? or field.source.changed?} id={"wrap-#{field[:key].value}"}>
                       
-                        <summary class="relative font-bold"><span><%= field[:name].value || field[:key].value %></span> <span class="btn btn-ghost btn-sm absolute right-3 top-0"><Lucideicons.menu /></span></summary>
+                        <summary class="relative font-bold"><span><%= field[:name].value || field[:key].value %></span> <span class="btn btn-ghost btn-sm absolute right-3 top-0"><Heroicons.bars_3 /></span></summary>
 
 
                         <div class="border rounded bg-gray-50 p-2 mt-2">

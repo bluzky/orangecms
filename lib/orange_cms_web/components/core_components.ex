@@ -154,18 +154,26 @@ defmodule OrangeCmsWeb.CoreComponents do
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
       class={[
-        "fixed hidden top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 shadow-md shadow-zinc-900/5 ring-1",
-        @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
-        @kind == :error && "bg-rose-50 p-3 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
+        "fixed hidden top-2 right-2 w-80 sm:w-96 z-50 alert shadow-lg",
+        @kind == :info && "alert-info",
+        @kind == :success && "alert-success",
+        @kind == :error && "alert-error"
       ]}
       {@rest}
     >
-      <p :if={@title} class="flex items-center gap-1.5 text-[0.8125rem] font-semibold leading-6">
-        <Heroicons.information_circle :if={@kind == :info} mini class="h-4 w-4" />
-        <Heroicons.exclamation_circle :if={@kind == :error} mini class="h-4 w-4" />
-        <%= @title %>
-      </p>
-      <p class="mt-2 text-[0.8125rem] leading-5"><%= msg %></p>
+      <div>
+        <%= if @title do %>
+          <Heroicons.information_circle :if={@kind == :info} mini class="h-5 w-5" />
+          <Heroicons.check_circle :if={@kind == :success} mini class="h-5 w-5" />
+          <Heroicons.exclamation_circle :if={@kind == :error} mini class="h-5 w-5" />
+        <% end %>
+        <div>
+          <p :if={@title} class="font-semibold">
+            <%= @title %>
+          </p>
+          <p class="text-sm"><%= msg %></p>
+        </div>
+      </div>
       <button
         :if={@close}
         type="button"
@@ -251,6 +259,8 @@ defmodule OrangeCmsWeb.CoreComponents do
   """
   attr :type, :string, default: nil
   attr :class, :string, default: nil
+  attr :icon, :string, default: nil
+  attr :icon_right, :string, default: nil
   attr :rest, :global, include: ~w(disabled form name value)
 
   slot :inner_block, required: true
@@ -260,12 +270,24 @@ defmodule OrangeCmsWeb.CoreComponents do
     <button
       type={@type}
       class={[
+        "btn",
+        (@icon || @icon_right) && "gap-2",
         "phx-submit-loading:opacity-75 btn",
         @class
       ]}
       {@rest}
     >
+      <%= if @icon,
+        do:
+          apply(Heroicons, :"#{String.replace(@icon, "-", "_")}", [
+            %{__changed__: nil, __given__: nil, class: "w-5 h-5"}
+          ]) %>
       <%= render_slot(@inner_block) %>
+      <%= if @icon_right,
+        do:
+          apply(Heroicons, :"#{String.replace(@icon_right, "-", "_")}", [
+            %{__changed__: nil, __given__: nil, class: "w-5 h-5"}
+          ]) %>
     </button>
     """
   end
@@ -596,7 +618,7 @@ defmodule OrangeCmsWeb.CoreComponents do
         icon =
           case to_string(assigns.kind) do
             "success" -> :check_circle
-            "warning" -> :alert_triangle
+            "warning" -> :exclamation_triangle
             "error" -> :x_circle
             _ -> :info
           end
@@ -615,7 +637,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       @kind == "error" && "alert-error"
     ]}>
       <div>
-        <%= apply(Lucideicons, :"#{@icon}", [%{__changed__: nil, __given__: nil}]) %>
+        <%= apply(Heroicons, :"#{@icon}", [%{__changed__: nil, __given__: nil}]) %>
         <%= render_slot(@inner_block) %>
       </div>
     </div>

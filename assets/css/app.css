@@ -11,3 +11,14 @@
     border: transparent;
     padding: 0;
 }
+
+ul.menu li{
+    @apply py-0.5;
+}
+ul.menu li > :where(:not(ul)){
+    @apply rounded-xl;
+}
+
+.btn{
+    @apply normal-case;
+}
