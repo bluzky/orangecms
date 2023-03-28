@@ -93,9 +93,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
     js
     |> JS.add_class("hidden", to: "#general, #image-settings, #frontmatter")
     |> JS.remove_class("hidden", to: tab)
-    |> JS.remove_class("text-cyan-500 border-current", to: "#tab-header a")
-    |> JS.add_class("border-transparent", to: "#tab-header a")
-    |> JS.add_class("text-cyan-500 border-current", to: "#{tab}-hd")
-    |> JS.remove_class("border-transparent", to: "#{tab}-hd")
+    |> JS.remove_class("tab-active", to: "#tab-header a")
+    |> JS.add_class("tab-active", to: "#{tab}-hd")
   end
 end

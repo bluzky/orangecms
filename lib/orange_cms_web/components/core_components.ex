@@ -340,16 +340,17 @@ defmodule OrangeCmsWeb.CoreComponents do
       assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
 
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="form-control">
       <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
         <input type="hidden" name={@name} value="false" />
         <input
+          type="checkbox"
+          class="toggle"
           type="checkbox"
           id={@id || @name}
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
           {@rest}
         />
         <%= @label %>
@@ -361,12 +362,12 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def input(%{type: "select"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="form-control">
       <.label for={@id}><%= @label %></.label>
       <select
         id={@id}
         name={@name}
-        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-zinc-500 focus:border-zinc-500 sm:text-sm"
+        class={["select select-bordered", @errors != [] && "select-error"]}
         multiple={@multiple}
         {@rest}
       >
@@ -380,17 +381,15 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def input(%{type: "textarea"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="form-control">
       <.label for={@id}><%= @label %></.label>
       <textarea
         id={@id || @name}
         name={@name}
         class={[
-          "mt-2 block min-h-[6rem] w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
-          "text-zinc-900 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6",
+          "textarea textarea-bordered",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5",
-          "border-zinc-300 focus:border-zinc-400 focus:ring-zinc-800/5",
-          @errors != [] && "border-rose-400 focus:border-rose-400 focus:ring-rose-400/10"
+          @errors != [] && "textarea-error"
         ]}
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
@@ -401,7 +400,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def input(assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="form-control">
       <.label for={@id}><%= @label %></.label>
       <input
         type={@type}
@@ -409,11 +408,9 @@ defmodule OrangeCmsWeb.CoreComponents do
         id={@id || @name}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
-          "text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6",
+          "input input-bordered w-full",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5",
-          "border-zinc-300 focus:border-zinc-400 focus:ring-zinc-800/5",
-          @errors != [] && "border-rose-400 focus:border-rose-400 focus:ring-rose-400/10"
+          @errors != [] && "input-error"
         ]}
         {@rest}
       />
@@ -430,7 +427,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class="label font-bold text-sm p-0 mb-1">
       <%= render_slot(@inner_block) %>
     </label>
     """
@@ -443,8 +440,8 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def error(assigns) do
     ~H"""
-    <p class="phx-no-feedback:hidden mt-3 flex gap-3 text-sm leading-6 text-rose-600">
-      <Heroicons.exclamation_circle mini class="mt-0.5 h-5 w-5 flex-none fill-rose-500" />
+    <p class="phx-no-feedback:hidden mt-3 flex gap-3 text-sm leading-6 text-error">
+      <Heroicons.exclamation_circle mini class="mt-0.5 h-5 w-5 flex-none fill-error" />
       <%= render_slot(@inner_block) %>
     </p>
     """
