@@ -515,7 +515,7 @@ defmodule OrangeCmsWeb.CoreComponents do
         <tbody id={@id} phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}>
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class={[@row_click && "hover"]}>
             <td
-              :for={{col, i} <- Enum.with_index(@col)}
+              :for={{col, _i} <- Enum.with_index(@col)}
               phx-click={@row_click && @row_click.(row)}
               class={[@row_click && "hover:cursor-pointer"]}
             >
@@ -620,8 +620,8 @@ defmodule OrangeCmsWeb.CoreComponents do
       @kind == "warning" && "alert-warning",
       @kind == "error" && "alert-error"
     ]}>
-      <div>
-        <%= apply(Heroicons, :"#{@icon}", [%{__changed__: nil, __given__: nil}]) %>
+      <div class="w-full">
+        <%= apply(Heroicons, :"#{@icon}", [%{__changed__: nil, __given__: nil, class: "w-5 h5"}]) %>
         <%= render_slot(@inner_block) %>
       </div>
     </div>

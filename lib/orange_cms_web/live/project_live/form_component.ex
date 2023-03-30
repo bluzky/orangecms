@@ -29,7 +29,13 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
           options={OrangeCms.Projects.ProjectType.values()}
         />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Project</.button>
+          <.button
+            class="btn btn-secondary btn-md"
+            icon="inbox_arrow_down"
+            phx-disable-with="Saving..."
+          >
+            Save project
+          </.button>
         </:actions>
       </.simple_form>
     </div>

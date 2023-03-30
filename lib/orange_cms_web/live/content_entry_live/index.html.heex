@@ -19,7 +19,7 @@
     <.table id="content-entries" rows={@streams.content_entries} row_click={fn {_id, entry} -> JS.navigate(scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")) end}
         >
         <:col :let={{_id, entry}} label="Title" ><span class="font-bold"><%= entry.title %></span></:col>
-        <:col :let={{_id, entry}} label="Action"><%= "Action" %></:col>
+        <:col :let={{_id, _entry}} label="Action"><%= "Action" %></:col>
         <:action :let={{_id, entry}}>
             <.link navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")} class="action-btn">
 <Heroicons.pencil_square class="w-4 h-4" />

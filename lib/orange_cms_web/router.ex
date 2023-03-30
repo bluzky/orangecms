@@ -33,7 +33,7 @@ defmodule OrangeCmsWeb.Router do
 
     # get "/", PageController, :home
     scope "/api" do
-      post "/upload_image/:project_id", UploadController, :upload_image
+      post "/upload_image/:project_id/:content_type_id", UploadController, :upload_image
     end
 
     scope "/" do

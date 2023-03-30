@@ -4,7 +4,7 @@ defmodule OrangeCmsWeb.ViewHelper do
   def scoped_path(socket_or_conn_or_assigns, relative_path, params \\ %{})
 
   def scoped_path(%{assigns: assigns} = socket, relative_path, params) do
-    scoped_path(socket, socket.assigns, relative_path, params)
+    scoped_path(socket, assigns, relative_path, params)
   end
 
   def scoped_path(assigns, relative_path, params) do

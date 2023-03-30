@@ -1,11 +1,10 @@
 defmodule OrangeCmsWeb.ContentTypeLive.Index do
   use OrangeCmsWeb, :live_view
 
-  alias OrangeCms.Content
   alias OrangeCms.Content.ContentType
 
   @impl true
-  def mount(_params, _session, %{assigns: assigns} = socket) do
+  def mount(_params, _session, socket) do
     case ContentType.read_all() do
       {:ok, entries} ->
         {:ok, stream(socket, :content_types, entries)}
