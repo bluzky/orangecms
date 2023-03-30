@@ -81,7 +81,11 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
       {:ok, entry} ->
         # publish to github
 
-        case OrangeCms.Shared.Github.publish(entry, socket.assigns.current_project) do
+        case OrangeCms.Shared.Github.publish(
+               socket.assigns.current_project,
+               entry.content_type,
+               entry
+             ) do
           {:ok, new_entry} ->
             {:noreply,
              socket

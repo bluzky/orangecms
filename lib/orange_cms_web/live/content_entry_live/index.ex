@@ -5,6 +5,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
   alias OrangeCms.Content.ContentType
   alias OrangeCms.Content.ContentEntry
 
+  @impl true
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket,
@@ -13,6 +14,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
      )}
   end
 
+  @impl true
   def handle_params(%{"type" => type}, _uri, socket) do
     content_type = ContentType.get_by_key!(type)
 
@@ -42,7 +44,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
          |> push_navigate(to: scoped_path(socket, "/content/#{content_type.key}/#{entry.id}"))
          |> put_flash(:info, "Create entry successfully!")}
 
-      {:error, error} ->
+      {:error, _error} ->
         {:noreply, put_flash(socket, :error, "Cannot create new #{content_type.name}")}
     end
   end

@@ -1,7 +1,6 @@
 defmodule OrangeCmsWeb.ProjectLive.Index do
   use OrangeCmsWeb, :live_view
 
-  alias OrangeCms.Projects
   alias OrangeCms.Projects.Project
 
   @impl true

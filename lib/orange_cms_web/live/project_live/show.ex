@@ -16,11 +16,6 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
     {:noreply, assign(socket, project: project)}
   end
 
-  defp apply_action(socket, :show, _params) do
-    socket
-    |> assign(:page_title, "Project details")
-  end
-
   defp apply_action(socket, :setup_github, params) do
     socket
     |> assign(:page_title, "Setup github")
@@ -32,6 +27,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
     |> assign(:page_title, "Fetch Users")
   end
 
+  @impl true
   def handle_event("form_changed", %{"_target" => ["token"], "token" => token} = params, socket) do
     if String.starts_with?(token, "github_pat_") do
       {:ok, repositories} = OrangeCms.Shared.Github.list_repository(token)
@@ -52,6 +48,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
     end
   end
 
+  @impl true
   def handle_event(
         "form_changed",
         %{"_target" => ["repository"], "repository" => repo_name} = params,
@@ -68,6 +65,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
      )}
   end
 
+  @impl true
   def handle_event(
         "form_changed",
         %{"_target" => ["content_dir"], "token" => token, "content_dir" => content_dir} = params,
@@ -75,7 +73,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
       ) do
     %{repository: repository} = socket.assigns
 
-    case OrangeCms.Shared.Github.get_content(
+    case OrangeCms.Shared.Github.Client.get_content(
            token,
            repository["owner"]["login"],
            repository["name"],
@@ -110,6 +108,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
     end
   end
 
+  @impl true
   def handle_event("import_content", params, socket) do
     # update config
     current_project =
