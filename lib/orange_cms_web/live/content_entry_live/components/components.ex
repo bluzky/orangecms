@@ -3,162 +3,55 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   alias OrangeCms.Content.FieldDef
 
   @input_map %{
-    "string" => &__MODULE__.string_input/1,
-    "text" => &__MODULE__.text_input/1,
-    "number" => &__MODULE__.number_input/1,
-    "boolean" => &__MODULE__.boolean_input/1,
-    "datetime" => &__MODULE__.datetime_input/1,
-    "date" => &__MODULE__.date_input/1,
-    "select" => &__MODULE__.select/1,
-    "checkbox" => &__MODULE__.checkbox/1,
-    "upload" => &__MODULE__.upload/1
+    string: "text",
+    text: "textarea",
+    number: "number",
+    boolean: "checkbox",
+    datetime: "datetime-local",
+    date: "date",
+    select: "select"
   }
 
-  def render_input(field_def, value, assigns \\ %{}) do
-    func = Map.get(@input_map, to_string(field_def.type)) || @input_map["string"]
-
-    Phoenix.LiveView.HTMLEngine.component(
-      func,
-      Map.merge(assigns, %{field_def: field_def, value: value}),
-      {__ENV__.module, __ENV__.function, __ENV__.file, __ENV__.line}
-    )
-  end
-
-  attr :field_def, FieldDef, required: true
-  slot(:inner_block)
-
-  def input_wrapper(assigns) do
-    ~H"""
-    <div>
-      <label {[for: @field_def.key]} class="block text-xs font-bold text-gray-700">
-        <%= @field_def.name || @field_def.key %>
-      </label>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr :field_def, FieldDef, required: true
+  attr :field, FieldDef, required: true
   attr :value, :any, default: nil
-  attr :options, :map, default: %{}
+  attr :data, :map, default: %{}
 
-  def string_input(assigns) do
+  def schema_field(%{field: field} = assigns) do
+    assigns
+    |> assign(
+      id: field.key,
+      label: field.name || field.key,
+      type: field.type,
+      name: field_name(field, assigns.data.options),
+      data: nil
+    )
+    |> render_input()
+  end
+
+  attr :field, FieldDef, required: false
+  attr :id, :string, default: nil
+  attr :label, :string, default: nil
+  attr :name, :string, required: true
+  attr :type, :atom, required: true
+  attr :value, :any, default: nil
+
+  def render_input(%{type: :select} = assigns) do
+    field = OrangeCms.Content.load!(assigns.field, :options)
+
+    assigns =
+      assign(assigns, :type, "select")
+      |> assign(:assigns, nil)
+      |> assign(:field, nil)
+      |> assign(:options, field.options)
+
     ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <input
-        {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
-        type="text"
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      />
-    </.input_wrapper>
+    <OrangeCmsWeb.CoreComponents.input {assigns} />
     """
   end
 
-  def text_input(assigns) do
-    ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <textarea
-        {[id: @field_def.key, rows: 3, name: field_name(@field_def, @options)]}
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      ><%= @value %></textarea>
-    </.input_wrapper>
-    """
-  end
+  def render_input(%{type: :checkbox} = assigns) do
+    field = OrangeCms.Content.load!(assigns.field, :options)
 
-  def number_input(assigns) do
-    ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <input
-        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value || @field_def.default_value]}
-        type="number"
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      />
-    </.input_wrapper>
-    """
-  end
-
-  def boolean_input(assigns) do
-    ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <label {[for: @field_def.key]} class="relative h-8 w-14 cursor-pointer block">
-        <input type="hidden" name={field_name(@field_def, @options)} value="0" />
-
-        <input
-          type="checkbox"
-          class="peer sr-only"
-          onclick="this.previousSibling.value=1-this.previousSibling.value"
-          {[id: @field_def.key, name: field_name(@field_def, @options),checked: @value, value: "1"]}
-        />
-
-        <span class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500">
-        </span>
-
-        <span class="absolute inset-0 m-1 h-6 w-6 rounded-full bg-white transition peer-checked:translate-x-6">
-        </span>
-      </label>
-    </.input_wrapper>
-    """
-  end
-
-  def datetime_input(assigns) do
-    ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <input
-        type="datetime-local"
-        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      />
-    </.input_wrapper>
-    """
-  end
-
-  def date_input(assigns) do
-    ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <input
-        type="date"
-        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      />
-    </.input_wrapper>
-    """
-  end
-
-  def select(assigns) do
-    ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <select
-        {[id: @field_def.key, name: field_name(@field_def, @options), value: @value]}
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      >
-        <option
-          :for={item <- OrangeCms.Content.load!(@field_def, :options) |> Map.get(:options)}
-          {[value: item, selected: item == @value]}
-        >
-          <%= item %>
-        </option>
-      </select>
-    </.input_wrapper>
-    """
-  end
-
-  def array_input(assigns) do
-    ~H"""
-    <div>
-      <label {[for: @field_def.key]} class="block text-xs font-medium text-gray-700">
-        <%= @field_def.name %>
-      </label>
-
-      <input
-        {[id: @field_def.key, value: @value]}
-        type="text"
-        class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-      />
-    </div>
-    """
-  end
-
-  def checkbox(assigns) do
     value =
       if is_list(assigns.value) do
         assigns.value
@@ -166,28 +59,38 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
         []
       end
 
-    assigns = assign(assigns, :value, value)
+    assigns = assign(assigns, value: value, options: field.options)
 
     ~H"""
-    <.input_wrapper {[field_def: @field_def]}>
-      <div class="flex flex-wrap gap-4">
-        <label
-          :for={item <- OrangeCms.Content.load!(@field_def, :options) |> Map.get(:options)}
-          {[for: item]}
-          class="flex gap-2"
-        >
+    <div class="form-control">
+      <OrangeCmsWeb.CoreComponents.label for={@id}><%= @label %></OrangeCmsWeb.CoreComponents.label>
+      <div class="flex flex-wrap gap-x-6 gap-y-3">
+        <label :for={item <- @options} {[for: item]} class="flex gap-2">
           <input
             type="checkbox"
-            {[ name: field_name(@field_def, @options, true), id: item, value: item, checked: Enum.member?(@value, item)]}
-            class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+            class="checkbox"
+            {[ name: @name, id: item, value: item, checked: Enum.member?(@value, item)]}
           />
 
-          <span class="text-sm text-gray-700">
+          <span class="text-sm">
             <%= item %>
           </span>
         </label>
       </div>
-    </.input_wrapper>
+    </div>
+    """
+  end
+
+  def render_input(assigns) do
+    input_type = @input_map[assigns.type] || "text"
+
+    assigns =
+      assign(assigns, :type, input_type)
+      |> assign(:assigns, nil)
+      |> assign(:field, nil)
+
+    ~H"""
+    <OrangeCmsWeb.CoreComponents.input {assigns} />
     """
   end
 
@@ -231,7 +134,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   end
 
   defp field_name(field_def, opts, array? \\ false) do
-    suffix = if array?, do: "[]"
+    suffix = if array?, do: "[]", else: ""
 
     if opts[:prefix] do
       "#{opts[:prefix]}[#{field_def.key}]#{suffix}"

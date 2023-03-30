@@ -228,7 +228,7 @@ defmodule OrangeCms.Shared.Github do
         "\n---\n" <> content_entry.raw_body
 
     body = %{
-      "message" => "Create #{content_entry.integration_info.file_name}",
+      "message" => "Create #{file_name}",
       "committer" => %{
         "name" => "Orange Cms Admin",
         "email" => "sys@orangecms.io"

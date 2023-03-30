@@ -3,7 +3,7 @@
   Content types
   <:actions>
     <.link patch={scoped_path assigns, "/content_types/new"}>
-      <.button class="btn-secondary" icon="plus">Add new</.button>
+      <.button class="btn-secondary btn-md" icon="plus">Add new</.button>
     </.link>
   </:actions>
 </.header>
@@ -18,15 +18,19 @@
   <:col :let={{_id, content_type}} label="Anchor field"><%= content_type.anchor_field %></:col>
   <:action :let={{_id, content_type}}>
     <div class="sr-only">
-      <.link navigate={scoped_path assigns, "/content_types/#{content_type.id}"}>Show</.link>
+      <.link navigate={scoped_path assigns, "/content_types/#{content_type.id}"} class="action-btn">Show</.link>
     </div>
-    <.link navigate={scoped_path assigns, "/content_types/#{content_type.id}"}>Edit</.link>
+    <.link navigate={scoped_path assigns, "/content_types/#{content_type.id}"} class="action-btn">
+      <Heroicons.pencil_square class="w-4 h-4" />Edit</.link>
+    
   </:action>
   <:action :let={{id, content_type}}>
     <.link
       phx-click={JS.push("delete", value: %{id: content_type.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
+      class="action-btn"
     >
+      <Heroicons.x_mark class="w-4 h-4 text-error" />
       Delete
     </.link>
   </:action>
