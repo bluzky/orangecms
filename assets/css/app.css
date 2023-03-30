@@ -42,3 +42,11 @@ ul.menu li > :where(:not(ul)){
 .tab-content{
     @apply p-4;
 }
+
+.table tr td, .table tr th{
+    @apply text-sm;
+}
+
+.action-btn{
+    @apply btn btn-ghost btn-xs flex gap-1;
+}

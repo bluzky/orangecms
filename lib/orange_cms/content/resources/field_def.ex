@@ -56,7 +56,6 @@ defmodule OrangeCms.Content.FieldDef do
             value
 
           _error ->
-            IO.inspect(field)
             nil
         end
     end

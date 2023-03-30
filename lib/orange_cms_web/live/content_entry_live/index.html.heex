@@ -12,19 +12,22 @@
     <.header>
         Listing <%= @content_type.name %>
         <:actions>
-            <.button class="btn-secondary" icon="plus" phx-click="create_entry">New <%= @content_type.name %></.button>
+            <.button class="btn-secondary btn-md" icon="plus" phx-click="create_entry">New <%= @content_type.name %></.button>
         </:actions>
     </.header>
 
     <.table id="content-entries" rows={@streams.content_entries} row_click={fn {_id, entry} -> JS.navigate(scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")) end}
         >
-        <:col :let={{_id, entry}} label="Title"><%= entry.title %></:col>
+        <:col :let={{_id, entry}} label="Title" ><span class="font-bold"><%= entry.title %></span></:col>
         <:col :let={{_id, entry}} label="Action"><%= "Action" %></:col>
         <:action :let={{_id, entry}}>
-            <.link navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")}>Edit</.link>
+            <.link navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")} class="action-btn">
+<Heroicons.pencil_square class="w-4 h-4" />
+              Edit</.link>
         </:action>
         <:action :let={{_id, entry}}>
-            <.link phx-click={JS.push("delete", value: %{id: entry.id})} data-confirm="Are you sure?">
+            <.link phx-click={JS.push("delete", value: %{id: entry.id})} data-confirm="Are you sure?" class="action-btn">
+              <Heroicons.x_mark class="w-4 h-4 text-error" />
                 Delete
             </.link>
         </:action>
