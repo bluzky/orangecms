@@ -134,7 +134,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   end
 
   defp field_name(field_def, opts, array? \\ false) do
-    suffix = if array?, do: "[]", else: ""
+    suffix = if field_def.type == :checkbox, do: "[]", else: ""
 
     if opts[:prefix] do
       "#{opts[:prefix]}[#{field_def.key}]#{suffix}"
