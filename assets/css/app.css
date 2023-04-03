@@ -3,7 +3,7 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
-@import "easymde/dist/easymde.min.css";
+/* @import "easymde/dist/easymde.min.css"; */
 
 /* remove border for code mirror */
 
