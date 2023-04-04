@@ -324,6 +324,8 @@ defmodule OrangeCmsWeb.CoreComponents do
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
   attr :rest, :global, include: ~w(autocomplete cols disabled form max maxlength min minlength
                                    pattern placeholder readonly required rows size step)
+
+  slot :helper
   slot :inner_block
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -341,20 +343,33 @@ defmodule OrangeCmsWeb.CoreComponents do
 
     ~H"""
     <div phx-feedback-for={@name} class="form-control">
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+      <div class="flex gap-2 items-center">
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
-          class="toggle"
-          type="checkbox"
+          class="checkbox"
           id={@id || @name}
           name={@name}
           value="true"
           checked={@checked}
           {@rest}
         />
-        <%= @label %>
-      </label>
+        <label for={@id || @name} class="label-text"><%= @label %></label>
+
+        <div :if={@helper != []} class="dropdown">
+          <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
+            <Heroicons.question_mark_circle class="w-4 h-4" />
+          </label>
+          <div
+            tabindex="0"
+            class="card compact dropdown-content shadow-lg bg-base-300 rounded-box w-80"
+          >
+            <div class="card-body font-normal">
+              <%= render_slot(@helper) %>
+            </div>
+          </div>
+        </div>
+      </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
@@ -363,7 +378,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name} class="form-control">
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id} helper={@helper}><%= @label %></.label>
       <select
         id={@id}
         name={@name}
@@ -382,7 +397,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   def input(%{type: "textarea"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name} class="form-control">
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id} helper={@helper}><%= @label %></.label>
       <textarea
         id={@id || @name}
         name={@name}
@@ -401,7 +416,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div phx-feedback-for={@name} class="form-control">
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id} helper={@helper}><%= @label %></.label>
       <input
         type={@type}
         name={@name}
@@ -423,12 +438,24 @@ defmodule OrangeCmsWeb.CoreComponents do
   Renders a label.
   """
   attr :for, :string, default: nil
+  attr :helper, :any, default: []
   slot :inner_block, required: true
 
   def label(assigns) do
     ~H"""
     <label for={@for} class="label font-bold text-sm p-0 mb-1">
       <%= render_slot(@inner_block) %>
+
+      <div :if={@helper != []} class="dropdown">
+        <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
+          <Heroicons.question_mark_circle class="w-4 h-4" />
+        </label>
+        <div tabindex="0" class="card compact dropdown-content shadow-lg bg-base-300 rounded-box w-80">
+          <div class="card-body font-normal">
+            <%= render_slot(@helper) %>
+          </div>
+        </div>
+      </div>
     </label>
     """
   end

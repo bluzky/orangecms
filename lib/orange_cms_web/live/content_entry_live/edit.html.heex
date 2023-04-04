@@ -13,9 +13,9 @@
     <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
 
         <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-4 edit-sidebar hidden">
+            <div class="col-span-4 edit-sidebar">
             </div>
-            <div class="col-span-8 edit-content col-start-3">
+            <div class="col-span-8 edit-content">
                 <div class="px-4 pt-8">
                     <h2 class="text-3xl font-medium"><%= f[:title].value %></h2>
                     <div class="mt-2"><span class="p-1 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm" phx-click={toggle_class("hidden", to: ".edit-sidebar" ) |> toggle_class("col-start-3", to: ".edit-content")}
@@ -25,7 +25,7 @@
                         </span></div>
                 </div>
             </div>
-            <div class="col-span-4 p-4 edit-sidebar hidden">
+            <div class="col-span-4 p-4 edit-sidebar">
                 <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
                 <div>
                     <div :for={field_def <- @content_type.field_defs} class="mb-4">
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="col-span-8 px-4 edit-content col-start-3">
+            <div class="col-span-8 px-4 edit-content">
                 <div id="md-editor-container" phx-update="ignore">
                     <label class="sr-only" for="message">Message</label>
 

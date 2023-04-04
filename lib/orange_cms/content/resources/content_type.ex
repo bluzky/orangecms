@@ -50,6 +50,7 @@ defmodule OrangeCms.Content.ContentType do
   end
 
   alias OrangeCms.Content.FieldDef
+  alias OrangeCms.Content.ImageUploadSettings
 
   attributes do
     uuid_primary_key(:id)
@@ -62,7 +63,8 @@ defmodule OrangeCms.Content.ContentType do
       allow_nil?(false)
     end
 
-    attribute :image_settings, :map do
+    attribute :image_settings, ImageUploadSettings do
+      default(%{})
       allow_nil?(true)
     end
 
