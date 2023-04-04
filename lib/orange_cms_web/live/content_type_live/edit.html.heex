@@ -30,7 +30,7 @@
                     <.input type="text" field={f[:anchor_field]} label="Anchor field" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Anchor field" />
 
                     <div class="flex mt-4">
-                        <.button type="submit" class="ml-auto btn-secondary" icon="inbox-arrow-down">
+                        <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
                             Save
                         </.button>
                     </div>
@@ -41,14 +41,24 @@
 
     <div id="image-settings" class="hidden">
 
-        <.form :let={f} for={@form} phx-submit="create" class="space-y-4">
+        <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-6">
-                    <.input type="text" field={f[:name]} label="Name" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Name" />
-                    <.input type="text" field={f[:name]} label="Name" class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" placeholder="Name" />
+                    <.inputs_for :let={field} field={f[:image_settings]}>
+                        <.input type="text" field={field[:upload_dir]} label="Upload directory" placeholder="Ex: /public/assets" >
+                          <:helper>Where you want to store images</:helper>
+                        </.input>
+                        <.input type="text" field={field[:serve_at]} label="Serve at" placeholder="Ex: /static" >
+                           <:helper>path where you want to serve images</:helper>
+                        </.input>
 
+                        <.input type="checkbox" field={field[:use_raw_link]} label="Use raw link" placeholder="Ex: /static" >
+                           <:helper>Using raw file url <code>https://raw.githubcontent.xxxxx</code> instead of relative path to uploaded files</:helper>
+                        </.input>
+
+                    </.inputs_for>
                     <div class="flex mt-4">
-                        <.button type="submit" class="ml-auto btn-secondary" icon="inbox-arrow-down">
+                        <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
                             Save
                         </.button>
                     </div>
@@ -65,39 +75,41 @@
                         <details open={field.source.added? or field.source.changed?} id={"wrap-#{field[:key].value}"} class="group">
 
                             <summary class="flex gap-2 cursor-pointer font-bold text-sm">
-                              <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
-                              <Heroicons.minus class="w-5 h-5 text-gray-400 transition duration-300 hidden group-open:block" />
-                              <span class="flex-1"><%= field[:name].value || field[:key].value %></span>
-                              <span class="btn btn-ghost btn-sm">
+                                <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
+                                <Heroicons.minus class="w-5 h-5 text-gray-400 transition duration-300 hidden group-open:block" />
+                                <span class="flex-1"><%= field[:name].value || field[:key].value %></span>
+                                <span class="btn btn-ghost btn-sm">
                                     <Heroicons.bars_2 class="w-4 h-4" />
                                 </span>
                             </summary>
 
 
                             <div class="card card-compact card-bordered mt-2">
-                              <div class="card-body">
-                                <div class="grid grid-cols-12 gap-x-4 gap-y-2">
-                                    <div class="col-span-6">
-                                        <.input type="text" label="Key" {[readonly: not field.source.added?]} field={field[:key]} />
+                                <div class="card-body">
+                                    <div class="grid grid-cols-12 gap-x-4 gap-y-2">
+                                        <div class="col-span-6">
+                                            <.input type="text" label="Key" {[readonly: not field.source.added?]} field={field[:key]} />
+                                        </div>
+
+                                        <div class="col-span-6">
+
+                                            <.input type="select" label="Type" field={field[:type]} options={OrangeCms.Content.InputType.values()} />
+                                        </div>
+
+                                        <div class="col-span-12">
+                                            <%= if field[:type].value  in [:checkbox, :select, :array] do %>
+                                            <.input type="text" label="Options" field={field[:options_str]} placeholder="Separated by commas" />
+                                            <% else%>
+                                            <.input type="text" label="Default" field={field[:default_value]} />
+                                            <% end %>
+                                        </div>
                                     </div>
 
-                                    <div class="col-span-6">
-
-                                        <.input type="select" label="Type" field={field[:type]} options={OrangeCms.Content.InputType.values()} />
+                                    <div class="flex mt-2">
+                                        <a href="#" class="btn btn-ghost btn-xs ml-auto flex gap-2" phx-click="remove_field" phx-value-path={field.name} data-confirm="Are you sure?">
+                                            <Heroicons.trash class="w-4 h-4" /> <span>Delete field</span>
+                                        </a>
                                     </div>
-
-                                    <div class="col-span-12">
-                                        <%= if field[:type].value  in [:checkbox, :select, :array] do %>
-                                        <.input type="text" label="Options" field={field[:options_str]} placeholder="Separated by commas" />
-                                        <% else%>
-                                        <.input type="text" label="Default" field={field[:default_value]} />
-                                        <% end %>
-                                    </div>
-                                </div>
-
-                                <div class="flex mt-2">
-                                    <a href="#" class="btn btn-ghost btn-xs ml-auto flex gap-2" phx-click="remove_field" phx-value-path={field.name} data-confirm="Are you sure?"><Heroicons.trash class="w-4 h-4"/> <span>Delete field</span></a>
-                                </div>
                                 </div>
                             </div>
 
@@ -111,7 +123,7 @@
                     </div>
 
                     <div class="flex mt-4">
-                        <.button type="submit" class="ml-auto btn-secondary" icon="inbox-arrow-down">
+                        <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
                             Save
                         </.button>
                     </div>

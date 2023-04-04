@@ -1,21 +1,25 @@
 defmodule OrangeCms.Shared.Github.UploadFileAction do
+  @moduledoc """
+  Upload file from plug.Upload to github repo
+  """
   alias OrangeCms.Shared.Github.Client
 
-  def perform(project, _content_type, upload) do
+  @committer %{
+    "name" => "Orange Cms Admin",
+    "email" => "sys@orangecms.io"
+  }
+
+  def perform(project, content_type, upload) do
     [owner, repo] = String.split(project.github_config["repo_name"], "/")
-
-    # TODO: read from config
-    path = "public/assets/" <> upload.filename
-
-    # TODO: handle error
     {:ok, content} = File.read(upload.path)
 
+    path =
+      Path.join(content_type.image_settings.upload_dir, upload.filename)
+      |> String.trim_leading("/")
+
     body = %{
-      "message" => "upload #{upload.filename}",
-      "committer" => %{
-        "name" => "Orange Cms Admin",
-        "email" => "sys@orangecms.io"
-      },
+      "message" => "Upload #{upload.filename}",
+      "committer" => @committer,
       "content" => Base.encode64(content)
     }
 
