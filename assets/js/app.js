@@ -38,7 +38,7 @@ const Hooks = {
         element: document.getElementById("editor"),
         content: this.el.value,
         classes:
-          "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none h-[500px]",
+          "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none pb-32",
         tiptapOptions: {
           onBlur: ({ editor }) => {
             this.el.value = toMarkdown(editor.getJSON());

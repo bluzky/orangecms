@@ -8,9 +8,7 @@
   -->
 <div class="-m-6">
   <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
-    <div
-      class="grid grid-cols-12 gap-4 h-screen max-h-screen"
-    >
+    <div class="grid grid-cols-12 gap-4 h-screen max-h-screen">
       <div class="col-span-4 p-4 pt-16 edit-sidebar max-h-screen overflow-y-auto hidden">
         <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
         <div>
@@ -23,7 +21,11 @@
           </div>
         </div>
       </div>
-      <div class="col-span-8 edit-content col-start-3 grid grid-col-12"       style="grid-template-rows: auto 1fr auto;">
+      <div
+        class="col-span-8 edit-content col-start-3 grid grid-col-12 relative overflow-y-auto"
+         
+        style="grid-template-rows: auto 1fr auto;"
+      >
         <div class="px-4 pt-8">
           <h2 class="text-3xl font-medium"><%= f[:title].value %></h2>
           <div class="mt-2">
@@ -38,7 +40,7 @@
             </span>
           </div>
         </div>
-        <div id="md-editor-container" class="h-full overflow-y-auto" phx-update="ignore">
+        <div id="md-editor-container" class="max-h-full overflow-y-auto" phx-update="ignore">
           <div style="display: none;">
             <.input
               type="textarea"
@@ -147,9 +149,13 @@
           <div class="" id="editor"></div>
         </div>
 
-        <div class="my-4">
-  <.button type="submit" class="btn-primary" icon="inbox-arrow-down">Save</.button>
-</div>
+        <div class="my-4 fixed bottom-0 left-0 right-0 grid grid-col-12 ">
+          <div class="col-start-3">
+          <.button type="submit" class="btn-secondary btn-md" icon="arrow-up-on-square">
+            Publish
+          </.button>
+          </div>
+        </div>
       </div>
     </div>
   </.form>
