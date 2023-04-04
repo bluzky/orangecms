@@ -167,6 +167,13 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-2.0.1.tgz#ce27086ac8a7056f7354c117e173f65d31bc2985"
   integrity sha512-lVIyKa3qjqD4rUKSzVghkS5xonJ8k+msvy5Sr5xd6duwEBOk7e0oKtXmdn7B1VBH64i/U3Cx0QRgDlEyukvV2Q==
 
+"@tiptap/extension-link@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.2.tgz#86ef3fd04d5906167d63cc87c1c622a71b48a6e7"
+  integrity sha512-PzBM09Mmsxj0V5fAa0kxdIZdkNjowQWj4O4nrjEWSbSmF90v0Fyj4R/VjSg4dBf3ExfFNYmsjC3wPiRulnCu5g==
+  dependencies:
+    linkifyjs "^4.1.0"
+
 "@tiptap/extension-list-item@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-list-item/-/extension-list-item-2.0.1.tgz#ffa73101d425347fb11941344769ce2634eb642a"
@@ -562,6 +569,11 @@ linkify-it@^4.0.1:
   integrity sha512-C7bfi1UZmoj8+PQx22XyeXCuBlokoyWQL5pWSP+EI6nzRylyThouddufc2c1NDIcP9k5agmN9fLpA7VNJfIiqw==
   dependencies:
     uc.micro "^1.0.1"
+
+linkifyjs@^4.1.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/linkifyjs/-/linkifyjs-4.1.1.tgz#73d427e3bbaaf4ca8e71c589ad4ffda11a9a5fde"
+  integrity sha512-zFN/CTVmbcVef+WaDXT63dNzzkfRBKT1j464NJQkV7iSgJU0sLBus9W0HBwnXK13/hf168pbrx/V/bjEHOXNHA==
 
 lodash.castarray@^4.4.0:
   version "4.4.0"

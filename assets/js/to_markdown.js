@@ -118,7 +118,6 @@ const Serializer = {
     if (serializer) {
       const rs = serializer(node);
       if (rs) {
-        console.log(rs);
         return rs;
       } else {
         console.log(node);

@@ -1,62 +1,156 @@
 <!--
-  This component uses @tailwindcss/forms
+    This component uses @tailwindcss/forms
 
-  yarn add @tailwindcss/forms
-  npm install @tailwindcss/forms
+    yarn add @tailwindcss/forms
+    npm install @tailwindcss/forms
 
-  plugins: [require('@tailwindcss/forms')]
--->
-
-
-
-<div class="p-4 pb-8">
-    <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
-
-        <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-4 edit-sidebar hidden">
-            </div>
-            <div class="col-span-8 edit-content col-start-3">
-                <div class="px-4 pt-8">
-                    <h2 class="text-3xl font-medium"><%= f[:title].value %></h2>
-                    <div class="mt-2"><span class="p-1 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm" phx-click={toggle_class("hidden", to: ".edit-sidebar" ) |> toggle_class("col-start-3", to: ".edit-content")}
-                            >
-                            <Heroicons.adjustments_horizontal class="h-4 w-4" />
-                            Edit frontmatter
-                        </span></div>
-                </div>
-            </div>
-            <div class="col-span-4 p-4 edit-sidebar hidden">
-                <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
-                <div>
-                    <div :for={field_def <- @content_type.field_defs} class="mb-4">
-                         <.schema_field field={field_def} value={frontmatter[field_def.key]} data={%{options: [prefix: "frontmatter"], project: @current_project}}/>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-8 px-4 edit-content col-start-3">
-                <div id="md-editor-container" phx-update="ignore">
-                    <label class="sr-only" for="message">Message</label>
-
-                    <div style="display: none;">
-                    <.input type="textarea" field={f[:raw_body]} class="hidden" rows="30" phx-hook="MdEditor" data-upload-path={~p"/app/api/upload_image/#{@current_project.id}/#{@current_type.id}"} />
-                    </div>
-
-                    <div class="editor-menu">
-                      <span class="btn btn-xs" role="menu-item" data-command="bold">B</span>
-                      <span class="btn btn-xs" role="menu-item" data-command="italic">I</span>
-                      <span class="btn btn-xs" role="menu-item" data-command="strike">S</span>
-                      <span class="btn btn-xs" role="menu-item" data-command="h1">S</span>
-                    </div>
-                    <div class="" id="editor"></div>
-                </div>
-
-                <div class="mt-4">
-                    <.button type="submit" class="btn-primary" icon="inbox-arrow-down">Save </.button>
-
-                </div>
-            </div>
+    plugins: [require('@tailwindcss/forms')]
+  -->
+<div class="-m-6">
+  <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+    <div
+      class="grid grid-cols-12 gap-4 h-screen max-h-screen"
+    >
+      <div class="col-span-4 p-4 pt-16 edit-sidebar max-h-screen overflow-y-auto hidden">
+        <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
+        <div>
+          <div :for={field_def <- @content_type.field_defs} class="mb-4">
+            <.schema_field
+              field={field_def}
+              value={frontmatter[field_def.key]}
+              data={%{options: [prefix: "frontmatter"], project: @current_project}}
+            />
+          </div>
         </div>
-    </.form>
+      </div>
+      <div class="col-span-8 edit-content col-start-3 grid grid-col-12"       style="grid-template-rows: auto 1fr auto;">
+        <div class="px-4 pt-8">
+          <h2 class="text-3xl font-medium"><%= f[:title].value %></h2>
+          <div class="mt-2">
+            <span
+              class="p-1 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
+              phx-click={
+                toggle_class("hidden", to: ".edit-sidebar")
+                |> toggle_class("col-start-3", to: ".edit-content")
+              }
+            >
+              <Heroicons.adjustments_horizontal class="h-4 w-4" /> Edit frontmatter
+            </span>
+          </div>
+        </div>
+        <div id="md-editor-container" class="h-full overflow-y-auto" phx-update="ignore">
+          <div style="display: none;">
+            <.input
+              type="textarea"
+              field={f[:raw_body]}
+              class="hidden"
+              rows="30"
+              phx-hook="MdEditor"
+              data-upload-path={
+                ~p"/app/api/upload_image/#{@current_project.id}/#{@current_type.id}"
+              }
+            />
+          </div>
 
+          <div
+            class="editor-menu rounded-lg bg-base-content text-base-100 p-2"
+            style="visibility: visible;"
+          >
+            <div class="flex gap-0.5">
+              <span
+                class="btn btn-square btn-ghost btn-sm font-bold"
+                role="menu-item"
+                data-command="bold"
+              >
+                <Lucideicons.bold class="w-4 h-4" />
+              </span>
+              <span
+                class="btn btn-square btn-ghost btn-sm italic"
+                role="menu-item"
+                data-command="italic"
+              >
+                <Lucideicons.italic class="w-4 h-4" />
+              </span>
+              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="strike">
+                <Lucideicons.strikethrough class="w-4 h-4" />
+              </span>
+              <div class="divider divider-horizontal mx-0"></div>
+              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="link">
+                <Lucideicons.link class="w-4 h-4" />
+              </span>
+              <span
+                class="btn btn-square btn-ghost btn-sm hidden"
+                role="menu-item"
+                data-command="unlink"
+              >
+                <Lucideicons.unlink class="w-4 h-4" />
+              </span>
+              <span
+                class="btn btn-square btn-ghost btn-sm"
+                role="menu-item"
+                data-command="blockquote"
+              >
+                <Lucideicons.quote class="w-4 h-4" />
+              </span>
+              <span
+                class="btn btn-square btn-ghost btn-sm"
+                role="menu-item"
+                data-command="codeBlock"
+              >
+                <Lucideicons.code class="w-4 h-4" />
+              </span>
+              <div class="divider divider-horizontal mx-0"></div>
+              <span
+                class="btn btn-square btn-ghost btn-sm"
+                role="menu-item"
+                data-command="bulletList"
+              >
+                <Lucideicons.list class="w-5 h-5" />
+              </span>
+              <span
+                class="btn btn-square btn-ghost btn-sm"
+                role="menu-item"
+                data-command="orderedList"
+              >
+                <Lucideicons.list_ordered class="w-5 h-5" />
+              </span>
+
+              <div class="divider divider-horizontal mx-0"></div>
+              <span
+                class="btn btn-square btn-ghost btn-sm"
+                role="menu-item"
+                data-command="paragraph"
+              >
+                <Lucideicons.pilcrow class="w-4 h-4" />
+              </span>
+              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h1">
+                <Lucideicons.heading_1 class="w-5 h-5" />
+              </span>
+              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h2">
+                <Lucideicons.heading_2 class="w-5 h-5" />
+              </span>
+              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h3">
+                <Lucideicons.heading_3 class="w-5 h-5" />
+              </span>
+              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h4">
+                <Lucideicons.heading_4 class="w-5 h-5" />
+              </span>
+            </div>
+            <div class="">
+              <div class="link-form flex gap-1 p-2 hidden">
+                <input type="text" placeholder="Past your link here" class="input input-sm" />
+                <!-- <span class="btn btn-ghost btn-sm gap-1 bg-white"><Heroicons.check class="w-5 h-5 text-success" /> Add</span> -->
+        <!-- <span class="btn btn-square btn-outline btn-sm"><Heroicons.x_mark class="w-4 h-4" /></span> -->
+              </div>
+            </div>
+          </div>
+          <div class="" id="editor"></div>
+        </div>
+
+        <div class="my-4">
+  <.button type="submit" class="btn-primary" icon="inbox-arrow-down">Save</.button>
+</div>
+      </div>
+    </div>
+  </.form>
 </div>
