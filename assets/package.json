@@ -9,8 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "@tiptap/core": "^2.0.1",
+    "@tiptap/extension-bubble-menu": "^2.0.1",
+    "@tiptap/extension-image": "^2.0.1",
+    "@tiptap/extension-link": "^2.0.2",
+    "@tiptap/pm": "^2.0.1",
+    "@tiptap/starter-kit": "^2.0.1",
     "daisyui": "^2.51.3",
-    "easymde": "^2.18.0",
+    "markdown-it": "^13.0.1",
+    "punycode": "^2.3.0",
     "sortablejs": "^1.15.0"
   }
 }

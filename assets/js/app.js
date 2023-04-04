@@ -22,7 +22,8 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import Sortable from "sortablejs";
-import EasyMDE from "easymde";
+import { initEditor } from "./editor";
+import { toMarkdown } from "./to_markdown";
 import { FileUpload, uploadFile } from "./fileUpload";
 
 let csrfToken = document
@@ -33,39 +34,21 @@ let csrfToken = document
 const Hooks = {
   MdEditor: {
     mounted() {
-      const easyMDE = new EasyMDE({
-        element: this.el,
-        minHeight: "500px",
-        autoDownloadFontAwesome: false,
-        status: true,
-        toolbar: false,
-        spellChecker: false,
-        uploadImage: true,
-
-        imagePathAbsolute: true,
-        imageUploadFunction: (file, onSuccess, onError) => {
-          const endpoint = this.el.getAttribute("data-upload-path");
-          uploadFile(
-            endpoint,
-            file,
-            { csrf_token: csrfToken },
-            (result) => {
-              onSuccess(result.data.url);
-            },
-            (error) => {
-              onError(error.message || "Cannot upload image");
-            }
-          );
+      const editor = initEditor({
+        element: document.getElementById("editor"),
+        content: this.el.value,
+        classes:
+          "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none pb-32",
+        tiptapOptions: {
+          onBlur: ({ editor }) => {
+            this.el.value = toMarkdown(editor.getJSON());
+          },
         },
-      });
-
-      easyMDE.codemirror.on("blur", () => {
-        this.el.value = easyMDE.value();
       });
 
       // Synchronise the form's textarea with the editor on submit
       this.el.form.addEventListener("submit", (_event) => {
-        console.log(easyMDE.value());
+        this.el.value = toMarkdown(editor.getJSON());
       });
     },
   },
