@@ -7,20 +7,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
   alias OrangeCms.Content.ContentEntry
 
   def mount(_params, _session, socket) do
-    current_type = socket.assigns.current_type
-
-    socket =
-      Enum.reduce(current_type.field_defs, socket, fn field, socket ->
-        if field.type == :upload do
-          allow_upload(socket, field.key, accept: ~w(.png .jpg .jpeg), max_entries: 1)
-        else
-          socket
-        end
-      end)
-
     {:ok,
      socket
-     # |> allow_upload(:avatar, accept: ~w(.png .jpg .jpeg), max_entries: 1)
      |> assign(%{
        form: nil
      })}
@@ -51,7 +39,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
     {:noreply, assign(socket, content_type: content_type)}
   end
 
-  def handle_event("validate", %{"frontmatter" => params, "form" => form_params}, socket) do
+  # save content but not publish
+  def handle_event("autosave", %{"frontmatter" => params, "form" => form_params}, socket) do
     form =
       AshPhoenix.Form.validate(
         socket.assigns.form,
@@ -60,6 +49,17 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
           content_type_id: socket.assigns.content_type.id
         })
       )
+
+    case AshPhoenix.Form.submit(form) do
+      {:ok, entry} ->
+        {:noreply,
+         socket
+         |> assign(form: AshPhoenix.Form.for_update(entry, :update, api: Content))
+         |> put_flash(:success, "Auto saved")}
+
+      {:error, form} ->
+        {:noreply, assign(socket, form: form)}
+    end
 
     # You can also skip errors by setting `errors: false` if you only want to show errors on submit
     # form = AshPhoenix.Form.validate(socket.assigns.form, params, errors: false)

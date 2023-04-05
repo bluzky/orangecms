@@ -106,6 +106,9 @@ const Serializer = {
           case "code":
             return `\`${acc}\``;
 
+          case "link":
+            return `[${acc}](${mark.attrs.href})`;
+
           default:
             return acc;
         }

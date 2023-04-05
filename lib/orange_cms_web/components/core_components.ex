@@ -354,7 +354,7 @@ defmodule OrangeCmsWeb.CoreComponents do
           checked={@checked}
           {@rest}
         />
-        <label for={@id || @name} class="label-text"><%= @label %></label>
+        <label for={@id || @name} class="label-text font-bold"><%= @label %></label>
 
         <div :if={@helper != []} class="dropdown">
           <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">

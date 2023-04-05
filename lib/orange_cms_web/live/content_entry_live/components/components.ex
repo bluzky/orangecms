@@ -15,6 +15,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   attr :field, FieldDef, required: true
   attr :value, :any, default: nil
   attr :data, :map, default: %{}
+  attr :rest, :global
 
   def schema_field(%{field: field} = assigns) do
     assigns
@@ -34,6 +35,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   attr :name, :string, required: true
   attr :type, :atom, required: true
   attr :value, :any, default: nil
+  attr :rest, :global
 
   def render_input(%{type: :select} = assigns) do
     field = OrangeCms.Content.load!(assigns.field, :options)
