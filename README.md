@@ -46,8 +46,8 @@
   - [x] Create/edit/delete content entry
   - [x] Publish (update/create) content to github
   - [x] Markdown editor
-  - [ ] Block editors
-  - [ ] improve frontmatter form
+  - [x] Block editors
+  - [x] improve frontmatter form
   - [ ] Delete content both in database and on repo
   - [ ] Search, filter post
 - User
