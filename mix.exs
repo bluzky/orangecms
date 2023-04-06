@@ -61,7 +61,11 @@ defmodule OrangeCms.MixProject do
       {:nanoid, "~> 2.0"},
       {:tentacat, "~> 2.2"},
       {:yaml_elixir, "~> 2.9"},
-      {:slugger, "~> 0.3.0"}
+      {:slugger, "~> 0.3.0"},
+
+      # authentication
+      {:ash_authentication, "~> 3.10"},
+      {:ash_authentication_phoenix, "~> 1.6"}
     ]
   end
 

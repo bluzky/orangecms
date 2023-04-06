@@ -9,6 +9,7 @@ module.exports = {
     "../lib/*_web.ex",
     "../lib/*_web/**/*.*ex",
     "../lib/*_web/components/**/*.ex",
+    "../deps/ash_authentication_phoenix/**/*.ex",
   ],
   theme: {},
   plugins: [

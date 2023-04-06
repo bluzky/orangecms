@@ -64,7 +64,7 @@ config :phoenix, :json_library, Jason
 config :ash, :use_all_identities_in_manage_relationship?, false
 
 config :orange_cms,
-  ash_apis: [OrangeCms.Content, OrangeCms.Projects]
+  ash_apis: [OrangeCms.Content, OrangeCms.Projects, OrangeCms.Accounts]
 
 config :ash_graphql, :json_type, :json
 

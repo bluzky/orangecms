@@ -75,7 +75,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Created project successfully")
-         |> push_navigate(to: ~p"/app/p/#{entry.id}")}
+         |> push_navigate(to: ~p"/p/#{entry.id}")}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}

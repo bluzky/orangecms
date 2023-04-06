@@ -1,7 +1,7 @@
 <.header>
     Listing Projects
     <:actions>
-        <.link patch={~p"/app/p/new"}>
+        <.link patch={~p"/p/new"}>
             <.button class="btn btn-md btn-secondary"> <Heroicons.plus class="w-5 h-5" /> New project</.button>
         </.link>
     </:actions>
@@ -10,7 +10,7 @@
 <div class="grid grid-cols-4 gap-4 mt-5">
     <div class="card bg-base-100 shadow-xl border hover:bg-base-200" :for={{_id, project} <- @streams.projects} >
         <div class="card-body">
-          <.link navigate={~p"/app/p/#{project.id}"} class="flex flex-row">
+          <.link navigate={~p"/p/#{project.id}"} class="flex flex-row">
             <div class="avatar placeholder">
                 <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
                     <span class="text-3xl"><%= String.at(project.name, 0) %></span>
@@ -26,6 +26,6 @@
     </div>
 </div>
 
-<.modal :if={@live_action in [:new, :edit]} id="project-modal" show on_cancel={JS.navigate(~p"/app")}>
-    <.live_component module={OrangeCmsWeb.ProjectLive.FormComponent} id={@project.id || :new} title={@page_title} action={@live_action} project={@project} patch={~p"/app"} />
+<.modal :if={@live_action in [:new, :edit]} id="project-modal" show on_cancel={JS.navigate(~p"/p")}>
+    <.live_component module={OrangeCmsWeb.ProjectLive.FormComponent} id={@project.id || :new} title={@page_title} action={@live_action} project={@project} patch={~p"/p"} />
 </.modal>

@@ -1,7 +1,6 @@
 defmodule OrangeCmsWeb.Router do
   use OrangeCmsWeb, :router
-
-  import Plug.BasicAuth
+  use AshAuthentication.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html", "json"]
@@ -10,11 +9,12 @@ defmodule OrangeCmsWeb.Router do
     plug :put_root_layout, {OrangeCmsWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :basic_auth, Application.get_env(:orange_cms, :basic_auth)
+    plug :load_from_session
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :load_from_bearer
   end
 
   scope "/" do
@@ -28,21 +28,41 @@ defmodule OrangeCmsWeb.Router do
             interface: :playground
   end
 
-  scope "/app", OrangeCmsWeb do
+  scope "/", OrangeCmsWeb do
     pipe_through [:browser]
 
-    # get "/", PageController, :home
+    sign_in_route()
+    sign_out_route(AuthController)
+    auth_routes_for(OrangeCms.Accounts.User, to: AuthController)
+    reset_route([])
+  end
+
+  scope "/", OrangeCmsWeb do
+    pipe_through [:browser]
+
+    get "/", PageController, :home
+
     scope "/api" do
       post "/upload_image/:project_id/:content_type_id", UploadController, :upload_image
     end
 
-    scope "/" do
-      live "/", ProjectLive.Index, :index
-      live "/p/new", ProjectLive.Index, :new
+    ash_authentication_live_session :authenticated_only,
+      on_mount: [
+        {OrangeCmsWeb.LiveUserAuth, :live_user_required}
+      ] do
+      scope "/" do
+        live "/p", ProjectLive.Index, :index
+        live "/p/new", ProjectLive.Index, :new
+      end
     end
 
     scope "/p/:project_id" do
-      live_session :app, on_mount: [OrangeCmsWeb.LoadProject, OrangeCmsWeb.MenuAssign] do
+      ash_authentication_live_session :project_scope,
+        on_mount: [
+          {OrangeCmsWeb.LiveUserAuth, :live_user_required},
+          OrangeCmsWeb.LoadProject,
+          OrangeCmsWeb.MenuAssign
+        ] do
         live "/", ProjectLive.Show, :show
         live "/setup_github", ProjectLive.Show, :setup_github
         live "/fetch_content", ProjectLive.Show, :fetch_content

@@ -16,7 +16,7 @@ defmodule OrangeCmsWeb.ViewHelper do
       unverified_path(
         socket_or_conn,
         OrangeCmsWeb.Router,
-        "/app/p/#{assigns.current_project.id}#{relative_path}",
+        "/p/#{assigns.current_project.id}#{relative_path}",
         params
       )
     else

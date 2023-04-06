@@ -121,7 +121,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
             accept="image/*"
             {[id: @field_def.key <> "upload"]}
             phx-hook="FileUpload"
-            {["data-target": @field_def.key, "data-upload-path": "/app/api/upload_image/#{@project.id}", "data-error-display": @field_def.key <> "-error"]}
+            {["data-target": @field_def.key, "data-upload-path": "/api/upload_image/#{@project.id}", "data-error-display": @field_def.key <> "-error"]}
           />
           <label class="btn btn-sm btn-square" {[for: @field_def.key <> "upload"]}>
             <Heroicons.arrow_up_tray class="w-4 h-4" />
