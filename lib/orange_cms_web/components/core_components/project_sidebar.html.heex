@@ -15,11 +15,11 @@ content_types = (assigns[:content_types] || [])
     </label>
     <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-xl w-52">
         <li :for={project <- (assigns[:projects] || []) }>
-            <.link navigate={~p"/app/p/#{project}"} class="text-sm font-medium"><%= project.name %></.link>
+            <.link navigate={~p"/p/#{project}"} class="text-sm font-medium"><%= project.name %></.link>
         </li>
 
         <li>
-            <.link navigate={~p"/app"} class="text-sm font-medium text-primary">All projects</.link>
+            <.link navigate={~p"/p"} class="text-sm font-medium text-primary">All projects</.link>
         </li>
     </ul>
 </div>

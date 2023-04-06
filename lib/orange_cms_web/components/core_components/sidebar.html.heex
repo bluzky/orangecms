@@ -1,35 +1,51 @@
 <div class="drawer-side">
-    <label for="my-drawer" class="drawer-overlay"></label>
-    <aside class="w-64 bg-base-200 flex flex-col justify-between">
-
-        <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm"><a href={~p"/app"} aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
-                <div class="font-title text-orange-500 inline-flex text-lg transition-all duration-200 md:text-3xl"><span class="titlecase">Orange</span> <span class="text-base-content uppercase">CMS</span></div>
-            </a>
+  <label for="my-drawer" class="drawer-overlay"></label>
+  <aside class="w-64 bg-base-200 flex flex-col justify-between">
+    <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm">
+      <a
+        href={~p"/p"}
+        aria-current="page"
+        aria-label="Homepage"
+        class="flex-0 btn btn-ghost px-2"
+      >
+        <div class="font-title text-orange-500 inline-flex text-lg transition-all duration-200 md:text-3xl">
+          <span class="titlecase">Orange</span>
+          <span class="text-base-content uppercase">CMS</span>
         </div>
+      </a>
+    </div>
 
-        <div class="h-4"></div>
+    <div class="h-4"></div>
 
+    <%= if not is_nil(assigns[:current_project]) do %>
+      <.project_sidebar {assigns} />
+    <% else %>
+      <.home_sidebar {assigns} />
+    <% end %>
 
-        <%= if not is_nil(assigns[:current_project]) do %>
-        <.project_sidebar {assigns} />
-        <% else %>
-        <.home_sidebar {assigns} />
-        <% end %>
+    <div class="h-4 mt-auto"></div>
+    <div class="sticky inset-x-0 bottom-0 border-t border-gray-100 pr-2">
+      
+      <div class="dropdown dropdown-top dropdown-end w-full">
+        <a href="#" class="flex items-center gap-2 p-4">
+          <img
+            alt="Man"
+            src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+            class="h-10 w-10 rounded-full object-cover"
+          />
 
-        <div class="h-4 mt-auto"></div>
-        <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
-            <a href="#" class="flex items-center gap-2 p-4">
-                <img alt="Man" src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" class="h-10 w-10 rounded-full object-cover" />
+          <div>
+            <p class="text-xs">
+              <strong class="block font-medium">Eric Frusciante</strong>
 
-                <div>
-                    <p class="text-xs">
-                        <strong class="block font-medium">Eric Frusciante</strong>
-
-                        <span> eric@frusciante.com </span>
-                    </p>
-                </div>
-            </a>
-        </div>
-    </aside>
-
+              <span> eric@frusciante.com </span>
+            </p>
+          </div>
+        </a>
+        <ul tabindex="0" class="dropdown-content menu menu-compact p-2 shadow bg-base-100 w-52 rounded-lg">
+          <li><a href={~p"/sign-out"}><Heroicons.arrow_right_on_rectangle class="w-5 h-5" /> Sign out</a></li>
+        </ul>
+      </div>
+    </div>
+  </aside>
 </div>

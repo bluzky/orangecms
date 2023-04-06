@@ -24,11 +24,11 @@ defmodule OrangeCmsWeb.LoadProject do
           !project.set_up_completed and
               not (socket.view == OrangeCmsWeb.ProjectLive.Show and
                        socket.assigns.live_action in [:setup_github, :fetch_content]) ->
-            {:halt, push_navigate(socket, to: ~p"/app/p/#{project.id}/setup_github")}
+            {:halt, push_navigate(socket, to: ~p"/p/#{project.id}/setup_github")}
 
           project.set_up_completed and socket.view == OrangeCmsWeb.ProjectLive.Show and
               socket.assigns.live_action in [:setup_github, :fetch_content] ->
-            {:halt, push_navigate(socket, to: ~p"/app/p/#{project.id}")}
+            {:halt, push_navigate(socket, to: ~p"/p/#{project.id}")}
 
           true ->
             {:cont, socket}
@@ -38,7 +38,7 @@ defmodule OrangeCmsWeb.LoadProject do
         {:halt,
          socket
          |> put_flash(:error, "No project selected!")
-         |> push_navigate(to: ~p"/app")}
+         |> push_navigate(to: ~p"/p")}
     end
   end
 end

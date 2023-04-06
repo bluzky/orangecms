@@ -17,7 +17,8 @@ defmodule OrangeCms.Application do
       # Start Finch
       {Finch, name: OrangeCms.Finch},
       # Start the Endpoint (http/https)
-      OrangeCmsWeb.Endpoint
+      OrangeCmsWeb.Endpoint,
+      {AshAuthentication.Supervisor, otp_app: :orange_cms}
       # Start a worker by calling: OrangeCms.Worker.start_link(arg)
       # {OrangeCms.Worker, arg}
     ]
