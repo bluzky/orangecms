@@ -35,6 +35,10 @@ ul.menu li > :where(:not(ul)){
     @apply h-10 min-h-min text-sm;
 }
 
+.textarea{
+    @apply leading-6;
+}
+
 .tabs>.tab.tab-active{
     @apply font-bold border-b-2;
 }

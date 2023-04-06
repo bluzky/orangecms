@@ -24,6 +24,7 @@ import topbar from "../vendor/topbar";
 import Sortable from "sortablejs";
 import { initEditor } from "./editor";
 import { toMarkdown } from "./to_markdown";
+import { debounce } from "./utils";
 import { FileUpload, uploadFile } from "./fileUpload";
 
 let csrfToken = document
@@ -34,14 +35,24 @@ let csrfToken = document
 const Hooks = {
   MdEditor: {
     mounted() {
+      const autoSave = debounce((editor, textarea) => {
+        textarea.value = toMarkdown(editor.getJSON());
+        // trigger change so phx-change will be triggered
+        const e = new Event("input", {
+          bubbles: true,
+          cancelable: true,
+        });
+        textarea.dispatchEvent(e);
+      }, 1000);
+
       const editor = initEditor({
         element: document.getElementById("editor"),
         content: this.el.value,
         classes:
           "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none pb-32",
         tiptapOptions: {
-          onBlur: ({ editor }) => {
-            this.el.value = toMarkdown(editor.getJSON());
+          onUpdate: ({ editor }) => {
+            autoSave(editor, this.el);
           },
         },
       });

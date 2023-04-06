@@ -7,9 +7,9 @@
     plugins: [require('@tailwindcss/forms')]
   -->
 <div class="-m-6">
-  <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+  <.form :let={f} for={@form} phx-submit="save" phx-change="autosave" class="space-y-4">
     <div class="grid grid-cols-12 gap-4 h-screen max-h-screen">
-      <div class="col-span-4 p-4 pt-16 edit-sidebar max-h-screen overflow-y-auto hidden">
+      <div class="col-span-3 p-8 pt-16 edit-sidebar max-h-screen overflow-y-auto">
         <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
         <div>
           <div :for={field_def <- @content_type.field_defs} class="mb-4">
@@ -17,12 +17,13 @@
               field={field_def}
               value={frontmatter[field_def.key]}
               data={%{options: [prefix: "frontmatter"], project: @current_project}}
+              phx-debounce="blur"
             />
           </div>
         </div>
       </div>
       <div
-        class="col-span-8 edit-content col-start-3 grid grid-col-12 relative overflow-y-auto"
+        class="col-span-8 edit-content grid grid-col-12 relative overflow-y-auto"
          
         style="grid-template-rows: auto 1fr auto;"
       >
@@ -48,6 +49,7 @@
               class="hidden"
               rows="30"
               phx-hook="MdEditor"
+              phx-debounce="60000"
               data-upload-path={
                 ~p"/app/api/upload_image/#{@current_project.id}/#{@current_type.id}"
               }
