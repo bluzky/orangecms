@@ -30,8 +30,7 @@ defmodule OrangeCmsWeb.Router do
 
   scope "/", OrangeCmsWeb do
     pipe_through [:browser]
-
-    sign_in_route()
+    sign_in_route(on_mount: [{OrangeCmsWeb.LiveUserAuth, :live_no_user}])
     sign_out_route(AuthController)
     auth_routes_for(OrangeCms.Accounts.User, to: AuthController)
     reset_route([])
@@ -53,6 +52,15 @@ defmodule OrangeCmsWeb.Router do
       scope "/" do
         live "/p", ProjectLive.Index, :index
         live "/p/new", ProjectLive.Index, :new
+      end
+
+      scope "/users" do
+        live "/", UserLive.Index, :index
+        live "/new", UserLive.Index, :new
+        live "/:id/edit", UserLive.Index, :edit
+
+        live "/:id", UserLive.Show, :show
+        live "/:id/show/edit", UserLive.Show, :edit
       end
     end
 
