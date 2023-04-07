@@ -1,6 +1,26 @@
 <.header>
-  Project <%= @project.name %> dashboard
+  Dashboard
 </.header>
+
+<div class="p-6 flex gap-8">
+<div class="stats shadow bg-base-300">
+  <div class="stat">
+    <div class="stat-title">Total entries</div>
+    <div class="stat-value">89,400</div>
+  </div>
+  
+</div>
+
+<div class="stats shadow bg-base-300">
+  <div class="stat">
+    <div class="stat-title">Content types</div>
+    <div class="stat-value">89,400</div>
+  </div>
+  
+</div>
+</div>
+
+
 
 
 <.modal :if={@live_action in [:setup_github]} id="project-modal" show on_cancel={JS.navigate(~p"/p")}>

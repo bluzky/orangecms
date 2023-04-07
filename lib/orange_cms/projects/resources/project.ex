@@ -55,4 +55,16 @@ defmodule OrangeCms.Projects.Project do
     create_timestamp(:created_at)
     update_timestamp(:updated_at)
   end
+
+  relationships do
+    has_many :project_users, OrangeCms.Projects.ProjectUser do
+    end
+
+    many_to_many :users, OrangeCms.Accounts.User do
+      through OrangeCms.Projects.ProjectUser
+      source_attribute_on_join_resource :project_id
+      destination_attribute_on_join_resource :user_id
+      api OrangeCms.Accounts
+    end
+  end
 end

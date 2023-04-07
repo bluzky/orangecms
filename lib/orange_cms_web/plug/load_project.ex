@@ -4,11 +4,11 @@ defmodule OrangeCmsWeb.LoadProject do
   """
   use OrangeCmsWeb, :verified_routes
   import Phoenix.LiveView, only: [push_navigate: 2, put_flash: 3]
-  alias OrangeCms.Projects.Project
 
   def on_mount(_, params, _session, socket) do
     project_id = params["project_id"]
-    projects = Project.read_all!()
+
+    %{projects: projects} = OrangeCms.Accounts.load!(socket.assigns.current_user, :projects)
 
     case Enum.find(projects, &(&1.id == project_id)) do
       %{} = project ->

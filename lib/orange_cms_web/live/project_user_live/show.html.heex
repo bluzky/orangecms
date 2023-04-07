@@ -1,0 +1,28 @@
+<.header>
+  User: <%= @user.first_name || @user.email %>
+  <:actions>
+    <.link patch={~p"/users/#{@user}/show/edit"} phx-click={JS.push_focus()}>
+      <.button class="btn-secondary btn-md" icon="pencil-square">Edit user</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Avatar"><%= @user.avatar %></:item>
+  <:item title="First name"><%= @user.first_name %></:item>
+  <:item title="Last name"><%= @user.last_name %></:item>
+  <:item title="Email"><%= @user.email %></:item>
+</.list>
+
+<.back navigate={~p"/users"}>Back to users</.back>
+
+<.modal :if={@live_action == :edit} id="user-modal" show on_cancel={JS.patch(~p"/users/#{@user}")}>
+  <.live_component
+    module={OrangeCmsWeb.ProjectUserLive.FormComponent}
+    id={@user.id}
+    title={@page_title}
+    action={@live_action}
+    user={@user}
+    patch={~p"/users/#{@user}"}
+  />
+</.modal>

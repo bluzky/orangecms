@@ -57,6 +57,12 @@ content_types = (assigns[:content_types] || [])
                             <span> Content type </span>
                         </a>
                     </li>
+                    <li>
+                        <a href={scoped_path(assigns, "/members" )}>
+                            <Heroicons.users class="h-5 w-5" stroke="currentColor" />
+                            <span> Team </span>
+                        </a>
+                    </li>
                 </ul>
             </details>
         </li>

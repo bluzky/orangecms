@@ -1,0 +1,54 @@
+<.header>
+  Team members
+  <:actions>
+    <.link patch={scoped_path(assigns, "/members/new")}>
+      <.button class="btn-md btn-secondary" icon="plus">Add Member</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="project_users" rows={@streams.project_users}>
+  <:col :let={{_id, %{user: user}}} label="User">
+    <div class="flex gap-3">
+      <div class="avatar placeholder">
+        <div class="bg-neutral-focus text-neutral-content rounded-full w-16">
+          <span class="text-3xl">K</span>
+        </div>
+      </div>
+      <div>
+        <div class="font-bold"><%= "#{user.first_name} #{user.last_name}" %></div>
+        <div class="text-sm text-base"><%= user.email %></div>
+      </div>
+    </div>
+  </:col>
+  <:col :let={{_id, _project_user}} label="Role"><%=  %></:col>
+  <:action :let={{_id, %{user: user} = item}}>
+    <.link :if={user.id != @current_user.id} patch={scoped_path(assigns, "/members/#{item.id}/edit")}>Edit</.link>
+  </:action>
+  <:action :let={{id, %{user: user} = project_user}}>
+    <.link
+      :if={user.id != @current_user.id}
+      phx-click={JS.push("delete", value: %{id: project_user.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="user-modal"
+  show
+  on_cancel={JS.navigate(scoped_path(assigns, "/members"))}
+>
+  <.live_component
+    module={OrangeCmsWeb.ProjectUserLive.FormComponent}
+    id={@project_user.id || :new}
+    title={@page_title}
+    action={@live_action}
+    project_user={@project_user}
+    patch={scoped_path(assigns, "/members")}
+    current_project={@current_project}
+  />
+</.modal>

@@ -15,6 +15,15 @@ defmodule OrangeCms.Accounts.User do
     attribute(:is_admin, :boolean, default: false, private?: true)
   end
 
+  relationships do
+    many_to_many :projects, OrangeCms.Projects.Project do
+      through OrangeCms.Projects.ProjectUser
+      source_attribute_on_join_resource :user_id
+      destination_attribute_on_join_resource :project_id
+      api OrangeCms.Projects
+    end
+  end
+
   calculations do
     calculate :full_name, :string, expr(first_name <> " " <> last_name)
   end
@@ -22,7 +31,7 @@ defmodule OrangeCms.Accounts.User do
   code_interface do
     define_for(OrangeCms.Accounts)
     define(:create, action: :create)
-    define(:read_all, action: :read_all)
+    define(:read, action: :read)
     define(:update, action: :update)
     define(:delete, action: :destroy)
     define(:get, args: [:id], action: :by_id)
@@ -31,10 +40,6 @@ defmodule OrangeCms.Accounts.User do
 
   actions do
     defaults([:read, :update, :destroy])
-
-    read :read_all do
-      prepare(build(sort: [first_name: :asc]))
-    end
 
     read :by_id do
       argument(:id, :uuid, allow_nil?: false)
