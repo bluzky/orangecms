@@ -6,5 +6,12 @@
                 <span>Projects</span>
             </.link>
         </li>
+
+        <li :if={@current_user.is_admin}>
+            <.link navigate={~p"/users"}>
+                <Heroicons.users class="h-5 w-5" stroke="currentColor" />
+                <span>Users</span>
+            </.link>
+        </li>
     </ul>
 </div>
