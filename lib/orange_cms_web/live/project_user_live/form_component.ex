@@ -22,7 +22,9 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
       >
         <.input field={f[:user_id]} type="text" label="User" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Member</.button>
+          <.button class="btn-md btn-secondary" phx-disable-with="Saving...">
+            <.icon name="inbox" /> Save Member
+          </.button>
         </:actions>
       </.simple_form>
     </div>

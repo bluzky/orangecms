@@ -83,7 +83,7 @@ defmodule OrangeCmsWeb.CoreComponents do
                   class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
                   aria-label={gettext("close")}
                 >
-                  <Heroicons.x_mark solid class="h-5 w-5 stroke-current" />
+                  <.icon name="x-mark" solid class="h-5 w-5 stroke-current" />
                 </button>
               </div>
               <div id={"#{@id}-content"}>
@@ -128,6 +128,21 @@ defmodule OrangeCmsWeb.CoreComponents do
   end
 
   @doc """
+  Renders Heroicons
+  """
+
+  attr :name, :string, required: true
+  attr :class, :string, default: "w-5 h-5"
+  attr :solid, :boolean, default: false
+  attr :rest, :global
+
+  def icon(assigns) do
+    apply(Heroicons, :"#{String.replace(assigns.name, "-", "_")}", [
+      %{__changed__: nil, __given__: nil, class: assigns.class, solid: assigns.solid}
+    ])
+  end
+
+  @doc """
   Renders flash notices.
 
   ## Examples
@@ -163,9 +178,9 @@ defmodule OrangeCmsWeb.CoreComponents do
     >
       <div>
         <%= if @title do %>
-          <Heroicons.information_circle :if={@kind == :info} mini class="h-5 w-5" />
-          <Heroicons.check_circle :if={@kind == :success} mini class="h-5 w-5" />
-          <Heroicons.exclamation_circle :if={@kind == :error} mini class="h-5 w-5" />
+          <.icon :if={@kind == :info} name="information-circle" class="h-5 w-5" />
+          <.icon :if={@kind == :success} name="check-circle" class="h-5 w-5" />
+          <.icon :if={@kind == :error} name="exclamation-circle" class="h-5 w-5" />
         <% end %>
         <div>
           <p :if={@title} class="font-semibold">
@@ -180,7 +195,7 @@ defmodule OrangeCmsWeb.CoreComponents do
         class="group absolute top-2 right-1 p-2"
         aria-label={gettext("close")}
       >
-        <Heroicons.x_mark solid class="h-5 w-5 stroke-current opacity-40 group-hover:opacity-70" />
+        <.icon name="x-mark" solid class="h-5 w-5 stroke-current opacity-40 group-hover:opacity-70" />
       </button>
     </div>
     """
@@ -208,7 +223,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       phx-disconnected={show("#disconnected")}
       phx-connected={hide("#disconnected")}
     >
-      Attempting to reconnect <Heroicons.arrow_path class="ml-1 w-3 h-3 inline animate-spin" />
+      Attempting to reconnect <.icon name="arrow-path" class="ml-1 w-3 h-3 inline animate-spin" />
     </.flash>
     """
   end
@@ -271,23 +286,15 @@ defmodule OrangeCmsWeb.CoreComponents do
       type={@type}
       class={[
         "btn",
-        (@icon || @icon_right) && "gap-2",
+        "gap-1",
         "phx-submit-loading:opacity-75 btn",
         @class
       ]}
       {@rest}
     >
-      <%= if @icon,
-        do:
-          apply(Heroicons, :"#{String.replace(@icon, "-", "_")}", [
-            %{__changed__: nil, __given__: nil, class: "w-5 h-5"}
-          ]) %>
+      <.icon :if={not is_nil(@icon)} name={@icon} class="w-5 h-5" />
       <%= render_slot(@inner_block) %>
-      <%= if @icon_right,
-        do:
-          apply(Heroicons, :"#{String.replace(@icon_right, "-", "_")}", [
-            %{__changed__: nil, __given__: nil, class: "w-5 h-5"}
-          ]) %>
+      <.icon :if={not is_nil(@icon_right)} name={@icon_right} class="w-5 h-5" />
     </button>
     """
   end
@@ -358,7 +365,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
         <div :if={@helper != []} class="dropdown">
           <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
-            <Heroicons.question_mark_circle class="w-4 h-4" />
+            <.icon name="question-mark-circle" class="w-4 h-4" />
           </label>
           <div
             tabindex="0"
@@ -448,7 +455,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
       <div :if={@helper != []} class="dropdown">
         <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
-          <Heroicons.question_mark_circle class="w-4 h-4" />
+          <.icon name="question-mark-circle" class="w-4 h-4" />
         </label>
         <div tabindex="0" class="card compact dropdown-content shadow-lg bg-base-300 rounded-box w-80">
           <div class="card-body font-normal">
@@ -468,7 +475,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   def error(assigns) do
     ~H"""
     <p class="phx-no-feedback:hidden mt-3 flex gap-3 text-sm leading-6 text-error">
-      <Heroicons.exclamation_circle mini class="mt-0.5 h-5 w-5 flex-none fill-error" />
+      <.icon name="exclamation-circle" class="mt-0.5 h-5 w-5 flex-none fill-error" />
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -606,7 +613,7 @@ defmodule OrangeCmsWeb.CoreComponents do
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <Heroicons.arrow_left solid class="w-3 h-3 stroke-current inline" />
+        <.icon name="arrow-left" solid class="w-3 h-3 stroke-current inline" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>
@@ -648,7 +655,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       @kind == "error" && "alert-error"
     ]}>
       <div class="w-full">
-        <%= apply(Heroicons, :"#{@icon}", [%{__changed__: nil, __given__: nil, class: "w-5 h5"}]) %>
+        <.icon name={@icon} />
         <%= render_slot(@inner_block) %>
       </div>
     </div>
