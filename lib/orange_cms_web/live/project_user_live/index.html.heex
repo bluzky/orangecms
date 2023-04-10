@@ -22,9 +22,6 @@
     </div>
   </:col>
   <:col :let={{_id, _project_user}} label="Role"><%=  %></:col>
-  <:action :let={{_id, %{user: user} = item}}>
-    <.link :if={user.id != @current_user.id} patch={scoped_path(assigns, "/members/#{item.id}/edit")}>Edit</.link>
-  </:action>
   <:action :let={{id, %{user: user} = project_user}}>
     <.link
       :if={user.id != @current_user.id}

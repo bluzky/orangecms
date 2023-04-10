@@ -36,6 +36,7 @@ defmodule OrangeCms.Accounts.User do
     define(:delete, action: :destroy)
     define(:get, args: [:id], action: :by_id)
     define(:get_by_email, args: [:email], action: :by_email)
+    define(:search, args: [:q], action: :search)
   end
 
   actions do
@@ -48,9 +49,15 @@ defmodule OrangeCms.Accounts.User do
     end
 
     read :by_email do
-      argument(:key, :string, allow_nil?: false)
+      argument(:email, :string, allow_nil?: false)
       get?(true)
-      filter(expr(key == ^arg(:email)))
+      filter(expr(email == ^arg(:email)))
+    end
+
+    read :search do
+      argument(:q, :string, allow_nil?: false)
+      pagination offset?: true, keyset?: true, required?: false
+      filter(expr(contains(email, ^arg(:q))))
     end
 
     create :create do
