@@ -5,7 +5,8 @@ defmodule OrangeCmsWeb.ProjectLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :projects, Project.read_all!())}
+    %{projects: projects} = OrangeCms.Accounts.load!(socket.assigns.current_user, :projects)
+    {:ok, stream(socket, :projects, projects)}
   end
 
   @impl true

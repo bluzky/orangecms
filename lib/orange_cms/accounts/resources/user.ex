@@ -15,6 +15,15 @@ defmodule OrangeCms.Accounts.User do
     attribute(:is_admin, :boolean, default: false, private?: true)
   end
 
+  relationships do
+    many_to_many :projects, OrangeCms.Projects.Project do
+      through OrangeCms.Projects.ProjectUser
+      source_attribute_on_join_resource :user_id
+      destination_attribute_on_join_resource :project_id
+      api OrangeCms.Projects
+    end
+  end
+
   calculations do
     calculate :full_name, :string, expr(first_name <> " " <> last_name)
   end
@@ -22,19 +31,16 @@ defmodule OrangeCms.Accounts.User do
   code_interface do
     define_for(OrangeCms.Accounts)
     define(:create, action: :create)
-    define(:read_all, action: :read_all)
+    define(:read, action: :read)
     define(:update, action: :update)
     define(:delete, action: :destroy)
     define(:get, args: [:id], action: :by_id)
     define(:get_by_email, args: [:email], action: :by_email)
+    define(:search, args: [:q], action: :search)
   end
 
   actions do
     defaults([:read, :update, :destroy])
-
-    read :read_all do
-      prepare(build(sort: [first_name: :asc]))
-    end
 
     read :by_id do
       argument(:id, :uuid, allow_nil?: false)
@@ -43,9 +49,15 @@ defmodule OrangeCms.Accounts.User do
     end
 
     read :by_email do
-      argument(:key, :string, allow_nil?: false)
+      argument(:email, :string, allow_nil?: false)
       get?(true)
-      filter(expr(key == ^arg(:email)))
+      filter(expr(email == ^arg(:email)))
+    end
+
+    read :search do
+      argument(:q, :string, allow_nil?: false)
+      pagination offset?: true, keyset?: true, required?: false
+      filter(expr(contains(email, ^arg(:q))))
     end
 
     create :create do

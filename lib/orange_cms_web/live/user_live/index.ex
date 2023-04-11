@@ -5,7 +5,7 @@ defmodule OrangeCmsWeb.UserLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :users, User.read_all!())}
+    {:ok, stream(socket, :users, User.read!())}
   end
 
   @impl true

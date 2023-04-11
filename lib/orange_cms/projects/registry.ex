@@ -6,5 +6,6 @@ defmodule OrangeCms.Projects.Registry do
 
   entries do
     entry(OrangeCms.Projects.Project)
+    entry(OrangeCms.Projects.ProjectUser)
   end
 end

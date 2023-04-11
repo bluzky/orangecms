@@ -85,6 +85,15 @@ defmodule OrangeCmsWeb.Router do
           live "/new", ContentTypeLive.Index, :new
           live "/:id", ContentTypeLive.Edit
         end
+
+        scope "/members" do
+          live "/", ProjectUserLive.Index, :index
+          live "/new", ProjectUserLive.Index, :new
+          live "/:id/edit", ProjectUserLive.Index, :edit
+
+          live "/:id", ProjectUserLive.Show, :show
+          live "/:id/show/edit", ProjectUserLive.Show, :edit
+        end
       end
     end
   end
