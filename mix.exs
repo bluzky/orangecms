@@ -51,7 +51,7 @@ defmodule OrangeCms.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:ash, "~> 2.6"},
+      {:ash, "~> 2.6.31"},
       {:ash_postgres, "~> 1.3"},
       {:ash_phoenix, "~> 1.2"},
       {:ash_graphql, "~> 0.22"},

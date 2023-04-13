@@ -4,4 +4,8 @@ defmodule OrangeCms.Projects do
   resources do
     registry(OrangeCms.Projects.Registry)
   end
+
+  authorization do
+    authorize :by_default
+  end
 end
