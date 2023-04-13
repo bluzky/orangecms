@@ -45,7 +45,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.Index do
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     user = ProjectUser.get!(id)
-    {:ok, _} = ProjectUser.delete(user)
+    ProjectUser.delete!(user)
 
     {:noreply, stream_delete(socket, :project_users, user)}
   end

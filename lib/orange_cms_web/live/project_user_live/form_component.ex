@@ -119,7 +119,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
   @impl true
   def handle_event("search_user", %{"search_str" => search_str}, socket) do
     if String.trim(search_str) != "" do
-      %{results: users} = User.search!(search_str, page: [limit: 6])
+      %{results: users} = User.search!(search_str, page: [limit: 6], authorize?: false)
 
       {:noreply,
        assign(socket,

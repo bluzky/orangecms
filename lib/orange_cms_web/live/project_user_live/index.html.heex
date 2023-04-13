@@ -21,7 +21,7 @@
       </div>
     </div>
   </:col>
-  <:col :let={{_id, _project_user}} label="Role"><%=  %></:col>
+  <:col :let={{_id, project_user}} label="Role"><span class="badge badge-primary"><%= project_user.role  %></span></:col>
   <:action :let={{id, %{user: user} = project_user}}>
     <.link
       :if={user.id != @current_user.id}

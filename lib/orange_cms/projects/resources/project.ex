@@ -82,10 +82,6 @@ defmodule OrangeCms.Projects.Project do
   end
 
   policies do
-    policy accessing_from(OrangeCms.Accounts.User, :projects) do
-      authorize_if always()
-    end
-
     policy action(:create) do
       authorize_if actor_present()
     end
@@ -94,8 +90,9 @@ defmodule OrangeCms.Projects.Project do
       authorize_if actor_present()
     end
 
+    # here actor is project_member
     policy action(:by_id) do
-      authorize_if expr(^actor(:id) == owner_id or users.id == ^actor(:id))
+      authorize_if expr(project_users.id == ^actor(:id))
     end
   end
 end
