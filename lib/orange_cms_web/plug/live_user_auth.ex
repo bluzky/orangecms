@@ -16,6 +16,7 @@ defmodule OrangeCmsWeb.LiveUserAuth do
 
   def on_mount(:live_user_required, _params, _session, socket) do
     if socket.assigns[:current_user] do
+      Ash.set_actor(socket.assigns[:current_user])
       {:cont, socket}
     else
       {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/sign-in")}

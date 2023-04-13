@@ -1,6 +1,7 @@
 defmodule OrangeCms.Projects.ProjectUser do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   postgres do
     table("project_users")
@@ -21,6 +22,11 @@ defmodule OrangeCms.Projects.ProjectUser do
       allow_nil?: false,
       api: OrangeCms.Accounts,
       attribute_writable?: true
+
+    attribute :type, :atom do
+      constraints(one_of: OrangeCms.Projects.MemberRole.values())
+      default(:editor)
+    end
   end
 
   identities do
@@ -42,6 +48,12 @@ defmodule OrangeCms.Projects.ProjectUser do
       argument(:id, :string, allow_nil?: false)
       get?(true)
       filter(expr(id == ^arg(:id)))
+    end
+  end
+
+  policies do
+    policy relates_to_actor_via([:project, :owner]) do
+      authorize_if always()
     end
   end
 end

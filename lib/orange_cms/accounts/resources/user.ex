@@ -1,7 +1,8 @@
 defmodule OrangeCms.Accounts.User do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
-    extensions: [AshAuthentication]
+    extensions: [AshAuthentication],
+    authorizers: [Ash.Policy.Authorizer]
 
   attributes do
     uuid_primary_key(:id)
@@ -93,5 +94,27 @@ defmodule OrangeCms.Accounts.User do
 
   identities do
     identity(:unique_email, [:email])
+  end
+
+  policies do
+    bypass AshAuthentication.Checks.AshAuthenticationInteraction do
+      authorize_if always()
+    end
+
+    policy accessing_from(OrangeCms.Projects.Project, :users) do
+      authorize_if always()
+    end
+
+    policy accessing_from(OrangeCms.Projects.ProjectUser, :user) do
+      authorize_if always()
+    end
+
+    bypass OrangeCms.Checks.IsAdmin do
+      authorize_if always()
+    end
+
+    policy action(:get) do
+      authorize_if expr(^actor(:id) == id)
+    end
   end
 end

@@ -8,7 +8,7 @@ defmodule OrangeCmsWeb.LoadProject do
   def on_mount(_, params, _session, socket) do
     project_id = params["project_id"]
 
-    %{projects: projects} = OrangeCms.Accounts.load!(socket.assigns.current_user, :projects)
+    projects = OrangeCms.Projects.Project.list_my_projects!()
 
     case Enum.find(projects, &(&1.id == project_id)) do
       %{} = project ->
