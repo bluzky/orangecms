@@ -3,8 +3,8 @@ content_types = (assigns[:content_types] || [])
         current_type = assigns[:current_type]
         %>
 
-<div class="dropdown dropdown-end w-full border-y border-slate-200 p-4 ">
-    <label tabindex="0" class="flex items-center gap-4 px-4">
+<div class="dropdown dropdown-end w-full border-y border-slate-200 ">
+    <label tabindex="0" class="flex items-center gap-4 py-4 px-8">
 
         <Heroicons.puzzle_piece class="w-5 h-5" />
         <p class="text-sm flex-1">
@@ -51,13 +51,13 @@ content_types = (assigns[:content_types] || [])
 
                 <ul class="menu menu-compact mt-2">
 
-                    <li>
+                    <li :if={can?(OrangeCms.Content.ContentType, :read)}>
                         <a href={scoped_path(assigns, "/content_types" )}>
                             <Heroicons.document_text class="h-5 w-5" stroke="currentColor" />
                             <span> Content type </span>
                         </a>
                     </li>
-                    <li>
+                    <li :if={can?(OrangeCms.Projects.ProjectUser, :read)}>
                         <a href={scoped_path(assigns, "/members" )}>
                             <Heroicons.users class="h-5 w-5" stroke="currentColor" />
                             <span> Team </span>

@@ -1,6 +1,8 @@
 defmodule OrangeCmsWeb.ErrorHTML do
   use OrangeCmsWeb, :html
 
+  embed_templates "error_html/*"
+
   # If you want to customize your error pages,
   # uncomment the embed_templates/1 call below
   # and add pages to the error directory:

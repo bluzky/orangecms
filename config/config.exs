@@ -15,7 +15,8 @@ config :orange_cms, OrangeCmsWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
     formats: [html: OrangeCmsWeb.ErrorHTML, json: OrangeCmsWeb.ErrorJSON],
-    layout: false
+    root_layout: {OrangeCmsWeb.Layouts, :root},
+    layout: {OrangeCmsWeb.Layouts, :app}
   ],
   pubsub_server: OrangeCms.PubSub,
   live_view: [signing_salt: "iFmLWv47"]

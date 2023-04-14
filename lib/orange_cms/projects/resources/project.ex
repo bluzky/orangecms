@@ -33,6 +33,7 @@ defmodule OrangeCms.Projects.Project do
 
     create :create do
       change relate_actor(:owner)
+      change {OrangeCms.Projects.Changes.SetOwner, []}
     end
   end
 

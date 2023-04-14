@@ -104,10 +104,10 @@ defmodule OrangeCms.Content.ContentType do
 
   policies do
     bypass action_type(:read) do
-      authorize_if actor_present
+      authorize_if actor_present()
     end
 
-    policy always do
+    policy always() do
       authorize_if actor_attribute_equals(:role, :admin)
     end
   end

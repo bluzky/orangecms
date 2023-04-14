@@ -21,7 +21,8 @@
     <div class="h-4 mt-auto"></div>
     <div class="sticky inset-x-0 bottom-0 border-t border-gray-100 pr-2">
       <div class="dropdown dropdown-top dropdown-end w-full">
-        <a href="#" class="flex items-center gap-2 p-4">
+
+        <label     tabindex="0" class="flex items-center gap-2 p-4">
           <div class="avatar placeholder">
             <div class="bg-orange-500 text-white rounded-full w-12">
               <span>OC</span>
@@ -35,7 +36,8 @@
               <span> <%= @current_user.email %> </span>
             </p>
           </div>
-        </a>
+        </label>
+
         <ul
           tabindex="0"
           class="dropdown-content menu menu-compact p-2 shadow bg-base-100 w-52 rounded-lg"

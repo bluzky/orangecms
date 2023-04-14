@@ -4,7 +4,7 @@ defmodule OrangeCmsWeb.LoadMembership do
   """
   use OrangeCmsWeb, :verified_routes
 
-  def on_mount(_, params, _session, %{assigns: assigns} = socket) do
+  def on_mount(_, _params, _session, %{assigns: assigns} = socket) do
     membership =
       OrangeCms.Projects.ProjectUser.get_membership!(
         assigns.current_project.id,

@@ -16,13 +16,13 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
     {:noreply, assign(socket, project: project)}
   end
 
-  defp apply_action(socket, :setup_github, params) do
+  def apply_action(socket, :setup_github, params) do
     socket
     |> assign(:page_title, "Setup github")
     |> assign(:form, to_form(params))
   end
 
-  defp apply_action(socket, :fetch_content, _params) do
+  def apply_action(socket, :fetch_content, _params) do
     socket
     |> assign(:page_title, "Fetch Users")
   end

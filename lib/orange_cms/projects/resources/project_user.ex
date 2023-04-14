@@ -16,7 +16,7 @@ defmodule OrangeCms.Projects.ProjectUser do
       default(:editor)
     end
 
-    attribute :is_owner, :boolean, default: false
+    attribute :is_owner, :boolean, default: false, private?: true
   end
 
   relationships do
@@ -58,6 +58,10 @@ defmodule OrangeCms.Projects.ProjectUser do
       argument(:user_id, :uuid, allow_nil?: false)
       get?(true)
       filter(expr(project_id == ^arg(:project_id) and user_id == ^arg(:user_id)))
+    end
+
+    create :create_owner do
+      change {OrangeCms.Projects.Change.ForceChange, [is_owner: true]}
     end
   end
 
