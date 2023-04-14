@@ -25,7 +25,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
 
         <div class="relative w-full">
           <div
-            class={["dropdown w-full group", @search && "dropdown-open"]}
+            class={["dropdown w-full group", @search && "dropdown-open", not is_nil(@project_user.id) && "disabled"]}
             phx-click-away="hide-search-box"
             phx-target={@myself}
           >
@@ -42,7 +42,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
               tabindex="0"
               class={[
                 "dropdown-content menu flex-row shadow bg-base-100 rounded-box w-full overflow-y-auto",
-                not @search && "hidden"
+                (not @search || not is_nil(@project_user.id)) && "hidden"
               ]}
               style="max-height: 330px"
             >
@@ -75,6 +75,8 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
             <.icon name="exclamation-circle" /> <%= @error %>
           </label>
         </div>
+
+        <.input type="select" field={f[:role]} options={OrangeCms.Projects.MemberRole.values()} />
         <:actions>
           <.button class="btn-md btn-secondary" phx-disable-with="Saving...">
             <.icon name="inbox" /> Save Member
@@ -119,7 +121,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
   @impl true
   def handle_event("search_user", %{"search_str" => search_str}, socket) do
     if String.trim(search_str) != "" do
-      %{results: users} = User.search!(search_str, page: [limit: 6])
+      %{results: users} = User.search!(search_str, page: [limit: 6], authorize?: false)
 
       {:noreply,
        assign(socket,
@@ -169,8 +171,8 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
         user_params
       )
 
-    case AshPhoenix.Form.submit(form) |> IO.inspect() do
-      {:ok, entry} ->
+    case AshPhoenix.Form.submit(form) do
+      {:ok, _entry} ->
         {:noreply,
          socket
          |> put_flash(:success, "User updated successfully")

@@ -69,6 +69,7 @@ defmodule OrangeCmsWeb.Router do
         on_mount: [
           {OrangeCmsWeb.LiveUserAuth, :live_user_required},
           OrangeCmsWeb.LoadProject,
+          OrangeCmsWeb.LoadMembership,
           OrangeCmsWeb.MenuAssign
         ] do
         live "/", ProjectLive.Show, :show

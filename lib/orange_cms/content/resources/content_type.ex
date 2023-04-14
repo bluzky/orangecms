@@ -1,6 +1,7 @@
 defmodule OrangeCms.Content.ContentType do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   postgres do
     table("content_types")
@@ -98,6 +99,16 @@ defmodule OrangeCms.Content.ContentType do
       allow_nil?(false)
       attribute_writable?(true)
       api(OrangeCms.Projects)
+    end
+  end
+
+  policies do
+    bypass action_type(:read) do
+      authorize_if actor_present()
+    end
+
+    policy always() do
+      authorize_if actor_attribute_equals(:role, :admin)
     end
   end
 end

@@ -16,15 +16,6 @@ defmodule OrangeCms.Accounts.User do
     attribute(:is_admin, :boolean, default: false, private?: true)
   end
 
-  relationships do
-    many_to_many :projects, OrangeCms.Projects.Project do
-      through OrangeCms.Projects.ProjectUser
-      source_attribute_on_join_resource :user_id
-      destination_attribute_on_join_resource :project_id
-      api OrangeCms.Projects
-    end
-  end
-
   calculations do
     calculate :full_name, :string, expr(first_name <> " " <> last_name)
   end
