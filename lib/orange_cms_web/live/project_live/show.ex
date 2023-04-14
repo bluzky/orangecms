@@ -126,6 +126,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
 
     {:ok, content_type} =
       OrangeCms.Content.ContentType.create(%{
+        project_id: current_project.id,
         name: Phoenix.Naming.humanize(content_type_key),
         key: content_type_key,
         github_config: %{"content_dir" => params["content_dir"]}
@@ -136,7 +137,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
 
     {:noreply,
      assign(socket, current_project: current_project, content_type: content_type)
-     |> push_navigate(to: scoped_path(socket.assigns, "/"))}
+     |> push_navigate(to: scoped_path(socket, "/"))}
   end
 
   defp reset_assigns(socket) do

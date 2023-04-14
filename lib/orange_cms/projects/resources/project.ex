@@ -97,7 +97,7 @@ defmodule OrangeCms.Projects.Project do
     end
 
     policy action(:update) do
-      authorize_if expr(project_users.id == ^actor(:id))
+      authorize_if expr(project_users.id == ^actor(:id) and project_users.role == :admin)
     end
   end
 end
