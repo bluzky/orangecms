@@ -95,5 +95,9 @@ defmodule OrangeCms.Projects.Project do
     policy action(:by_id) do
       authorize_if expr(project_users.id == ^actor(:id))
     end
+
+    policy action(:update) do
+      authorize_if expr(project_users.id == ^actor(:id))
+    end
   end
 end
