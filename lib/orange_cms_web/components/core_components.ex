@@ -635,10 +635,10 @@ defmodule OrangeCmsWeb.CoreComponents do
       if is_nil(assigns[:icon]) do
         icon =
           case to_string(assigns.kind) do
-            "success" -> :check_circle
-            "warning" -> :exclamation_triangle
-            "error" -> :x_circle
-            _ -> :info
+            "success" -> "check-circle"
+            "warning" -> "exclamation_triangle"
+            "error" -> "x_circle"
+            _ -> "info"
           end
 
         assign(assigns, :icon, icon)
