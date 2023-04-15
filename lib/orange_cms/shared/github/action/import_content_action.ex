@@ -38,7 +38,11 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
            &Tentacat.Contents.find(&1, owner, repo, directory)
          ) do
       {:ok, files} ->
-        {:ok, Enum.map(files, &import_file(project, content_type, &1))}
+        # import all markdown file only
+        {:ok,
+         files
+         |> Enum.reject(&(not String.ends_with?(&1["path"], ".md")))
+         |> Enum.map(&import_file(project, content_type, &1))}
 
       {:error, error} ->
         Logger.error(inspect(error))
@@ -56,7 +60,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
            project.github_config["access_token"],
            &Tentacat.Contents.find(&1, owner, repo, file["path"])
          ) do
-      {:ok, %{"content" => content}} ->
+      {:ok, %{"content" => content} = file} ->
         {frontmatter, content} = Helper.parse_markdown_content(content)
 
         title =
