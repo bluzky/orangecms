@@ -10,9 +10,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage project records in your database.</:subtitle>
       </.header>
-
       <.simple_form
         :let={f}
         for={@form}
@@ -22,12 +20,12 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
         phx-submit="save"
       >
         <.input field={f[:name]} type="text" label="Name" phx-debounce="500" />
-        <.input
+        <!--        <.input
           field={f[:type]}
           type="select"
           label="Type"
           options={OrangeCms.Projects.ProjectType.values()}
-        />
+        /> -->
         <:actions>
           <.button
             class="btn btn-secondary btn-md"

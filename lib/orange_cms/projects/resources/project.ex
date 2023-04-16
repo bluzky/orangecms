@@ -54,7 +54,7 @@ defmodule OrangeCms.Projects.Project do
 
     attribute :type, :atom do
       constraints(one_of: OrangeCms.Projects.ProjectType.values())
-      default(:headless_cms)
+      default(:github)
     end
 
     attribute :github_config, :map do
