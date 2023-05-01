@@ -9,12 +9,12 @@ defmodule OrangeCms.Shared.Github.UploadFileAction do
     "email" => "sys@orangecms.io"
   }
 
-  def perform(project, content_type, upload) do
+  def perform(project, %{image_settings: settings}, upload) do
     [owner, repo] = String.split(project.github_config["repo_name"], "/")
     {:ok, content} = File.read(upload.path)
 
     path =
-      Path.join(content_type.image_settings.upload_dir, upload.filename)
+      Path.join(settings.upload_dir, upload.filename)
       |> String.trim_leading("/")
 
     body = %{
@@ -30,9 +30,17 @@ defmodule OrangeCms.Shared.Github.UploadFileAction do
     )
     |> case do
       {:ok, file} ->
+        path = get_in(file, ["content", "path"])
+
+        access_path =
+          Path.join("/", path)
+          |> String.replace_leading(settings.upload_dir, "")
+          |> then(&Path.join(settings.serve_at, &1))
+
         {:ok,
          %{
-           path: get_in(file, ["content", "path"]),
+           original_path: path,
+           access_path: access_path,
            url: get_in(file, ["content", "download_url"])
          }}
 

@@ -16,7 +16,7 @@
             <.schema_field
               field={field_def}
               value={frontmatter[field_def.key]}
-              data={%{options: [prefix: "frontmatter"], project: @current_project}}
+              data={%{options: [prefix: "frontmatter"], entry: @content_entry}}
               phx-debounce="blur"
             />
           </div>
@@ -24,7 +24,6 @@
       </div>
       <div
         class="col-span-8 edit-content grid grid-col-12 relative overflow-y-auto"
-         
         style="grid-template-rows: auto 1fr auto;"
       >
         <div class="px-4 pt-8">
@@ -50,9 +49,8 @@
               rows="30"
               phx-hook="MdEditor"
               phx-debounce="60000"
-              data-upload-path={
-                ~p"/api/upload_image/#{@current_project.id}/#{@current_type.id}"
-              }
+              data-upload-path={~p"/api/upload_image/#{@current_project.id}/#{@current_type.id}"}
+              data-preview-path={~p"/assets/preview/#{@content_entry.project_id}/#{@content_entry.content_type_id}"}
             />
           </div>
 
@@ -153,9 +151,9 @@
 
         <div class="my-4 fixed bottom-0 left-0 right-0 grid grid-col-12 ">
           <div class="col-start-3">
-          <.button type="submit" class="btn-secondary btn-md" icon="arrow-up-on-square">
-            Publish
-          </.button>
+            <.button type="submit" class="btn-secondary btn-md" icon="arrow-up-on-square">
+              Publish
+            </.button>
           </div>
         </div>
       </div>

@@ -14,7 +14,12 @@ defmodule OrangeCmsWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug :load_from_bearer
+    # plug :load_from_session
+  end
+
+  pipeline :auth do
+    plug OrangeCmsWeb.LoadMembershipPlug
+    plug OrangeCmsWeb.LoadProjectPlug
   end
 
   scope "/" do
@@ -41,7 +46,14 @@ defmodule OrangeCmsWeb.Router do
 
     get "/", PageController, :home
 
+    scope "/" do
+      pipe_through [:auth]
+
+      get "/assets/preview/:project_id/:content_type_id", PreviewController, :preview
+    end
+
     scope "/api" do
+      pipe_through [:api, :auth]
       post "/upload_image/:project_id/:content_type_id", UploadController, :upload_image
     end
 
