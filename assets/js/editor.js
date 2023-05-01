@@ -4,6 +4,8 @@ import { CustomImage } from "./editor/image";
 import Link from "@tiptap/extension-link";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
 import MarkdownIt from "markdown-it";
+import Commands from "./editor/commands";
+import suggestion from "./editor/suggestion";
 // import { toMarkdown } from "./to_markdown";
 
 // Override function
@@ -147,6 +149,9 @@ export function initEditor(options) {
         tippyOptions: {
           maxWidth: "none",
         },
+      }),
+      Commands.configure({
+        suggestion,
       }),
     ],
     editorProps: {

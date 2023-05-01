@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tabler/icons-svelte": "^2.17.0",
     "@tailwindcss/typography": "^0.5.9",
     "@tiptap/core": "^2.0.1",
     "@tiptap/extension-bubble-menu": "^2.0.1",
@@ -16,9 +17,16 @@
     "@tiptap/extension-link": "^2.0.2",
     "@tiptap/pm": "^2.0.1",
     "@tiptap/starter-kit": "^2.0.1",
+    "@tiptap/suggestion": "^2.0.3",
     "daisyui": "^2.51.3",
+    "esbuild": "^0.17.18",
+    "esbuild-svelte": "^0.7.3",
     "markdown-it": "^13.0.1",
+    "phoenix": "file:../deps/phoenix",
+    "phoenix_html": "file:../deps/phoenix_html",
+    "phoenix_live_view": "file:../deps/phoenix_live_view",
     "punycode": "^2.3.0",
-    "sortablejs": "^1.15.0"
+    "sortablejs": "^1.15.0",
+    "svelte": "^3.58.0"
   }
 }
