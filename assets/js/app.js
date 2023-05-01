@@ -48,6 +48,7 @@ const Hooks = {
       const editor = initEditor({
         element: document.getElementById("editor"),
         content: this.el.value,
+        previewEndpoint: this.el.getAttribute("data-preview-path"),
         classes:
           "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none pb-32",
         tiptapOptions: {
@@ -61,6 +62,7 @@ const Hooks = {
       this.el.form.addEventListener("submit", (_event) => {
         this.el.value = toMarkdown(editor.getJSON());
       });
+      window.editor = editor;
     },
   },
   FileUpload: {

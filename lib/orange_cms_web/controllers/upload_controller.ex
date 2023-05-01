@@ -25,7 +25,7 @@ defmodule OrangeCmsWeb.UploadController do
             |> json(%{status: "internal_error"})
         end
 
-      _ ->
+      _err ->
         put_status(conn, :not_found)
         |> json(%{status: "not_found"})
     end

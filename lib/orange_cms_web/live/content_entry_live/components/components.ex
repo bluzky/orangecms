@@ -23,8 +23,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
       id: field.key,
       label: field.name || field.key,
       type: field.type,
-      name: field_name(field, assigns.data.options),
-      data: nil
+      name: field_name(field, assigns.data.options)
     )
     |> render_input()
   end
@@ -35,6 +34,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   attr :name, :string, required: true
   attr :type, :atom, required: true
   attr :value, :any, default: nil
+  attr :data, :map, default: %{}
   attr :rest, :global
 
   def render_input(%{type: :select} = assigns) do
@@ -44,6 +44,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
       assign(assigns, :type, "select")
       |> assign(:assigns, nil)
       |> assign(:field, nil)
+      |> assign(:data, nil)
       |> assign(:options, field.options)
 
     ~H"""
@@ -83,35 +84,25 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     """
   end
 
-  def render_input(assigns) do
-    input_type = @input_map[assigns.type] || "text"
+  def render_input(%{type: :upload} = assigns) do
+    preview_url =
+      if assigns.value do
+        "/assets/preview/#{assigns.data.entry.project_id}/#{assigns.data.entry.content_type_id}?path=#{assigns.value}"
+      end
 
-    assigns =
-      assign(assigns, :type, input_type)
-      |> assign(:assigns, nil)
-      |> assign(:field, nil)
+    assigns = assign(assigns, :preview_url, preview_url)
 
-    ~H"""
-    <OrangeCmsWeb.CoreComponents.input {assigns} />
-    """
-  end
-
-  def upload(assigns) do
     ~H"""
     <div>
       <label class="block text-xs font-medium text-gray-700">
-        <%= @field_def.name %>
+        <%= @label %>
       </label>
       <div class="form-control">
-        <div
-          class="input-group input-group-sm"
-          phx-update="ignore"
-          {[id: "upload-wrapper-" <> @field_def.key ]}
-        >
+        <div class="input-group input-group-sm" phx-update="ignore" {[id: "upload-wrapper-" <> @id ]}>
           <input
             type="text"
-            {[for: @field_def.key]}
-            {[id: @field_def.key, value: @value, name: field_name(@field_def, @options)]}
+            {[for: @id]}
+            {[id: @id, value: @value, name: @name]}
             placeholder="paste image link or select image to upload"
             class="input input-sm flex-1"
           />
@@ -119,19 +110,37 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
             type="file"
             class="hidden"
             accept="image/*"
-            {[id: @field_def.key <> "upload"]}
+            {[id: @id <> "upload"]}
             phx-hook="FileUpload"
-            {["data-target": @field_def.key, "data-upload-path": "/api/upload_image/#{@project.id}", "data-error-display": @field_def.key <> "-error"]}
+            {["data-target": @id, "data-preview": @id <> "-preview", "data-upload-path": "/api/upload_image/#{@data.entry.project_id}/#{@data.entry.content_type_id}",
+              "data-error-display": @id <> "-error"]}
           />
-          <label class="btn btn-sm btn-square" {[for: @field_def.key <> "upload"]}>
+          <label class="btn btn-sm btn-square" {[for: @id <> "upload"]}>
             <Heroicons.arrow_up_tray class="w-4 h-4" />
           </label>
         </div>
         <label class="label">
-          <span class="label-text-alt text-red-500" {[id: @field_def.key <> "-error"]}></span>
+          <span class="label-text-alt text-red-500" {[id: @id <> "-error"]}></span>
         </label>
+        <div class="w-full h-24 border border-dashed flex items-center justify-center text-gray-300 overflow-hidden">
+          <img {[id: @id <> "-preview", src: @preview_url]} alt="image preview" />
+        </div>
       </div>
     </div>
+    """
+  end
+
+  def render_input(assigns) do
+    input_type = @input_map[assigns.type] || "text"
+
+    assigns =
+      assign(assigns, :type, input_type)
+      |> assign(:assigns, nil)
+      |> assign(:data, nil)
+      |> assign(:field, nil)
+
+    ~H"""
+    <OrangeCmsWeb.CoreComponents.input {assigns} />
     """
   end
 

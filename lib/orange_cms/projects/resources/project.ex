@@ -83,6 +83,10 @@ defmodule OrangeCms.Projects.Project do
   end
 
   policies do
+    policy accessing_from(OrangeCms.Content.ContentType, :project) do
+      authorize_if always()
+    end
+
     policy action(:create) do
       authorize_if actor_present()
     end

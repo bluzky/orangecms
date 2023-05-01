@@ -33,6 +33,10 @@ export class FileUpload {
     this.targetEl = document.getElementById(
       inputEl.getAttribute("data-target")
     );
+
+    this.previewEl = document.getElementById(
+      inputEl.getAttribute("data-preview")
+    );
     this.errorEl = document.getElementById(
       inputEl.getAttribute("data-error-display")
     );
@@ -48,7 +52,14 @@ export class FileUpload {
         this.options,
         (result) => {
           if (this.targetEl) {
-            this.targetEl.value = result.data.url;
+            this.targetEl.value = result.data.access_path;
+            this.previewEl.src = result.data.url;
+            this.errorEl.innerHTML = "";
+            const e = new Event("input", {
+              bubbles: true,
+              cancelable: true,
+            });
+            this.targetEl.dispatchEvent(e);
           }
         },
         (result) => {

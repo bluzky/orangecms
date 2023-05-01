@@ -24,6 +24,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
     {:noreply,
      assign(socket,
        form: AshPhoenix.Form.for_update(content_entry, :update, api: Content),
+       content_entry: content_entry,
        content_type: content_entry.content_type
      )}
   end
@@ -54,7 +55,10 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
       {:ok, entry} ->
         {:noreply,
          socket
-         |> assign(form: AshPhoenix.Form.for_update(entry, :update, api: Content))
+         |> assign(
+           form: AshPhoenix.Form.for_update(entry, :update, api: Content),
+           content_entry: entry
+         )
          |> put_flash(:success, "Auto saved")}
 
       {:error, form} ->

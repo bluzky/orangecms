@@ -1,6 +1,6 @@
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
-import Image from "@tiptap/extension-image";
+import { CustomImage } from "./editor/image";
 import Link from "@tiptap/extension-link";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
 import MarkdownIt from "markdown-it";
@@ -135,7 +135,10 @@ export function initEditor(options) {
     element: options.element,
     extensions: [
       StarterKit,
-      Image.configure({ inline: true }),
+      CustomImage.configure({
+        inline: true,
+        previewEndpoint: options.previewEndpoint,
+      }),
       Link.configure({
         openOnClick: false,
       }),
