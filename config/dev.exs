@@ -25,7 +25,8 @@ config :orange_cms, OrangeCmsWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "Jwa9efdCeTCdhTKzuVdA+DS9v5fBgB8+KT+RcLJ3puS6n2CppCldhkATTUNBd/Qc",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    # esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    node: ["build.js", "--watch", cd: Path.expand("../assets", __DIR__)],
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
