@@ -28,7 +28,7 @@
     Configure github repo
   </:title>
 
-  <:inner_block>
+
     <.simple_form :let={f} for={@form} id="setup_github" phx-change="form_changed" phx-submit="import_content">
       <.input type="text" field={f[:token]} label="Paste your personal github token here" />
 
@@ -45,5 +45,5 @@
           <.button class="btn btn-secondary btn-md" {%{disabled: (not @ready_next)}} icon="inbox-arrow-down"> Import content</.button>
         </div>
     </.simple_form>
-  </:inner_block>
+
 </.modal>

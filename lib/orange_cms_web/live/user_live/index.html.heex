@@ -12,7 +12,7 @@
   rows={@streams.users}
   row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}") end}
 >
-  <:col :let={{_id, user}} label="Avatar">
+  <:col :let={{_id, _user}} label="Avatar">
       <div class="avatar placeholder">
         <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
           <span class="text-3xl">K</span>

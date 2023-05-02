@@ -11,7 +11,7 @@ defmodule OrangeCmsWeb.LoadProjectPlug do
       {:ok, project} ->
         assign(conn, :current_project, project)
 
-      error ->
+      _error ->
         assign(conn, :current_project, nil)
     end
   end
