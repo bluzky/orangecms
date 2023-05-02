@@ -6,6 +6,7 @@ import IconH3 from "@tabler/icons-svelte/dist/svelte/icons/IconH3.svelte";
 import IconQuote from "@tabler/icons-svelte/dist/svelte/icons/IconQuote.svelte";
 import IconList from "@tabler/icons-svelte/dist/svelte/icons/IconList.svelte";
 import IconListNumbers from "@tabler/icons-svelte/dist/svelte/icons/IconListNumbers.svelte";
+import IconPhoto from "@tabler/icons-svelte/dist/svelte/icons/IconPhoto.svelte";
 
 export default {
   items: ({ query }) => {
@@ -14,6 +15,7 @@ export default {
         title: "Header 1",
         icon: IconH1,
         command: ({ editor, range }) => {
+          console.log(editor);
           editor
             .chain()
             .focus()
@@ -70,10 +72,31 @@ export default {
           editor.chain().focus().deleteRange(range).toggleOrderedList().run();
         },
       },
+
+      {
+        title: "Upload image",
+        icon: IconPhoto,
+        command: ({ editor, range }) => {
+          let input = document.createElement("input");
+          input.type = "file";
+          input.onchange = (_) => {
+            let files = Array.from(input.files);
+            editor.options.uploadFunc(files[0]).then((result) => {
+              console.log(result);
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setNode("paragraph")
+                .setImage({ src: result.data.access_path })
+                .run();
+            });
+          };
+          input.click();
+        },
+      },
     ]
-      .filter((item) =>
-        item.title.toLowerCase().startsWith(query.toLowerCase())
-      )
+      .filter((item) => item.title.toLowerCase().includes(query.toLowerCase()))
       .slice(0, 10);
   },
 

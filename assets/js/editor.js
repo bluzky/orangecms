@@ -6,7 +6,6 @@ import BubbleMenu from "@tiptap/extension-bubble-menu";
 import MarkdownIt from "markdown-it";
 import Commands from "./editor/commands";
 import suggestion from "./editor/suggestion";
-// import { toMarkdown } from "./to_markdown";
 
 // Override function
 
@@ -129,6 +128,19 @@ function bindLinkForm(editor, element) {
   });
 }
 
+function uploadFile(file, options) {
+  if (file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("_csrf_token", options.csrf_token);
+
+    return fetch(options.uploadEndpoint, {
+      method: "POST",
+      body: formData,
+    }).then((response) => response.json());
+  }
+}
+
 export function initEditor(options) {
   const html = new MarkdownIt().render(options.content);
   const menuElement = document.querySelector(".editor-menu");
@@ -161,6 +173,7 @@ export function initEditor(options) {
       },
     },
     content: html,
+    uploadFunc: (file) => uploadFile(file, options),
     ...options.tiptapOptions,
   });
 

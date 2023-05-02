@@ -25,7 +25,7 @@ import Sortable from "sortablejs";
 import { initEditor } from "./editor";
 import { toMarkdown } from "./to_markdown";
 import { debounce } from "./utils";
-import { FileUpload, uploadFile } from "./fileUpload";
+import { FileUpload } from "./fileUpload";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -49,6 +49,8 @@ const Hooks = {
         element: document.getElementById("editor"),
         content: this.el.value,
         previewEndpoint: this.el.getAttribute("data-preview-path"),
+        uploadEndpoint: this.el.getAttribute("data-upload-path"),
+        csrf_token: csrfToken,
         classes:
           "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none pb-32",
         tiptapOptions: {
