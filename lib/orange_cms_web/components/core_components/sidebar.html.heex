@@ -1,39 +1,41 @@
-<div class="drawer-side">
-  <label for="my-drawer" class="drawer-overlay"></label>
-  <aside class="w-64 bg-base-200 flex flex-col justify-between">
-    <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm">
+
+  <aside class="collapsible collapsed sidebar w-64 bg-base-200 flex flex-col justify-between">
+    <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-2 py-2 hidden lg:flex shadow-sm">
       <a href={~p"/p"} aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
         <div class="font-title text-orange-500 inline-flex text-lg transition-all duration-200 md:text-3xl">
-          <span class="titlecase">Orange</span>
-          <span class="text-base-content uppercase">CMS</span>
+          <span class="titlecase">O<span class="collapsed-hidden">range</span></span>
+          <span class="text-base-content uppercase collapsed-hidden">CMS</span>
         </div>
       </a>
     </div>
-
+<button
+          onclick="document.querySelector('aside').classList.toggle('collapsed')"
+          class="bg-green-500 rounded-lg w-full text-center"
+        >
+          T
+        </button>
     <div class="h-4"></div>
 
-    <%= if not is_nil(assigns[:current_project]) do %>
-      <.project_sidebar {assigns} />
-    <% else %>
-      <.home_sidebar {assigns} />
-    <% end %>
+    <%= render_slot(@inner_block) %>
 
     <div class="h-4 mt-auto"></div>
-    <div class="sticky inset-x-0 bottom-0 border-t border-gray-100 pr-2">
-      <div class="dropdown dropdown-top dropdown-end w-full">
-
-        <label     tabindex="0" class="flex items-center gap-2 p-4">
-          <div class="avatar placeholder">
-            <div class="bg-orange-500 text-white rounded-full w-12">
+    <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
+      
+      <div class="dropdown dropdown-right dropdown-hover w-full">
+        <label tabindex="0" class="collapsible-item flex items-center gap-2 p-2 overflow-x-hidden">
+          <div class="avatar placeholder no-collapse">
+            <div class="bg-orange-500 text-white rounded-full w-12" title={@current_user.first_name || "No name" }>
               <span>OC</span>
             </div>
           </div>
 
-          <div>
-            <p class="text-xs">
-              <strong class="block font-medium"><%= @current_user.first_name || "No name" %></strong>
+          <div class="will-collapse">
+            <p class="text-xs whitespace-nowrap">
+              <strong class="block font-medium">
+                <%= @current_user.first_name || "No name" %>
+              </strong>
 
-              <span> <%= @current_user.email %> </span>
+              <span><%= @current_user.email %></span>
             </p>
           </div>
         </label>
@@ -51,4 +53,3 @@
       </div>
     </div>
   </aside>
-</div>

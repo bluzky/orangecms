@@ -1,71 +1,85 @@
-<%
-content_types = (assigns[:content_types] || [])
-        current_type = assigns[:current_type]
-        %>
+<% content_types = assigns[:content_types] || []
+current_type = assigns[:current_type] %>
 
-<div class="dropdown dropdown-end w-full border-y border-slate-200 ">
-    <label tabindex="0" class="flex items-center gap-4 py-4 px-8">
+<div class="dropdown dropdown-right dropdown-hover w-full border-y border-slate-200 ">
+  <label tabindex="0" class=" flex items-center p-2 w-full">
+    <div class="collapsible-item w-full gap-4 p-3 rounded-xl hover:bg-blue-100 hover:text-blue-500">
+      <Heroicons.puzzle_piece class="w-6 h-6 no-collapse" />
+      <p class="text-sm will-collapse grow">
+        <strong class="block font-medium font-bold">Projects</strong>
+      </p>
+      <Heroicons.chevron_down class="w-5 h-5 flex-none collapsed-hidden" />
+    </div>
+  </label>
+  <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-xl w-52">
+    <li class="menu-title">
+    <span>Projects</span>
+  </li>
+    
+    <li :for={project <- assigns[:projects] || []}>
+      <.link
+        navigate={~p"/p/#{project}"}
+        class={[
+          "text-sm",
+          (@current_project.id == project.id && "font-bold text-blue-500 bg-blue-100") ||
+            "font-medium"
+        ]}
+      >
+        <%= project.name %>
+      </.link>
+    </li>
 
-        <Heroicons.puzzle_piece class="w-5 h-5" />
-        <p class="text-sm flex-1">
-            <strong class="block font-medium font-bold"><%= @current_project.name %></strong>
-        </p>
-
-                <Heroicons.chevron_down class="w-5 h-5 flex-none" />
-    </label>
-    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-xl w-52">
-        <li :for={project <- (assigns[:projects] || []) }>
-            <.link navigate={~p"/p/#{project}"} class="text-sm font-medium"><%= project.name %></.link>
-        </li>
-
-        <li>
-            <.link navigate={~p"/p"} class="text-sm font-medium text-primary">All projects</.link>
-        </li>
-    </ul>
+    <li class="border-t">
+      <.link navigate={~p"/p"} class="text-sm font-medium text-primary">All projects</.link>
+    </li>
+  </ul>
 </div>
 
-<div class="px-4 mt-4">
+<div class="px-2 mt-4">
+  <ul class="menu text-sm font-medium">
+    <li :for={item <- content_types} class="w-full overflow-x-hidden">
+      <.link
+        navigate={scoped_path(assigns, "/content/#{item.key}")}
+        class={[
+          "flex gap-4 collapsible-item p-3 hover:bg-blue-100 hover:text-blue-500",
+          current_type && item.key == current_type.key && "bg-blue-100 text-blue-500"
+        ]}
+      >
+        <Heroicons.inbox class="h-6 w-6 no-collapse" stroke="currentColor" />
 
-    <ul class="menu text-sm font-medium">
-        <li :for={item <- content_types}>
-            <.link navigate={scoped_path(assigns, "/content/#{item.key}" )} class={["flex gap-4", current_type && item.key==current_type.key && "active" ]}>
-                <Heroicons.inbox class="h-5 w-5" stroke="currentColor" />
+        <span class="will-collapse"><%= item.name %></span>
+      </.link>
+    </li>
 
-                <span> <%= item.name %> </span>
-            </.link>
-        </li>
+    <li>
+      <details class="group [&_summary::-webkit-details-marker]:hidden -mx-2 py-0 px-2 hover:bg-transparent">
+        <summary class="flex cursor-pointer items-center justify-between rounded-xl hover:bg-blue-100 hover:text-blue-500">
+          <div class="flex items-center gap-2 collapsible-item p-3">
+            <Heroicons.cog_6_tooth class="h-6 w-6 no-collapse" stroke="currentColor" />
 
-        <li>
-            <details class="group [&_summary::-webkit-details-marker]:hidden">
-                <summary class="flex cursor-pointer items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <Heroicons.cog_6_tooth class="h-5 w-5" stroke="currentColor" />
+            <span class="will-collapse"> Settings </span>
+          </div>
 
-                        <span> Settings </span>
-                    </div>
+          <span class="shrink-0 transition duration-300 group-open:-rotate-180 collapsed-hidden">
+            <Heroicons.chevron_down class="h-5 w-5" stroke="currentColor" />
+          </span>
+        </summary>
 
-                    <span class="shrink-0 transition duration-300 group-open:-rotate-180">
-                        <Heroicons.chevron_down class="h-5 w-5" stroke="currentColor" />
-                    </span>
-                </summary>
-
-                <ul class="menu menu-compact mt-2">
-
-                    <li :if={can?(OrangeCms.Content.ContentType, :read)}>
-                        <a href={scoped_path(assigns, "/content_types" )}>
-                            <Heroicons.document_text class="h-5 w-5" stroke="currentColor" />
-                            <span> Content type </span>
-                        </a>
-                    </li>
-                    <li :if={can?(OrangeCms.Projects.ProjectUser, :read)}>
-                        <a href={scoped_path(assigns, "/members" )}>
-                            <Heroicons.users class="h-5 w-5" stroke="currentColor" />
-                            <span> Team </span>
-                        </a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-
-    </ul>
+        <ul class="menu menu-compact mt-2">
+          <li :if={can?(OrangeCms.Content.ContentType, :read)}>
+            <a href={scoped_path(assigns, "/content_types")}>
+              <Heroicons.document_text class="h-5 w-5" stroke="currentColor" />
+              <span> Content type </span>
+            </a>
+          </li>
+          <li :if={can?(OrangeCms.Projects.ProjectUser, :read)}>
+            <a href={scoped_path(assigns, "/members")}>
+              <Heroicons.users class="h-5 w-5" stroke="currentColor" />
+              <span> Team </span>
+            </a>
+          </li>
+        </ul>
+      </details>
+    </li>
+  </ul>
 </div>

@@ -7,54 +7,103 @@
 
 /* remove border for code mirror */
 
-.EasyMDEContainer .CodeMirror{
-    border: transparent;
-    padding: 0;
+.collapsible.sidebar,
+.collapsible .sidebar {
+  @apply transition-all duration-500;
 }
 
-ul.menu li{
-    @apply py-0.5;
-}
-ul.menu li > :where(:not(ul)){
-    @apply rounded-xl;
+.collapsible .collapsible-item {
+  @apply flex gap-0 items-center transition-all duration-500;
 }
 
-.btn{
-    @apply normal-case;
+.collapsible .collapsible-item .no-collapse {
+  @apply shrink-0;
 }
 
-.btn-md{
-    @apply h-10 min-h-min
+.collapsible .collapsible-item .will-collapse {
+  @apply w-auto pl-2 opacity-100 transition-all duration-500;
 }
 
-.form-control{
-    @apply mt-2.5;
+.collapsible .collapsed-visible{
+    display: none;
 }
 
-.form-control .input, .form-control .select{
-    @apply h-10 min-h-min text-sm;
+.collapsed.sidebar,
+.collapsed .sidebar {
+  @apply w-16;
 }
 
-.textarea{
-    @apply leading-6;
+.collapsed .collapsible-item .will-collapse {
+  @apply w-0 opacity-0 pl-0;
 }
 
-.tabs>.tab.tab-active{
-    @apply font-bold border-b-2;
+.collapsed .collapsed-visible{
+    display: block;
 }
 
-.tab-content{
-    @apply p-4;
+.collapsed .collapsed-hidden{
+    @apply transition-all duration-500;
+    display: none;
 }
 
-.table tr td, .table tr th{
-    @apply text-sm;
+.collapsed.sidebar details{
+    @apply relative;
 }
 
-.action-btn{
-    @apply btn btn-ghost btn-xs flex gap-1;
+.collapsed.sidebar details ul.menu{
+    @apply absolute top-0 left-full bg-white w-52 p-2 rounded-xl drop-shadow-lg;
 }
 
-.label{
-    @apply justify-start;
+.EasyMDEContainer .CodeMirror {
+  border: transparent;
+  padding: 0;
+}
+
+ul.menu li {
+  @apply py-0.5;
+}
+ul.menu li > :where(:not(ul)) {
+  @apply rounded-xl;
+}
+
+.btn {
+  @apply normal-case;
+}
+
+.btn-md {
+  @apply h-10 min-h-min;
+}
+
+.form-control {
+  @apply mt-2.5;
+}
+
+.form-control .input,
+.form-control .select {
+  @apply h-10 min-h-min text-sm;
+}
+
+.textarea {
+  @apply leading-6;
+}
+
+.tabs > .tab.tab-active {
+  @apply font-bold border-b-2;
+}
+
+.tab-content {
+  @apply p-4;
+}
+
+.table tr td,
+.table tr th {
+  @apply text-sm;
+}
+
+.action-btn {
+  @apply btn btn-ghost btn-xs flex gap-1;
+}
+
+.label {
+  @apply justify-start;
 }
