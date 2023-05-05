@@ -78,6 +78,7 @@ defmodule OrangeCmsWeb.Router do
 
     scope "/p/:project_id" do
       ash_authentication_live_session :project_scope,
+        layout: {OrangeCmsWeb.Layouts, :project},
         on_mount: [
           {OrangeCmsWeb.LiveUserAuth, :live_user_required},
           OrangeCmsWeb.LoadProject,

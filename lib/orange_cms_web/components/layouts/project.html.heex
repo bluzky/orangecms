@@ -1,9 +1,10 @@
 <div class="flex flex-row-reverse">
-  <main class="h-screen overflow-y-auto bg-zinc-200 p-6 grow">
+  <main class="h-screen overflow-y-auto bg-zinc-100 p-6 grow">
     <.flash_group flash={@flash} />
     <%= @inner_content %>
   </main>
-  <.sidebar {assigns}>
-    <.home_sidebar {assigns} />
+
+    <.sidebar {assigns}>
+    <.project_sidebar {assigns} />
   </.sidebar>
 </div>
