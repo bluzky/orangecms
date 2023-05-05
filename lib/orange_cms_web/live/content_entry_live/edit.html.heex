@@ -6,7 +6,7 @@
 
     plugins: [require('@tailwindcss/forms')]
   -->
-<div class="-m-6">
+<div class="-m-6 bg-stone-50">
   <.form :let={f} for={@form} phx-submit="save" phx-change="autosave" class="space-y-4">
     <div class="grid grid-cols-12 gap-4 h-screen max-h-screen">
       <div class="col-span-3 p-8 pt-16 edit-sidebar max-h-screen overflow-y-auto">
@@ -40,7 +40,7 @@
             </span>
           </div>
         </div>
-        <div id="md-editor-container" class="max-h-full overflow-y-auto" phx-update="ignore">
+        <div id="md-editor-container" class="min-h-full" phx-update="ignore">
           <div style="display: none;">
             <.input
               type="textarea"

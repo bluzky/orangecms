@@ -1,3 +1,4 @@
+<div class="p-6 bg-white rounded-xl drop-shadow-lg">
 <.header>
   User: <%= @user.first_name || @user.email %>
   <:actions>
@@ -13,6 +14,8 @@
   <:item title="Last name"><%= @user.last_name %></:item>
   <:item title="Email"><%= @user.email %></:item>
 </.list>
+
+</div>
 
 <.back navigate={~p"/users"}>Back to users</.back>
 
