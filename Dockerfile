@@ -21,8 +21,12 @@ ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
-RUN apt-get update -y && apt-get install -y build-essential git \
+RUN apt-get update -y && apt-get install -y build-essential git curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# install nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+    apt-get install -y nodejs
 
 # prepare build dir
 WORKDIR /app
@@ -33,6 +37,8 @@ RUN mix local.hex --force && \
 
 # set build ENV
 ENV MIX_ENV="prod"
+
+RUN echo $MIX_ENV
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
@@ -50,6 +56,13 @@ COPY priv priv
 COPY lib lib
 
 COPY assets assets
+
+# build assets
+WORKDIR assets
+RUN node --version
+RUN npm i -g yarn; yarn set version stable
+RUN yarn install
+WORKDIR ../
 
 # compile assets
 RUN mix assets.deploy
@@ -89,3 +102,7 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/orange_cms ./
 USER nobody
 
 CMD ["/app/bin/server"]
+
+# Appended by flyctl
+# ENV ECTO_IPV6 true
+# ENV ERL_AFLAGS "-proto_dist inet6_tcp"

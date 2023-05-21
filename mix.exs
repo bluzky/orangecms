@@ -77,13 +77,17 @@ defmodule OrangeCms.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      setup: ["deps.get", "db.setup", "assets.setup", "assets.build"],
+      "db.setup": ["ash_postgres.create", "ash_postgres.migrate", "run priv/repo/seeds.exs"],
+      "db.reset": ["ash_postgres.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.setup": ["tailwind.install --if-missing", "cmd \"cd assets && yarn && cd -\""],
+      "assets.build": ["tailwind default", "cmd \"cd assets && yarn build && cd -\""],
+      "assets.deploy": [
+        "tailwind default --minify",
+        "cmd \"cd assets && yarn build && cd -\"",
+        "phx.digest"
+      ]
     ]
   end
 end

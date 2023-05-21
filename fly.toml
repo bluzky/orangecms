@@ -1,0 +1,12 @@
+# fly.toml file generated for orangecms on 2023-05-16T08:36:57+07:00
+
+app = "orangecms"
+kill_signal = "SIGTERM"
+primary_region = "sin"
+
+[deploy]
+  release_command = "/app/bin/migrate"
+
+[env]
+  PHX_HOST = "orangecms.fly.dev"
+  PORT = "8080"
