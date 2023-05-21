@@ -1,8 +1,11 @@
-# fly.toml file generated for orangecms on 2023-05-16T08:36:57+07:00
+# fly.toml app configuration file generated for orangecms on 2023-05-21T23:43:21+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
 app = "orangecms"
-kill_signal = "SIGTERM"
 primary_region = "sin"
+kill_signal = "SIGTERM"
 
 [deploy]
   release_command = "/app/bin/migrate"
