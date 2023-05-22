@@ -1,8 +1,7 @@
 # OrangeCMS - CMS admin for your static site 
 
-# ⚠️ Warning: This project is under heavy construction and refactoring
 
-> **OrangeCMS is a admin app for static site on github. Instead of creating/editing file on your local and push to git repo. You are now can manage your content with Web UI and your editors don't have to know anything about git**
+> **OrangeCMS is a admin app for static site on github. Instead of creating/editing file on your local and push to git repo. You are now can manage your content with Web UI and your content editors don't have to know anything about git**
 
 ## DEMO
 - [Admin page](http://demo-orangecms.pawtools.org/) username: demo@example.com, password: 123123
@@ -12,20 +11,24 @@
 
 ## Start dev server
 
-- Requirement: elixir, nodejs installed on your machine
+- Requirement: elixir, nodejs installed on your machine. Nodejs is used to build assets only
 
 - Install dependencies
-`mix deps.get`
-
-- Install node packages
-`cd assets && npm install`
-
-- Run migration
-`mix ash_postgres.migrate`
+`mix setup`
 
 - Start project
 `mix phx.server`
 
+## Build release
+
+- Manual build `mix assets.deploy && mix release`
+- Build docker `docker build -t orangecms .`
+
+## Deploy with Fly.io
+
+`fly` cli installation guide here [https://fly.io/docs/flyctl/](https://fly.io/docs/flyctl/)
+
+Then run `fly launch`
 
 ## Roadmap
 - Project
@@ -37,7 +40,7 @@
   - [x] Extract content type from markdown frontmatter
   - [x] Add/edit/remove field from frontmatter schema
   - [ ] Add new content type and sync from github
-  - [ ] Cofig image upload, use relative image path
+  - [x] Cofig image upload, use relative image path
   - [ ] Add default field for github file: `file_name` and `file_dir`
   - [ ] Reorder content type's field
   - [ ] Resync button to force sync latest data from github
