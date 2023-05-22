@@ -32,6 +32,11 @@ if (watch) {
     ...opts,
     sourcemap: "inline",
   };
+
+  esbuild.context(opts).then((context) => {
+    context.watch();
+    console.log("Watching ....");
+  });
 }
 
 if (deploy) {
@@ -39,11 +44,7 @@ if (deploy) {
     ...opts,
     minify: true,
   };
-}
 
-esbuild.context(opts).then((context) => {
-  if (watch) {
-    context.watch();
-    console.log("Watching ....");
-  }
-});
+  console.log("Building release ...");
+  esbuild.build(opts);
+}
