@@ -9,7 +9,22 @@ kill_signal = "SIGTERM"
 
 [deploy]
   release_command = "/app/bin/migrate"
+  strategy = "rolling"
 
 [env]
   PHX_HOST = "orangecms.fly.dev"
   PORT = "8080"
+
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = false
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
+
+
+
