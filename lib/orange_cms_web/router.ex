@@ -53,7 +53,8 @@ defmodule OrangeCmsWeb.Router do
       post "/upload_image/:project_id/:content_type_id", UploadController, :upload_image
     end
 
-    live_session :authenticated_only do
+    live_session :authenticated_only,
+      on_mount: [{OrangeCmsWeb.UserAuth, :ensure_authenticated}] do
       # on_mount: [
       #   {OrangeCmsWeb.LiveUserAuth, :live_user_required}
       # ] do
@@ -73,14 +74,15 @@ defmodule OrangeCmsWeb.Router do
     end
 
     scope "/p/:project_id" do
-      live_session :project_scope do
-        # layout: {OrangeCmsWeb.Layouts, :project},
-        # on_mount: [
-        #   {OrangeCmsWeb.LiveUserAuth, :live_user_required},
-        #   OrangeCmsWeb.LoadProject,
-        #   OrangeCmsWeb.LoadMembership,
-        #   OrangeCmsWeb.MenuAssign
-        # ] do
+      live_session :project_scope,
+        layout: {OrangeCmsWeb.Layouts, :project},
+        on_mount: [
+          {OrangeCmsWeb.UserAuth, :ensure_authenticated},
+          # {OrangeCmsWeb.LiveUserAuth, :live_user_required},
+          OrangeCmsWeb.LoadProject
+          # OrangeCmsWeb.LoadMembership,
+          # OrangeCmsWeb.MenuAssign
+        ] do
         live "/", ProjectLive.Show, :show
         live "/setup_github", ProjectLive.Show, :setup_github
         live "/fetch_content", ProjectLive.Show, :fetch_content

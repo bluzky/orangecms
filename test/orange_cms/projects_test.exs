@@ -1,0 +1,123 @@
+defmodule OrangeCms.ProjectsTest do
+  use OrangeCms.DataCase
+
+  alias OrangeCms.Projects
+
+  describe "projects" do
+    alias OrangeCms.Projects.Project
+
+    import OrangeCms.ProjectsFixtures
+
+    @invalid_attrs %{github_config: nil, image: nil, name: nil, setup_completed: nil, type: nil}
+
+    test "list_projects/0 returns all projects" do
+      project = project_fixture()
+      assert Projects.list_projects() == [project]
+    end
+
+    test "get_project!/1 returns the project with given id" do
+      project = project_fixture()
+      assert Projects.get_project!(project.id) == project
+    end
+
+    test "create_project/1 with valid data creates a project" do
+      valid_attrs = %{github_config: %{}, image: "some image", name: "some name", setup_completed: true, type: "some type"}
+
+      assert {:ok, %Project{} = project} = Projects.create_project(valid_attrs)
+      assert project.github_config == %{}
+      assert project.image == "some image"
+      assert project.name == "some name"
+      assert project.setup_completed == true
+      assert project.type == "some type"
+    end
+
+    test "create_project/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Projects.create_project(@invalid_attrs)
+    end
+
+    test "update_project/2 with valid data updates the project" do
+      project = project_fixture()
+      update_attrs = %{github_config: %{}, image: "some updated image", name: "some updated name", setup_completed: false, type: "some updated type"}
+
+      assert {:ok, %Project{} = project} = Projects.update_project(project, update_attrs)
+      assert project.github_config == %{}
+      assert project.image == "some updated image"
+      assert project.name == "some updated name"
+      assert project.setup_completed == false
+      assert project.type == "some updated type"
+    end
+
+    test "update_project/2 with invalid data returns error changeset" do
+      project = project_fixture()
+      assert {:error, %Ecto.Changeset{}} = Projects.update_project(project, @invalid_attrs)
+      assert project == Projects.get_project!(project.id)
+    end
+
+    test "delete_project/1 deletes the project" do
+      project = project_fixture()
+      assert {:ok, %Project{}} = Projects.delete_project(project)
+      assert_raise Ecto.NoResultsError, fn -> Projects.get_project!(project.id) end
+    end
+
+    test "change_project/1 returns a project changeset" do
+      project = project_fixture()
+      assert %Ecto.Changeset{} = Projects.change_project(project)
+    end
+  end
+
+  describe "project_users" do
+    alias OrangeCms.Projects.ProjectUser
+
+    import OrangeCms.ProjectsFixtures
+
+    @invalid_attrs %{is_owner: nil, role: nil}
+
+    test "list_project_users/0 returns all project_users" do
+      project_user = project_user_fixture()
+      assert Projects.list_project_users() == [project_user]
+    end
+
+    test "get_project_user!/1 returns the project_user with given id" do
+      project_user = project_user_fixture()
+      assert Projects.get_project_user!(project_user.id) == project_user
+    end
+
+    test "create_project_user/1 with valid data creates a project_user" do
+      valid_attrs = %{is_owner: true, role: "some role"}
+
+      assert {:ok, %ProjectUser{} = project_user} = Projects.create_project_user(valid_attrs)
+      assert project_user.is_owner == true
+      assert project_user.role == "some role"
+    end
+
+    test "create_project_user/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Projects.create_project_user(@invalid_attrs)
+    end
+
+    test "update_project_user/2 with valid data updates the project_user" do
+      project_user = project_user_fixture()
+      update_attrs = %{is_owner: false, role: "some updated role"}
+
+      assert {:ok, %ProjectUser{} = project_user} = Projects.update_project_user(project_user, update_attrs)
+      assert project_user.is_owner == false
+      assert project_user.role == "some updated role"
+    end
+
+    test "update_project_user/2 with invalid data returns error changeset" do
+      project_user = project_user_fixture()
+      assert {:error, %Ecto.Changeset{}} = Projects.update_project_user(project_user, @invalid_attrs)
+      assert project_user == Projects.get_project_user!(project_user.id)
+    end
+
+    test "delete_project_user/1 deletes the project_user" do
+      project_user = project_user_fixture()
+      assert {:ok, %ProjectUser{}} = Projects.delete_project_user(project_user)
+      assert_raise Ecto.NoResultsError, fn -> Projects.get_project_user!(project_user.id) end
+    end
+
+    test "change_project_user/1 returns a project_user changeset" do
+      project_user = project_user_fixture()
+      assert %Ecto.Changeset{} = Projects.change_project_user(project_user)
+    end
+  end
+end

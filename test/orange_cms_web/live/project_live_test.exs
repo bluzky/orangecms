@@ -4,9 +4,9 @@ defmodule OrangeCmsWeb.ProjectLiveTest do
   import Phoenix.LiveViewTest
   import OrangeCms.ProjectsFixtures
 
-  @create_attrs %{icon: "some icon", name: "some name", type: "some type"}
-  @update_attrs %{icon: "some updated icon", name: "some updated name", type: "some updated type"}
-  @invalid_attrs %{icon: nil, name: nil, type: nil}
+  @create_attrs %{github_config: %{}, image: "some image", name: "some name", setup_completed: true, type: "some type"}
+  @update_attrs %{github_config: %{}, image: "some updated image", name: "some updated name", setup_completed: false, type: "some updated type"}
+  @invalid_attrs %{github_config: nil, image: nil, name: nil, setup_completed: false, type: nil}
 
   defp create_project(_) do
     project = project_fixture()
@@ -20,7 +20,7 @@ defmodule OrangeCmsWeb.ProjectLiveTest do
       {:ok, _index_live, html} = live(conn, ~p"/projects")
 
       assert html =~ "Listing Projects"
-      assert html =~ project.icon
+      assert html =~ project.image
     end
 
     test "saves new project", %{conn: conn} do
@@ -43,7 +43,7 @@ defmodule OrangeCmsWeb.ProjectLiveTest do
 
       html = render(index_live)
       assert html =~ "Project created successfully"
-      assert html =~ "some icon"
+      assert html =~ "some image"
     end
 
     test "updates project in listing", %{conn: conn, project: project} do
@@ -66,7 +66,7 @@ defmodule OrangeCmsWeb.ProjectLiveTest do
 
       html = render(index_live)
       assert html =~ "Project updated successfully"
-      assert html =~ "some updated icon"
+      assert html =~ "some updated image"
     end
 
     test "deletes project in listing", %{conn: conn, project: project} do
@@ -84,7 +84,7 @@ defmodule OrangeCmsWeb.ProjectLiveTest do
       {:ok, _show_live, html} = live(conn, ~p"/projects/#{project}")
 
       assert html =~ "Show Project"
-      assert html =~ project.icon
+      assert html =~ project.image
     end
 
     test "updates project within modal", %{conn: conn, project: project} do
@@ -107,7 +107,7 @@ defmodule OrangeCmsWeb.ProjectLiveTest do
 
       html = render(show_live)
       assert html =~ "Project updated successfully"
-      assert html =~ "some updated icon"
+      assert html =~ "some updated image"
     end
   end
 end

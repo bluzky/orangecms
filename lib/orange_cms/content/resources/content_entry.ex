@@ -39,7 +39,7 @@ defmodule OrangeCms.Content.ContentEntry do
     read :by_type do
       argument(:content_type_id, :uuid)
       argument(:type, :string)
-      prepare(build(sort: [created_at: :desc]))
+      prepare(build(sort: [inserted_at: :desc]))
       filter(expr(content_type_id == ^arg(:content_type_id) or content_type.key == ^arg(:type)))
     end
   end
@@ -69,7 +69,7 @@ defmodule OrangeCms.Content.ContentEntry do
 
     attribute(:integration_info, OrangeCms.Content.ContentGithubInfo, default: %{})
 
-    create_timestamp(:created_at)
+    create_timestamp(:inserted_at)
     update_timestamp(:updated_at)
   end
 
@@ -78,13 +78,7 @@ defmodule OrangeCms.Content.ContentEntry do
     change({OrangeCms.Content.CopyLinkedField, [fields: [:title, :slug]]})
   end
 
-  multitenancy do
-    strategy(:attribute)
-    attribute(:project_id)
-  end
-
   alias OrangeCms.Content.ContentType
-  alias OrangeCms.Projects.Project
 
   relationships do
     belongs_to :content_type, ContentType do
@@ -93,14 +87,14 @@ defmodule OrangeCms.Content.ContentEntry do
     end
   end
 
-  relationships do
-    belongs_to :project, Project do
-      allow_nil?(false)
-      attribute_type(:string)
-      attribute_writable?(true)
-      api(OrangeCms.Projects)
-    end
-  end
+  # relationships do
+  #   belongs_to :project, Project do
+  #     allow_nil?(false)
+  #     attribute_type(:string)
+  #     attribute_writable?(true)
+  #     api(OrangeCms.Projects)
+  #   end
+  # end
 
   # graphql for list entry and get entry
   graphql do
