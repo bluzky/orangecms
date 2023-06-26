@@ -1,7 +1,7 @@
 
   <aside class="collapsible collapsed sidebar w-64 bg-white border-r flex flex-col justify-between">
     <div class="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-2 py-2 hidden lg:flex shadow-sm">
-      <a href={~p"/p"} aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
+      <a href={~p"/"} aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
         <div class="font-title text-orange-500 inline-flex text-lg transition-all duration-200 md:text-3xl">
           <span class="titlecase">O<span class="collapsed-hidden">range</span></span>
           <span class="text-base-content uppercase collapsed-hidden">CMS</span>
@@ -21,10 +21,10 @@
     <div class="h-4 mt-auto"></div>
     <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
       
-      <div class="dropdown dropdown-right dropdown-hover w-full">
+      <div class="dropdown dropdown-right dropdown-end dropdown-hover w-full">
         <label tabindex="0" class="collapsible-item flex items-center gap-2 p-2 overflow-x-hidden">
           <div class="avatar placeholder no-collapse">
-            <div class="bg-orange-500 text-white rounded-full w-12" title={@current_user.first_name || "No name" }>
+            <div class="bg-orange-500 text-white rounded-full w-12" title={@current_user.first_name || @current_user.email }>
               <span>OC</span>
             </div>
           </div>
@@ -45,9 +45,15 @@
           class="dropdown-content menu menu-compact p-2 shadow bg-base-100 w-52 rounded-lg"
         >
           <li>
-            <a href={~p"/sign-out"}>
+            <.link href={~p"/users/settings"}>
+              <Heroicons.user class="w-5 h-5" /> Profile
+            </.link>
+          </li>
+          <li>
+            <.link href={~p"/users/log_out"}
+            method="delete">
               <Heroicons.arrow_right_on_rectangle class="w-5 h-5" /> Sign out
-            </a>
+            </.link>
           </li>
         </ul>
       </div>

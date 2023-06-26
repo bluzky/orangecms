@@ -5,6 +5,6 @@ defmodule OrangeCmsWeb.PageController do
     # The home page is often custom made,
     # so skip the default app layout.
     # render(conn, :home, layout: false)
-    redirect(conn, to: ~p"/sign-in")
+    render(conn, :home)
   end
 end

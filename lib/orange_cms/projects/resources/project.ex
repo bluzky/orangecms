@@ -70,14 +70,14 @@ defmodule OrangeCms.Projects.Project do
   relationships do
     has_many :project_users, OrangeCms.Projects.ProjectUser
 
-    many_to_many :users, OrangeCms.Accounts.User do
+    many_to_many :users, OrangeCms.Accounts.OUser do
       through OrangeCms.Projects.ProjectUser
       source_attribute_on_join_resource :project_id
       destination_attribute_on_join_resource :user_id
       api OrangeCms.Accounts
     end
 
-    belongs_to :owner, OrangeCms.Accounts.User do
+    belongs_to :owner, OrangeCms.Accounts.OUser do
       api OrangeCms.Accounts
     end
   end

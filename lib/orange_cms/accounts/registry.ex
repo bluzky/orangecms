@@ -5,6 +5,6 @@ defmodule OrangeCms.Accounts.Registry do
     ]
 
   entries do
-    entry(OrangeCms.Accounts.User)
+    entry(OrangeCms.Accounts.OUser)
   end
 end
