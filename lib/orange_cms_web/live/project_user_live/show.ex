@@ -1,7 +1,7 @@
 defmodule OrangeCmsWeb.ProjectUserLive.Show do
   use OrangeCmsWeb, :live_view
 
-  alias OrangeCms.Accounts.User
+  alias OrangeCms.Accounts.OUser
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,7 +13,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:user, User.get!(id))}
+     |> assign(:user, OUser.get!(id))}
   end
 
   defp page_title(:show), do: "Show User"

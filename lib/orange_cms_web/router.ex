@@ -1,6 +1,8 @@
 defmodule OrangeCmsWeb.Router do
   use OrangeCmsWeb, :router
-  use AshAuthentication.Phoenix.Router
+
+  import OrangeCmsWeb.UserAuth
+  # use AshAuthentication.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html", "json"]
@@ -9,7 +11,8 @@ defmodule OrangeCmsWeb.Router do
     plug :put_root_layout, {OrangeCmsWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :load_from_session
+    plug :fetch_current_user
+    # plug :load_from_session
   end
 
   pipeline :api do
@@ -18,31 +21,24 @@ defmodule OrangeCmsWeb.Router do
   end
 
   pipeline :auth do
-    plug OrangeCmsWeb.LoadMembershipPlug
-    plug OrangeCmsWeb.LoadProjectPlug
+    # plug OrangeCmsWeb.LoadMembershipPlug
+    # plug OrangeCmsWeb.LoadProjectPlug
   end
 
-  scope "/" do
-    forward "/gql",
-            Absinthe.Plug,
-            schema: OrangeCms.Content.Schema
-
-    forward "/playground",
-            Absinthe.Plug.GraphiQL,
-            schema: OrangeCms.Content.Schema,
-            interface: :playground
+  pipeline :not_auth do
+    plug :put_layout, false
   end
+
+  # scope "/", OrangeCmsWeb do
+  #   pipe_through [:browser]
+  #   sign_in_route(on_mount: [{OrangeCmsWeb.LiveUserAuth, :live_no_user}])
+  #   sign_out_route(AuthController)
+  #   auth_routes_for(OrangeCms.Accounts.OUser, to: AuthController)
+  #   reset_route([])
+  # end
 
   scope "/", OrangeCmsWeb do
-    pipe_through [:browser]
-    sign_in_route(on_mount: [{OrangeCmsWeb.LiveUserAuth, :live_no_user}])
-    sign_out_route(AuthController)
-    auth_routes_for(OrangeCms.Accounts.User, to: AuthController)
-    reset_route([])
-  end
-
-  scope "/", OrangeCmsWeb do
-    pipe_through [:browser]
+    pipe_through [:browser, :require_authenticated_user]
 
     get "/", PageController, :home
 
@@ -57,34 +53,34 @@ defmodule OrangeCmsWeb.Router do
       post "/upload_image/:project_id/:content_type_id", UploadController, :upload_image
     end
 
-    ash_authentication_live_session :authenticated_only,
-      on_mount: [
-        {OrangeCmsWeb.LiveUserAuth, :live_user_required}
-      ] do
+    live_session :authenticated_only do
+      # on_mount: [
+      #   {OrangeCmsWeb.LiveUserAuth, :live_user_required}
+      # ] do
       scope "/" do
         live "/p", ProjectLive.Index, :index
         live "/p/new", ProjectLive.Index, :new
       end
 
-      scope "/users" do
-        live "/", UserLive.Index, :index
-        live "/new", UserLive.Index, :new
-        live "/:id/edit", UserLive.Index, :edit
+      # scope "/users" do
+      #   live "/", UserLive.Index, :index
+      #   live "/new", UserLive.Index, :new
+      #   live "/:id/edit", UserLive.Index, :edit
 
-        live "/:id", UserLive.Show, :show
-        live "/:id/show/edit", UserLive.Show, :edit
-      end
+      #   live "/:id", UserLive.Show, :show
+      #   live "/:id/show/edit", UserLive.Show, :edit
+      # end
     end
 
     scope "/p/:project_id" do
-      ash_authentication_live_session :project_scope,
-        layout: {OrangeCmsWeb.Layouts, :project},
-        on_mount: [
-          {OrangeCmsWeb.LiveUserAuth, :live_user_required},
-          OrangeCmsWeb.LoadProject,
-          OrangeCmsWeb.LoadMembership,
-          OrangeCmsWeb.MenuAssign
-        ] do
+      live_session :project_scope do
+        # layout: {OrangeCmsWeb.Layouts, :project},
+        # on_mount: [
+        #   {OrangeCmsWeb.LiveUserAuth, :live_user_required},
+        #   OrangeCmsWeb.LoadProject,
+        #   OrangeCmsWeb.LoadMembership,
+        #   OrangeCmsWeb.MenuAssign
+        # ] do
         live "/", ProjectLive.Show, :show
         live "/setup_github", ProjectLive.Show, :setup_github
         live "/fetch_content", ProjectLive.Show, :fetch_content
@@ -131,6 +127,45 @@ defmodule OrangeCmsWeb.Router do
 
       live_dashboard "/dashboard", metrics: OrangeCmsWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  ## Authentication routes
+
+  scope "/", OrangeCmsWeb do
+    pipe_through [:browser, :not_auth, :redirect_if_user_is_authenticated]
+
+    live_session :redirect_if_user_is_authenticated,
+      layout: false,
+      on_mount: [{OrangeCmsWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/register", UserRegistrationLive, :new
+      live "/log_in", UserLoginLive, :new
+      live "/users/reset_password", UserForgotPasswordLive, :new
+      live "/users/reset_password/:token", UserResetPasswordLive, :edit
+    end
+
+    post "/log_in", UserSessionController, :create
+  end
+
+  scope "/", OrangeCmsWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_authenticated_user,
+      on_mount: [{OrangeCmsWeb.UserAuth, :ensure_authenticated}] do
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+    end
+  end
+
+  scope "/", OrangeCmsWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+
+    live_session :current_user,
+      on_mount: [{OrangeCmsWeb.UserAuth, :mount_current_user}] do
+      live "/users/confirm/:token", UserConfirmationLive, :edit
+      live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
   end
 end

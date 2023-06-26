@@ -25,7 +25,7 @@ defmodule OrangeCms.Projects.ProjectUser do
       allow_nil?: false,
       attribute_writable?: true
 
-    belongs_to :user, OrangeCms.Accounts.User,
+    belongs_to :user, OrangeCms.Accounts.OUser,
       allow_nil?: false,
       api: OrangeCms.Accounts,
       attribute_writable?: true

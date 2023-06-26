@@ -1,4 +1,4 @@
-defmodule OrangeCms.Accounts.User do
+defmodule OrangeCms.Accounts.OUser do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshAuthentication],
@@ -79,7 +79,7 @@ defmodule OrangeCms.Accounts.User do
   end
 
   postgres do
-    table("users")
+    table("ousers")
     repo(OrangeCms.Repo)
   end
 

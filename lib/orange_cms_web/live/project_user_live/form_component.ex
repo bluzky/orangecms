@@ -3,7 +3,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
 
   alias OrangeCms.Projects
   alias OrangeCms.Projects.ProjectUser
-  alias OrangeCms.Accounts.User
+  alias OrangeCms.Accounts.OUser
 
   @impl true
   def render(assigns) do
@@ -25,7 +25,11 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
 
         <div class="relative w-full">
           <div
-            class={["dropdown w-full group", @search && "dropdown-open", not is_nil(@project_user.id) && "disabled"]}
+            class={[
+              "dropdown w-full group",
+              @search && "dropdown-open",
+              not is_nil(@project_user.id) && "disabled"
+            ]}
             phx-click-away="hide-search-box"
             phx-target={@myself}
           >
@@ -121,7 +125,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
   @impl true
   def handle_event("search_user", %{"search_str" => search_str}, socket) do
     if String.trim(search_str) != "" do
-      %{results: users} = User.search!(search_str, page: [limit: 6], authorize?: false)
+      %{results: users} = OUser.search!(search_str, page: [limit: 6], authorize?: false)
 
       {:noreply,
        assign(socket,
