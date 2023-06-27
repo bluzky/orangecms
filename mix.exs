@@ -63,6 +63,7 @@ defmodule OrangeCms.MixProject do
       {:tentacat, "~> 2.2"},
       {:yaml_elixir, "~> 2.9"},
       {:slugger, "~> 0.3.0"},
+      {:filtery, "~> 0.2.3"},
 
       # authentication
       {:ash_authentication, "~> 3.10"},

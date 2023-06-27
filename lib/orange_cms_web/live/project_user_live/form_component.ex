@@ -3,7 +3,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
 
   alias OrangeCms.Projects
   alias OrangeCms.Projects.ProjectUser
-  alias OrangeCms.Accounts.OUser
+  alias OrangeCms.Accounts
 
   @impl true
   def render(assigns) do
@@ -13,10 +13,10 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
         <%= @title %>
       </.header>
 
-      <.simple_form :let={f} for={@form} id="user-form" phx-target={@myself} phx-submit="save">
+      <.simple_form for={@form} id="user-form" phx-target={@myself} phx-submit="save">
         <div class="hidden">
           <.input
-            field={f[:user_id]}
+            field={@form[:user_id]}
             value={(@selected_item && @selected_item.value) || nil}
             type="text"
             label="User"
@@ -80,7 +80,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
           </label>
         </div>
 
-        <.input type="select" field={f[:role]} options={OrangeCms.Projects.MemberRole.values()} />
+        <.input type="select" field={@form[:role]} options={OrangeCms.Projects.MemberRole.values()} />
         <:actions>
           <.button class="btn-md btn-secondary" phx-disable-with="Saving...">
             <.icon name="inbox" /> Save Member
@@ -93,18 +93,13 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
 
   @impl true
   def update(%{project_user: project_user} = assigns, socket) do
-    form =
-      if project_user.id do
-        AshPhoenix.Form.for_update(project_user, :update, api: Projects)
-      else
-        AshPhoenix.Form.for_create(ProjectUser, :create, api: Projects)
-      end
+    changeset = Projects.change_project_user(project_user)
 
     {:ok,
      socket
+     |> assign_form(changeset)
      |> assign(assigns)
      |> assign(
-       form: form,
        suggestions: [],
        selected_item: nil,
        search: false,
@@ -125,7 +120,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
   @impl true
   def handle_event("search_user", %{"search_str" => search_str}, socket) do
     if String.trim(search_str) != "" do
-      %{results: users} = OUser.search!(search_str, page: [limit: 6], authorize?: false)
+      users = Accounts.search_user(search_str)
 
       {:noreply,
        assign(socket,
@@ -142,7 +137,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
 
   @impl true
   def handle_event("select-item", %{"selected" => value}, socket) do
-    selected_item = Enum.find(socket.assigns.suggestions, &(&1.value == value))
+    selected_item = Enum.find(socket.assigns.suggestions, &(to_string(&1.value) == value))
 
     if selected_item do
       {:noreply,
@@ -156,38 +151,58 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"form" => user_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        user_params
-      )
+  def handle_event("validate", %{"project_user" => project_user_params}, socket) do
+    changeset =
+      socket.assigns.project
+      |> Projects.change_project_user(project_user_params)
+      |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :form, form)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"form" => user_params}, socket) do
-    user_params = Map.put(user_params, "project_id", socket.assigns.current_project.id)
+  def handle_event("save", %{"project_user" => params}, socket) do
+    save_project(socket, socket.assigns.action, params)
+  end
 
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        user_params
-      )
+  defp save_project(socket, :edit, params) do
+    case Projects.update_project_user(socket.assigns.project_user, params) do
+      {:ok, project_user} ->
+        notify_parent({:saved, project_user})
 
-    case AshPhoenix.Form.submit(form) do
-      {:ok, _entry} ->
         {:noreply,
          socket
-         |> put_flash(:success, "User updated successfully")
-         |> assign(error: nil)
-         |> push_navigate(to: scoped_path(socket, "/members"))}
+         |> put_flash(:info, "Member updated successfully")
+         |> push_patch(to: socket.assigns.patch)}
 
-      {:error, form} ->
-        {:noreply,
-         socket
-         |> assign(form: form)}
-        |> assign(error: "User is duplicated")
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
     end
   end
+
+  defp save_project(socket, :new, params) do
+    params =
+      Map.merge(params, %{
+        "project_id" => socket.assigns.current_project.id
+      })
+
+    case Projects.create_project_user(params) do
+      {:ok, project_user} ->
+        notify_parent({:saved, project_user})
+
+        {:noreply,
+         socket
+         |> assign(error: nil)
+         |> put_flash(:info, "Member added successfully")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

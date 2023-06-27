@@ -9,13 +9,13 @@ defmodule OrangeCms.Repo.Migrations.AddSetupFlag do
 
   def up do
     alter table(:projects) do
-      add :set_up_completed, :boolean, default: false
+      add :setup_completed, :boolean, default: false
     end
   end
 
   def down do
     alter table(:projects) do
-      remove :set_up_completed
+      remove :setup_completed
     end
   end
 end

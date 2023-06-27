@@ -57,7 +57,7 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "set_up_completed",
+      "source": "setup_completed",
       "type": "boolean"
     },
     {
@@ -67,7 +67,7 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "created_at",
+      "source": "inserted_at",
       "type": "utc_datetime_usec"
     },
     {

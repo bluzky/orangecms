@@ -12,7 +12,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
 
   @impl true
   def handle_params(%{"project_id" => id}, _url, socket) do
-    project = Project.get!(id)
+    project = Projects.get_project!(id)
     {:noreply, assign(socket, project: project)}
   end
 
@@ -24,7 +24,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
 
   def apply_action(socket, :fetch_content, _params) do
     socket
-    |> assign(:page_title, "Fetch Users")
+    |> assign(:page_title, "Fetch content")
   end
 
   @impl true
@@ -113,7 +113,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
     # update config
     current_project =
       socket.assigns.current_project
-      |> Ash.Changeset.for_update(:update, %{
+      |> Projects.update_project(%{
         github_config: %{
           "access_token" => params["token"],
           "repo_name" => socket.assigns.repository["full_name"]

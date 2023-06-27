@@ -13,7 +13,7 @@ defmodule OrangeCms.Repo.Migrations.AddProject do
       add :name, :text, null: false
       add :image, :text
       add :type, :text, default: "headless_cms"
-      add :created_at, :utc_datetime_usec, null: false, default: fragment("now()")
+      add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
     end
 
@@ -24,7 +24,7 @@ defmodule OrangeCms.Repo.Migrations.AddProject do
       add :image_settings, :map
       add :field_defs, {:array, :map}
       add :anchor_field, :text
-      add :created_at, :utc_datetime_usec, null: false, default: fragment("now()")
+      add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
 
       add :project_id,
@@ -45,7 +45,7 @@ defmodule OrangeCms.Repo.Migrations.AddProject do
       add :raw_body, :text, null: false, default: ""
       add :json_body, :map
       add :frontmatter, :map
-      add :created_at, :utc_datetime_usec, null: false, default: fragment("now()")
+      add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
 
       add :content_type_id,

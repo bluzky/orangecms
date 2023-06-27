@@ -64,6 +64,11 @@ defmodule OrangeCms.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def search_user(keyword) do
+    Filtery.apply(User, %{email: {:ilike, keyword}})
+    |> Repo.all()
+  end
+
   ## User registration
 
   @doc """

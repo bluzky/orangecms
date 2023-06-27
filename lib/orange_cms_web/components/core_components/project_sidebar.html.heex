@@ -66,13 +66,13 @@ current_type = assigns[:current_type] %>
         </summary>
 
         <ul class="menu menu-compact mt-2">
-          <li :if={can?(OrangeCms.Content.ContentType, :read)}>
+          <li>
             <a href={scoped_path(assigns, "/content_types")}>
               <Heroicons.document_text class="h-5 w-5" stroke="currentColor" />
               <span> Content type </span>
             </a>
           </li>
-          <li :if={can?(OrangeCms.Projects.ProjectUser, :read)}>
+          <li>
             <a href={scoped_path(assigns, "/members")}>
               <Heroicons.users class="h-5 w-5" stroke="currentColor" />
               <span> Team </span>

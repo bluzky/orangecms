@@ -2,7 +2,6 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Projects
-  alias OrangeCms.Projects.Project
 
   @impl true
   def render(assigns) do
@@ -12,16 +11,15 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
         <%= @title %>
       </.header>
       <.simple_form
-        :let={f}
         for={@form}
         id="project-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={f[:name]} type="text" label="Name" phx-debounce="500" />
+        <.input field={@form[:name]} type="text" label="Name" phx-debounce="500" />
         <!--        <.input
-          field={f[:type]}
+          field={@form[:type]}
           type="select"
           label="Type"
           options={OrangeCms.Projects.ProjectType.values()}
@@ -41,42 +39,47 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   end
 
   @impl true
-  def update(assigns, socket) do
-    form = AshPhoenix.Form.for_create(Project, :create, api: Projects)
+  def update(%{project: project} = assigns, socket) do
+    changeset = Projects.change_project(project)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(form: form)}
+     |> assign_form(changeset)}
   end
 
   @impl true
-  def handle_event("validate", %{"form" => project_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        project_params
-      )
+  def handle_event("validate", %{"project" => project_params}, socket) do
+    changeset =
+      socket.assigns.project
+      |> Projects.change_project(project_params)
+      |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :form, form)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"form" => project_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        project_params
-      )
+  def handle_event("save", %{"project" => project_params}, socket) do
+    save_project(socket, socket.assigns.action, project_params)
+  end
 
-    case AshPhoenix.Form.submit(form) do
-      {:ok, entry} ->
+  defp save_project(socket, :new, project_params) do
+    case Projects.create_project(project_params) do
+      {:ok, project} ->
+        notify_parent({:saved, project})
+
         {:noreply,
          socket
-         |> put_flash(:info, "Created project successfully")
-         |> push_navigate(to: ~p"/p/#{entry.id}")}
+         |> put_flash(:info, "Project created successfully")
+         |> push_patch(to: socket.assigns.patch)}
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
     end
   end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

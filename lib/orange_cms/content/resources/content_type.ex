@@ -10,14 +10,6 @@ defmodule OrangeCms.Content.ContentType do
     custom_indexes do
       index(["id", "project_id"], unique: true)
     end
-
-    references do
-      reference(:project,
-        on_delete: :delete,
-        on_update: :update,
-        name: "content_types_project_id_fkey"
-      )
-    end
   end
 
   code_interface do
@@ -34,7 +26,7 @@ defmodule OrangeCms.Content.ContentType do
     defaults([:create, :read, :update, :destroy])
 
     read :read_all do
-      prepare(build(sort: [created_at: :desc]))
+      prepare(build(sort: [inserted_at: :desc]))
     end
 
     read :by_id do
@@ -82,25 +74,18 @@ defmodule OrangeCms.Content.ContentType do
       allow_nil?(true)
     end
 
-    create_timestamp(:created_at)
+    create_timestamp(:inserted_at)
     update_timestamp(:updated_at)
   end
 
-  multitenancy do
-    strategy(:attribute)
-    attribute(:project_id)
-  end
-
-  alias OrangeCms.Projects.Project
-
-  relationships do
-    belongs_to :project, Project do
-      attribute_type(:string)
-      allow_nil?(false)
-      attribute_writable?(true)
-      api(OrangeCms.Projects)
-    end
-  end
+  # relationships do
+  #   belongs_to :project, Project do
+  #     attribute_type(:string)
+  #     allow_nil?(false)
+  #     attribute_writable?(true)
+  #     api(OrangeCms.Projects)
+  #   end
+  # end
 
   policies do
     bypass action_type(:read) do

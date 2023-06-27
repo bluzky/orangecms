@@ -3,12 +3,13 @@ defmodule OrangeCmsWeb.ProjectUserLive.Index do
 
   alias OrangeCms.Projects
   alias OrangeCms.Projects.ProjectUser
+  alias OrangeCms.Repo
 
   @impl true
   def mount(_params, _session, socket) do
     project =
       socket.assigns.current_project
-      |> Projects.load!(project_users: :user)
+      |> Repo.preload(project_users: :user)
 
     {:ok, stream(socket, :project_users, project.project_users)}
   end
@@ -21,7 +22,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Member")
-    |> assign(:project_user, ProjectUser.get!(id))
+    |> assign(:project_user, Projects.get_project_user!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -38,14 +39,14 @@ defmodule OrangeCmsWeb.ProjectUserLive.Index do
 
   @impl true
   def handle_info({OrangeCmsWeb.ProjectUserLive.FormComponent, {:saved, user}}, socket) do
-    user = Projects.load!(user, :user)
+    user = Repo.preload(user, :user)
     {:noreply, stream_insert(socket, :project_users, user)}
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    user = ProjectUser.get!(id)
-    ProjectUser.delete!(user)
+    user = Projects.get_project_user!(id)
+    Projects.delete_project_user(user)
 
     {:noreply, stream_delete(socket, :project_users, user)}
   end

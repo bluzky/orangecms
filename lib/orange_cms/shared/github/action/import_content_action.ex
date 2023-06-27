@@ -21,7 +21,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
     case import_directory(project, content_type, content_type.github_config["content_dir"]) do
       {:ok, frontmatters} ->
         schema = construct_frontmatter_schema(frontmatters)
-        OrangeCms.Projects.Project.update!(project, %{set_up_completed: true})
+        OrangeCms.Projects.Project.update!(project, %{setup_completed: true})
         OrangeCms.Content.ContentType.update!(content_type, %{field_defs: schema})
 
       {:error, error} ->

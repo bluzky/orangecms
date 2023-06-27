@@ -88,24 +88,22 @@
 # end)
 
 # create admin
-OrangeCms.Accounts.User
-|> Ash.Changeset.for_create(:register_with_password, %{
-  # first_name: "Supper",
-  # last_name: "admin",
-  email: "admin@example.com",
-  password: "123123123",
-  password_confirmation: "123123123"
-})
-|> Ash.Changeset.force_change_attribute(:is_admin, true)
-|> OrangeCms.Accounts.create!(authorize?: false)
+# OrangeCms.Accounts.User
+# |> Ash.Changeset.for_create(:register_with_password, %{
+#   # first_name: "Supper",
+#   # last_name: "admin",
+#   email: "admin@example.com",
+#   password: "123123123",
+#   password_confirmation: "123123123"
+# })
+# |> Ash.Changeset.force_change_attribute(:is_admin, true)
+# |> OrangeCms.Accounts.create!(authorize?: false)
 
 Enum.map(1..10, fn i ->
-  OrangeCms.Accounts.User
-  |> Ash.Changeset.for_create(:create, %{
+  OrangeCms.Accounts.register_user(%{
     first_name: "Demo #{i}",
     last_name: "User",
     email: "demo#{i}@example.com",
     password: "123123123"
   })
-  |> OrangeCms.Accounts.create!(authorize?: false)
 end)
