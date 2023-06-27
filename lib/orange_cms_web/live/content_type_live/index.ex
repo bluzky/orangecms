@@ -1,17 +1,13 @@
 defmodule OrangeCmsWeb.ContentTypeLive.Index do
   use OrangeCmsWeb, :live_view
 
+  alias OrangeCms.Content
   alias OrangeCms.Content.ContentType
 
   @impl true
   def mount(_params, _session, socket) do
-    case ContentType.read_all() do
-      {:ok, entries} ->
-        {:ok, stream(socket, :content_types, entries)}
-
-      {:error, _err} ->
-        {:ok, stream(socket, :content_types, [])}
-    end
+    entries = Content.list_content_types(socket.assigns.current_project.id)
+    {:ok, stream(socket, :content_types, entries)}
   end
 
   @impl true
@@ -38,14 +34,11 @@ defmodule OrangeCmsWeb.ContentTypeLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    content_type = ContentType.get!(id)
-    :ok = ContentType.delete(content_type)
-
-    content_types = socket.assigns.content_types |> Enum.reject(&(&1.id == id))
+    content_type = Content.get_content_type!(id)
+    Content.delete_content_type(content_type)
 
     socket =
       socket
-      |> assign(:content_types, content_types)
       |> stream_delete(:content_types, content_type)
 
     {:noreply, socket}

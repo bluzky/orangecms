@@ -19,7 +19,7 @@
 
 <div class="tab-content border-t">
   <div id="general">
-    <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+    <.form let={f} for={@form} phx-submit="save" class="space-y-4">
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-6">
           <.input
@@ -47,7 +47,6 @@
 
           <div class="flex mt-4">
             <.button
-              :if={can?(OrangeCms.Content.ContentType, :update)}
               type="submit"
               class="ml-auto btn-secondary btn-md"
               icon="inbox-arrow-down"
@@ -96,7 +95,6 @@
           </.inputs_for>
           <div class="flex mt-4">
             <.button
-              :if={can?(OrangeCms.Content.ContentType, :update)}
               type="submit"
               class="ml-auto btn-secondary btn-md"
               icon="inbox-arrow-down"
@@ -123,7 +121,7 @@
         >
           <.inputs_for :let={field} field={f[:field_defs]}>
             <details
-              open={field.source.added? or field.source.changed?}
+              open={true}
               id={"wrap-#{field[:key].value}"}
               class="group"
             >
@@ -143,7 +141,6 @@
                       <.input
                         type="text"
                         label="Key"
-                        {[readonly: not field.source.added?]}
                         field={field[:key]}
                       />
                     </div>
@@ -176,9 +173,8 @@
                       href="#"
                       class="btn btn-ghost btn-xs ml-auto flex gap-2"
                       phx-click="remove_field"
-                      phx-value-path={field.name}
+                      phx-value-index={field.index}
                       data-confirm="Are you sure?"
-                      :if={can?(OrangeCms.Content.ContentType, :update)}
                     >
                       <Heroicons.trash class="w-4 h-4" /> <span>Delete field</span>
                     </a>
@@ -190,7 +186,6 @@
 
           <div class="mt-3">
             <button
-              :if={can?(OrangeCms.Content.ContentType, :update)}
               class="btn btn-outline btn-xs rounded-full px-5"
               phx-click="add_field"
               phx-value-path={f[:field_defs].name}
@@ -202,7 +197,6 @@
 
           <div class="flex mt-4">
             <.button
-              :if={can?(OrangeCms.Content.ContentType, :update)}
               type="submit"
               class="ml-auto btn-secondary btn-md"
               icon="inbox-arrow-down"

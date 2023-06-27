@@ -1,4 +1,4 @@
-defmodule OrangeCms.Content.FieldDef do
+defmodule OrangeCms.Content.OFieldDef do
   use Ash.Resource,
     data_layer: :embedded
 

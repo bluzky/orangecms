@@ -11,7 +11,8 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    content_type = ContentType.get!(id)
+    content_type = Content.get_content_type!(id)
+    changeset = Content.change_content_type(content_type)
 
     {:noreply,
      socket
@@ -19,87 +20,54 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
      |> assign(:content_type, content_type)
      |> assign(
        :form,
-       AshPhoenix.Form.for_update(content_type, :update,
-         api: Content,
-         forms: [
-           field_defs: [
-             type: :list,
-             data: content_type.field_defs,
-             resource: Content.FieldDef,
-             update_action: :update,
-             create_action: :create
-           ],
-           image_settings: [
-             data: content_type.image_settings,
-             resource: Content.ImageUploadSettings,
-             update_action: :update,
-             create_action: :create
-           ]
-         ]
-       )
+       changeset
      )}
   end
 
   @impl true
-  def handle_event("add_field", %{"path" => path}, socket) do
-    form = AshPhoenix.Form.add_form(socket.assigns.form, path, params: %{name: "New field"})
+  def handle_event("add_field", _params, socket) do
+    socket =
+      update(socket, :form, fn changeset ->
+        existing = Ecto.Changeset.get_field(changeset, :field_defs, [])
+        Ecto.Changeset.put_embed(changeset, :field_defs, existing ++ [%{name: "new field"}])
+      end)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("remove_field", %{"index" => index}, socket) do
+    index = String.to_integer(index)
+    # TODO: fix bugs "remove all field cannot save"
+    socket =
+      update(socket, :form, fn changeset ->
+        existing = Ecto.Changeset.get_field(changeset, :field_defs, [])
+        Ecto.Changeset.put_embed(changeset, :field_defs, List.delete_at(existing, index))
+      end)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("validate", %{"content_type" => params}, socket) do
+    form = Content.change_content_type(socket.assigns.content_type, params)
+
     {:noreply, assign(socket, :form, form)}
   end
 
   @impl true
-  def handle_event("remove_field", %{"path" => path}, socket) do
-    form = AshPhoenix.Form.remove_form(socket.assigns.form, path)
-    {:noreply, assign(socket, :form, form)}
-  end
+  def handle_event("save", %{"content_type" => params}, socket) do
+    case Content.update_content_type(socket.assigns.content_type, params) do
+      {:ok, entry} ->
+        changeset = Content.change_content_type(entry, params)
 
-  @impl true
-  def handle_event("validate", %{"form" => form_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        form_params
-      )
+        {:noreply,
+         socket
+         |> put_flash(:info, "Content type updated successfully")
+         |> assign(form: changeset, content_type: entry)}
 
-    {:noreply, assign(socket, :form, form)}
-  end
-
-  @impl true
-  def handle_event("save", %{"form" => form_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        form_params
-      )
-
-    case AshPhoenix.Form.submit(form) do
-      {:ok, content_type} ->
-        form =
-          AshPhoenix.Form.for_update(content_type, :update,
-            api: Content,
-            forms: [
-              field_defs: [
-                type: :list,
-                data: content_type.field_defs,
-                resource: Content.FieldDef
-              ],
-              image_settings: [
-                data: content_type.image_settings,
-                resource: Content.ImageUploadSettings,
-                update_action: :update,
-                create_action: :create
-              ]
-            ]
-          )
-
-        socket =
-          socket
-          |> assign(form: form)
-          |> put_flash(:info, "Update Content type successfully!")
-
-        {:noreply, socket}
-
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :form, changeset)}
     end
   end
 

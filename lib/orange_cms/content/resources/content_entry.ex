@@ -8,14 +8,6 @@ defmodule OrangeCms.Content.ContentEntry do
   postgres do
     table("content_entries")
     repo(OrangeCms.Repo)
-
-    references do
-      reference(:content_type,
-        on_delete: :delete,
-        on_update: :update,
-        name: "content_entries_content_type_id_fkey"
-      )
-    end
   end
 
   code_interface do
@@ -67,7 +59,7 @@ defmodule OrangeCms.Content.ContentEntry do
       default(%{})
     end
 
-    attribute(:integration_info, OrangeCms.Content.ContentGithubInfo, default: %{})
+    # attribute(:integration_info, OrangeCms.Content.ContentGithubInfo, default: %{})
 
     create_timestamp(:inserted_at)
     update_timestamp(:updated_at)
@@ -78,14 +70,14 @@ defmodule OrangeCms.Content.ContentEntry do
     change({OrangeCms.Content.CopyLinkedField, [fields: [:title, :slug]]})
   end
 
-  alias OrangeCms.Content.ContentType
+  # alias OrangeCms.Content.ContentType
 
-  relationships do
-    belongs_to :content_type, ContentType do
-      allow_nil?(false)
-      attribute_writable?(true)
-    end
-  end
+  # relationships do
+  #   belongs_to :content_type, ContentType do
+  #     allow_nil?(false)
+  #     attribute_writable?(true)
+  #   end
+  # end
 
   # relationships do
   #   belongs_to :project, Project do
