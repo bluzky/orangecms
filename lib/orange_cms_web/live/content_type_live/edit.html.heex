@@ -119,7 +119,6 @@
           phx-hook="InitSorting"
           id="schema-form"
         >
-            <% IO.inspect(f) %>
           <.inputs_for :let={field} field={f[:field_defs]}>
             <details
               open={true}
@@ -174,7 +173,7 @@
                       href="#"
                       class="btn btn-ghost btn-xs ml-auto flex gap-2"
                       phx-click="remove_field"
-                      phx-value-path={field.name}
+                      phx-value-index={field.index}
                       data-confirm="Are you sure?"
                     >
                       <Heroicons.trash class="w-4 h-4" /> <span>Delete field</span>

@@ -6,9 +6,9 @@ defmodule OrangeCms.Content.ContentType do
     field :name, :string
     field :key, :string
     field :anchor_field, :string
-    embeds_many :field_defs, OrangeCms.Content.FieldDef
+    embeds_many :field_defs, OrangeCms.Content.FieldDef, on_replace: :delete
     field :github_config, :map, default: %{}
-    embeds_one :image_settings, OrangeCms.Content.ImageUploadSettings
+    embeds_one :image_settings, OrangeCms.Content.ImageUploadSettings, on_replace: :update
 
     belongs_to :project, OrangeCms.Projects.Project, type: :binary
     timestamps()
@@ -17,13 +17,13 @@ defmodule OrangeCms.Content.ContentType do
   @doc false
   def changeset(content_type, attrs) do
     content_type
-    |> cast(attrs, [:name, :key, :anchor_field, :github_config])
+    |> cast(attrs, [:name, :key, :anchor_field, :github_config, :project_id])
     |> cast_embed(:image_settings, default: %{})
+    |> cast_embed(:field_defs, default: [])
     |> validate_required([
       :name,
       :key,
-      :anchor_field,
-      :github_config
+      :project_id
     ])
   end
 end
