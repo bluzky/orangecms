@@ -109,8 +109,11 @@ defmodule OrangeCms.Projects do
       [%ProjectUser{}, ...]
 
   """
-  def list_project_users do
-    Repo.all(ProjectUser)
+  def list_project_users(project) do
+    ProjectUser
+    |> Filtery.filter(:project_id, project.id)
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc """

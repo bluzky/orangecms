@@ -10,6 +10,7 @@ defmodule OrangeCms.Projects.Project do
     field :setup_completed, :boolean, default: false
     field :github_config, :map, default: %{}
     belongs_to :owner, OrangeCms.Account.User
+    has_many :project_users, OrangeCms.Projects.ProjectUser
 
     timestamps()
   end

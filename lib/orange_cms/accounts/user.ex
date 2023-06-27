@@ -38,7 +38,7 @@ defmodule OrangeCms.Accounts.User do
       submitting the form), this option can be set to `false`.
       Defaults to `true`.
   """
-  @registration_fields [:email, :password]
+  @registration_fields [:email, :password, :first_name, :last_name]
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, @registration_fields)

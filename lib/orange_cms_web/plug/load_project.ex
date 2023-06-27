@@ -12,7 +12,7 @@ defmodule OrangeCmsWeb.LoadProject do
 
     case Enum.find(projects, &(&1.id == project_id)) do
       %{} = project ->
-        Ash.set_tenant(project.id)
+        # Ash.set_tenant(project.id)
 
         socket =
           Phoenix.Component.assign(socket,
