@@ -11,7 +11,8 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    content_type = ContentType.get!(id)
+    content_type = Content.get_content_type!(id)
+    changeset = Content.change_content_type(content_type)
 
     {:noreply,
      socket
@@ -19,24 +20,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
      |> assign(:content_type, content_type)
      |> assign(
        :form,
-       AshPhoenix.Form.for_update(content_type, :update,
-         api: Content,
-         forms: [
-           field_defs: [
-             type: :list,
-             data: content_type.field_defs,
-             resource: Content.FieldDef,
-             update_action: :update,
-             create_action: :create
-           ],
-           image_settings: [
-             data: content_type.image_settings,
-             resource: Content.ImageUploadSettings,
-             update_action: :update,
-             create_action: :create
-           ]
-         ]
-       )
+       changeset
      )}
   end
 
