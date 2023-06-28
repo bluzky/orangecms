@@ -36,13 +36,17 @@ defmodule OrangeCms.Shared.Github.UpdateContentAction do
     |> case do
       {:ok, file} ->
         integration_info =
-          Map.merge(content_entry.integration_info, %{
+          content_entry.integration_info
+          |> Map.from_struct()
+          |> Map.merge(%{
             full_path: get_in(file, ["content", "path"]),
             name: get_in(file, ["content", "name"]),
             sha: get_in(file, ["content", "sha"])
           })
 
-        OrangeCms.Content.ContentEntry.update(content_entry, %{integration_info: integration_info})
+        OrangeCms.Content.update_content_entry(content_entry, %{
+          integration_info: integration_info
+        })
 
       {:error, error} = err ->
         Logger.error(inspect(error))

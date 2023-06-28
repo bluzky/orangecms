@@ -1,14 +1,9 @@
 defmodule OrangeCms.Content.CastFrontmatter do
-  use Ash.Resource.Change
-
-  alias Ash.Changeset
   alias OrangeCms.Content.FieldDef
-
+alias Ecto.Changeset
   @impl true
-  def change(changeset, _opts, _context) do
-    content_type = Changeset.get_data(changeset, :content_type)
-    frontmatter_params = Changeset.get_argument_or_attribute(changeset, :frontmatter) || %{}
-
+  def change(changeset, content_type) do
+    frontmatter_params = Changeset.get_field(changeset, :frontmatter) || %{}
     # cast field value based on schema
 
     field_map = Enum.into(content_type.field_defs, %{}, &{&1.key, &1})
@@ -42,7 +37,7 @@ defmodule OrangeCms.Content.CastFrontmatter do
 
     # merge default values with values from params
     # this will override default values
-    Changeset.change_attribute(
+    Changeset.put_change(
       changeset,
       :frontmatter,
       Map.merge(frontmatter_default, frontmatter_params)

@@ -53,7 +53,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   end
 
   def render_input(%{type: :checkbox} = assigns) do
-    field = OrangeCms.Content.load!(assigns.field, :options)
+    field = OrangeCms.Content.FieldDef.load(assigns.field, :options)
 
     value =
       if is_list(assigns.value) do

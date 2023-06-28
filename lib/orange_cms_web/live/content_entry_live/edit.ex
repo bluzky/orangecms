@@ -16,14 +16,12 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
 
   def handle_params(%{"id" => id}, _uri, socket) do
     content_entry =
-      ContentEntry
-      |> Ash.Query.for_read(:by_id, %{id: id})
-      |> Content.read_one!()
-      |> Content.load!(:content_type)
+      Content.get_content_entry!(id)
+      |> OrangeCms.Repo.preload(:content_type)
 
     {:noreply,
      assign(socket,
-       form: AshPhoenix.Form.for_update(content_entry, :update, api: Content),
+       form: Content.change_content_entry(content_entry),
        content_entry: content_entry,
        content_type: content_entry.content_type
      )}
@@ -33,55 +31,40 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
     content_type_key = params["type"]
 
     content_type =
-      ContentType
-      |> Ash.Query.for_read(:by_key, %{key: content_type_key})
-      |> Content.read_one!()
+      Content.find_content_type(socket.assigns.current_project.id, code: content_type_key)
 
     {:noreply, assign(socket, content_type: content_type)}
   end
 
   # save content but not publish
-  def handle_event("autosave", %{"frontmatter" => params, "form" => form_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        Map.merge(form_params, %{
-          frontmatter: params,
-          content_type_id: socket.assigns.content_type.id
-        })
-      )
-
-    case AshPhoenix.Form.submit(form) do
+  def handle_event("autosave", %{"frontmatter" => params, "content_entry" => form_params}, socket) do
+    case Content.update_content_entry(
+           socket.assigns.content_entry,
+           Map.merge(form_params, %{
+             "frontmatter" => params
+           })
+         ) do
       {:ok, entry} ->
         {:noreply,
          socket
          |> assign(
-           form: AshPhoenix.Form.for_update(entry, :update, api: Content),
+           form: Content.change_content_entry(entry),
            content_entry: entry
          )
          |> put_flash(:success, "Auto saved")}
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, changeset} ->
+        {:noreply, assign(socket, form: changeset)}
     end
-
-    # You can also skip errors by setting `errors: false` if you only want to show errors on submit
-    # form = AshPhoenix.Form.validate(socket.assigns.form, params, errors: false)
-
-    {:noreply, assign(socket, :form, form)}
   end
 
-  def handle_event("save", %{"frontmatter" => params, "form" => form_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        Map.merge(form_params, %{
-          frontmatter: params,
-          content_type_id: socket.assigns.content_type.id
-        })
-      )
-
-    case AshPhoenix.Form.submit(form) do
+  def handle_event("save", %{"frontmatter" => params, "content_entry" => form_params}, socket) do
+    case Content.update_content_entry(
+           socket.assigns.content_entry,
+           Map.merge(form_params, %{
+             "frontmatter" => params
+           })
+         ) do
       {:ok, entry} ->
         # publish to github
 
@@ -90,21 +73,21 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
                entry.content_type,
                entry
              ) do
-          {:ok, new_entry} ->
+          {:ok, updated_entry} ->
             {:noreply,
              socket
-             |> assign(form: AshPhoenix.Form.for_update(new_entry, :update, api: Content))
+             |> assign(form: Content.change_content_entry(updated_entry))
              |> put_flash(:info, "Published entry successfully!")}
 
           {:error, _error} ->
             {:noreply,
              socket
-             |> assign(form: AshPhoenix.Form.for_update(entry, :update, api: Content))
+             |> assign(form: Content.change_content_entry(entry))
              |> put_flash(:error, "Failed to publish to github!")}
         end
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, changeset} ->
+        {:noreply, assign(socket, form: changeset)}
     end
   end
 

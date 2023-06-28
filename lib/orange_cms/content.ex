@@ -34,6 +34,13 @@ defmodule OrangeCms.Content do
   """
   def get_content_type!(id), do: Repo.get!(ContentType, id)
 
+  def find_content_type(project_id, filter) do
+    ContentType
+    |> Filtery.filter(:project_id, project_id)
+    |> Filtery.apply(filter)
+    |> Repo.one()
+  end
+
   @doc """
   Creates a content_type.
 
@@ -97,5 +104,106 @@ defmodule OrangeCms.Content do
   """
   def change_content_type(%ContentType{} = content_type, attrs \\ %{}) do
     ContentType.changeset(content_type, attrs)
+  end
+
+  alias OrangeCms.Content.ContentEntry
+
+  @doc """
+  Returns the list of content_entries.
+
+  ## Examples
+
+      iex> list_content_entries()
+      [%ContentEntry{}, ...]
+
+  """
+  def list_content_entries(project_id, filters) do
+    ContentEntry
+    |> Filtery.filter(:project_id, project_id)
+    |> Filtery.apply(filters)
+    |> Repo.all()
+  end
+
+  @doc """
+  Gets a single content_entry.
+
+  Raises `Ecto.NoResultsError` if the Content entry does not exist.
+
+  ## Examples
+
+      iex> get_content_entry!(123)
+      %ContentEntry{}
+
+      iex> get_content_entry!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_content_entry!(id), do: Repo.get!(ContentEntry, id)
+
+  @doc """
+  Creates a content_entry.
+
+  ## Examples
+
+      iex> create_content_entry(%{field: value})
+      {:ok, %ContentEntry{}}
+
+      iex> create_content_entry(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_content_entry(attrs \\ %{}) do
+    %ContentEntry{}
+    |> ContentEntry.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a content_entry.
+
+  ## Examples
+
+      iex> update_content_entry(content_entry, %{field: new_value})
+      {:ok, %ContentEntry{}}
+
+      iex> update_content_entry(content_entry, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_content_entry(%ContentEntry{} = content_entry, attrs) do
+    content_entry
+    |> ContentEntry.changeset(attrs)
+    |> OrangeCms.Content.CastFrontmatter.change(content_entry.content_type)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a content_entry.
+
+  ## Examples
+
+      iex> delete_content_entry(content_entry)
+      {:ok, %ContentEntry{}}
+
+      iex> delete_content_entry(content_entry)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_content_entry(%ContentEntry{} = content_entry) do
+    Repo.delete(content_entry)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking content_entry changes.
+
+  ## Examples
+
+      iex> change_content_entry(content_entry)
+      %Ecto.Changeset{data: %ContentEntry{}}
+
+  """
+  def change_content_entry(%ContentEntry{} = content_entry, attrs \\ %{}) do
+    ContentEntry.changeset(content_entry, attrs)
+    |> OrangeCms.Content.CastFrontmatter.change(content_entry.content_type)
   end
 end

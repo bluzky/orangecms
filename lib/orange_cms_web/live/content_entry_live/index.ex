@@ -16,27 +16,30 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
 
   @impl true
   def handle_params(%{"type" => type}, _uri, socket) do
-    content_type = ContentType.get_by_key!(type)
+    content_type = Content.find_content_type(socket.assigns.current_project.id, key: type)
 
-    content_entries = ContentEntry.get_by_type!(content_type.id)
+    content_entries =
+      Content.list_content_entries(socket.assigns.current_project.id,
+        content_type_id: content_type.id
+      )
 
     {:noreply,
      socket
-     |> assign(content_type: content_type)
+     |> assign(:content_type, content_type)
      |> stream(:content_entries, content_entries)}
   end
 
   def handle_event("create_entry", _params, socket) do
     content_type = socket.assigns.content_type
 
-    ContentEntry
-    |> Ash.Changeset.for_create(:create, %{
+    %{
       title: "My awesome title",
       raw_body: "",
       content_type_id: content_type.id,
-      project_id: socket.assigns.current_project.id
-    })
-    |> Content.create()
+      project_id: socket.assigns.current_project.id,
+      integration_info: %{}
+    }
+    |> Content.create_content_entry()
     |> case do
       {:ok, entry} ->
         {:noreply,
