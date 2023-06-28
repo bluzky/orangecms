@@ -54,9 +54,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    entry = ContentEntry.get!(id)
-    :ok = ContentEntry.delete(entry)
-
+    entry = Content.get_content_entry!(id)
+    Content.delete_content_entry(entry)
     socket = stream_delete(socket, :content_entries, entry)
 
     {:noreply, socket}
