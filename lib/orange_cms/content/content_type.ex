@@ -43,33 +43,77 @@ defmodule OrangeCms.Content.ImageUploadSettings do
   end
 end
 
-defmodule OrangeCms.Content.GithubConfig do
-  use OrangeCms, :schema
-
-  embedded_schema do
-    field :name, :string
-    field :relative_path, :string
-    field :full_path, :string
-    field :sha, :string
-  end
-end
-
 defmodule OrangeCms.Content.FieldDef do
   use OrangeCms, :schema
 
+  @primary_key false
   embedded_schema do
     field :name, :string
     field :key, :string
-    field :type, :string, default: "string"
+
+    field :type, Ecto.Enum,
+      values: [
+        :string,
+        :text,
+        :number,
+        :boolean,
+        :datetime,
+        :date,
+        :select,
+        :array,
+        :checkbox,
+        :upload
+      ],
+      default: :string
+
     field :default_value, :string
-    field :option_str, :string, default: ""
+    field :options_str, :string, default: ""
+    field :options, {:array, :string}, default: [], virtual: true
     field :is_required, :boolean, default: false
   end
 
   def changeset(model, attrs) do
     model
-    |> cast(attrs, [:name, :key, :type, :default_value, :option_str, :is_required])
+    |> cast(attrs, [:name, :key, :type, :default_value, :options_str, :is_required])
+  end
 
-    # |> validate_inclustion
+  def load(record, :options) do
+    options =
+      record.options_str
+      |> Kernel.||("")
+      |> String.split(",")
+      |> Enum.map(&String.trim/1)
+
+    %{record | options: options}
+  end
+
+  def default_value(field) do
+    case field do
+      %{default_value: nil} ->
+        nil
+
+      %{type: :string} ->
+        ## render template string with datetime 
+        Calendar.strftime(DateTime.utc_now(), field.default_value)
+
+      %{type: :date, default_value: "today()"} ->
+        Date.utc_today()
+
+      %{type: :datetime, default_value: "now()"} ->
+        NaiveDateTime.utc_now()
+
+      _ ->
+        case cast_field(field, field.default_value) do
+          {:ok, value} ->
+            value
+
+          _error ->
+            nil
+        end
+    end
+  end
+
+  def cast_field(field, value) do
+    Ecto.Type.cast(OrangeCms.Content.InputType.stored_type(field.type), value)
   end
 end

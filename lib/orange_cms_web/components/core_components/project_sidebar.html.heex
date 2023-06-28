@@ -37,7 +37,7 @@ current_type = assigns[:current_type] %>
 
 <div class="px-2 mt-4">
   <ul class="menu text-sm font-medium">
-    <li :for={item <- content_types} class="w-full overflow-x-hidden">
+    <li :for={item <- content_types} class="w-full tooltip tooltip-right" data-tip={item.name}>
       <.link
         navigate={scoped_path(assigns, "/content/#{item.key}")}
         class={[

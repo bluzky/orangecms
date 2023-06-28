@@ -66,4 +66,68 @@ defmodule OrangeCms.ContentTest do
       assert %Ecto.Changeset{} = Content.change_content_type(content_type)
     end
   end
+
+  describe "content_entries" do
+    alias OrangeCms.Content.ContentEntry
+
+    import OrangeCms.ContentFixtures
+
+    @invalid_attrs %{frontmatter: nil, integration_info: nil, json_body: nil, raw_body: nil, slug: nil, title: nil}
+
+    test "list_content_entries/0 returns all content_entries" do
+      content_entry = content_entry_fixture()
+      assert Content.list_content_entries() == [content_entry]
+    end
+
+    test "get_content_entry!/1 returns the content_entry with given id" do
+      content_entry = content_entry_fixture()
+      assert Content.get_content_entry!(content_entry.id) == content_entry
+    end
+
+    test "create_content_entry/1 with valid data creates a content_entry" do
+      valid_attrs = %{frontmatter: "some frontmatter", integration_info: "some integration_info", json_body: "some json_body", raw_body: "some raw_body", slug: "some slug", title: "some title"}
+
+      assert {:ok, %ContentEntry{} = content_entry} = Content.create_content_entry(valid_attrs)
+      assert content_entry.frontmatter == "some frontmatter"
+      assert content_entry.integration_info == "some integration_info"
+      assert content_entry.json_body == "some json_body"
+      assert content_entry.raw_body == "some raw_body"
+      assert content_entry.slug == "some slug"
+      assert content_entry.title == "some title"
+    end
+
+    test "create_content_entry/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Content.create_content_entry(@invalid_attrs)
+    end
+
+    test "update_content_entry/2 with valid data updates the content_entry" do
+      content_entry = content_entry_fixture()
+      update_attrs = %{frontmatter: "some updated frontmatter", integration_info: "some updated integration_info", json_body: "some updated json_body", raw_body: "some updated raw_body", slug: "some updated slug", title: "some updated title"}
+
+      assert {:ok, %ContentEntry{} = content_entry} = Content.update_content_entry(content_entry, update_attrs)
+      assert content_entry.frontmatter == "some updated frontmatter"
+      assert content_entry.integration_info == "some updated integration_info"
+      assert content_entry.json_body == "some updated json_body"
+      assert content_entry.raw_body == "some updated raw_body"
+      assert content_entry.slug == "some updated slug"
+      assert content_entry.title == "some updated title"
+    end
+
+    test "update_content_entry/2 with invalid data returns error changeset" do
+      content_entry = content_entry_fixture()
+      assert {:error, %Ecto.Changeset{}} = Content.update_content_entry(content_entry, @invalid_attrs)
+      assert content_entry == Content.get_content_entry!(content_entry.id)
+    end
+
+    test "delete_content_entry/1 deletes the content_entry" do
+      content_entry = content_entry_fixture()
+      assert {:ok, %ContentEntry{}} = Content.delete_content_entry(content_entry)
+      assert_raise Ecto.NoResultsError, fn -> Content.get_content_entry!(content_entry.id) end
+    end
+
+    test "change_content_entry/1 returns a content_entry changeset" do
+      content_entry = content_entry_fixture()
+      assert %Ecto.Changeset{} = Content.change_content_entry(content_entry)
+    end
+  end
 end

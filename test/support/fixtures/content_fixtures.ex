@@ -22,4 +22,23 @@ defmodule OrangeCms.ContentFixtures do
 
     content_type
   end
+
+  @doc """
+  Generate a content_entry.
+  """
+  def content_entry_fixture(attrs \\ %{}) do
+    {:ok, content_entry} =
+      attrs
+      |> Enum.into(%{
+        frontmatter: "some frontmatter",
+        integration_info: "some integration_info",
+        json_body: "some json_body",
+        raw_body: "some raw_body",
+        slug: "some slug",
+        title: "some title"
+      })
+      |> OrangeCms.Content.create_content_entry()
+
+    content_entry
+  end
 end

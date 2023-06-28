@@ -11,7 +11,10 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    content_type = Content.get_content_type!(id)
+    content_type =
+      Content.get_content_type!(id)
+      |> IO.inspect(label: "content_type")
+
     changeset = Content.change_content_type(content_type)
 
     {:noreply,
