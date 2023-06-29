@@ -17,6 +17,9 @@ defmodule OrangeCms do
     quote do
       use Ecto.Schema
       import Ecto.Changeset
+
+      @primary_key {:id, :binary_id, autogenerate: true}
+      @foreign_key_type :binary_id
     end
   end
 
@@ -25,5 +28,20 @@ defmodule OrangeCms do
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
+  end
+
+  def put_actor(actor) do
+    Process.put(:actor, actor)
+  end
+
+  def get_actor() do
+    Process.get(:actor)
+  end
+
+  def change_actor(changeset, key) do
+    case get_actor() |> IO.inspect() do
+      %{id: id} -> Ecto.Changeset.put_change(changeset, key, id)
+      _ -> changeset
+    end
   end
 end

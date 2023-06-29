@@ -151,6 +151,8 @@ defmodule OrangeCmsWeb.UserAuth do
     socket = mount_current_user(session, socket)
 
     if socket.assigns.current_user do
+      # put current_user in OrangeCms context
+      OrangeCms.put_actor(socket.assigns.current_user)
       {:cont, socket}
     else
       socket =
@@ -201,6 +203,8 @@ defmodule OrangeCmsWeb.UserAuth do
   """
   def require_authenticated_user(conn, _opts) do
     if conn.assigns[:current_user] do
+      # put current_user in OrangeCms context
+      OrangeCms.put_actor(conn.assigns[:current_user])
       conn
     else
       conn

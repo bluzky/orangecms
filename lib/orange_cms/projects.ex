@@ -46,7 +46,10 @@ defmodule OrangeCms.Projects do
 
   """
   def create_project(attrs \\ %{}) do
-    %Project{}
+    # TODO: find proper way to get actor
+    actor = OrangeCms.get_actor()
+
+    %Project{owner_id: actor.id}
     |> Project.changeset(attrs)
     |> Repo.insert()
   end

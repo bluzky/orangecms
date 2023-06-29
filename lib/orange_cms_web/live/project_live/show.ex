@@ -110,8 +110,8 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
 
   @impl true
   def handle_event("import_content", params, socket) do
-    # update config
-    current_project =
+    # TODO handle update error
+    {:ok, current_project} =
       socket.assigns.current_project
       |> Projects.update_project(%{
         github_config: %{
@@ -119,13 +119,12 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
           "repo_name" => socket.assigns.repository["full_name"]
         }
       })
-      |> Projects.update!()
 
     # create content type
     content_type_key = params["content_dir"] |> String.split("/") |> List.last()
 
     {:ok, content_type} =
-      OrangeCms.Content.ContentType.create(%{
+      OrangeCms.Content.create_content_type(%{
         project_id: current_project.id,
         name: Phoenix.Naming.humanize(content_type_key),
         key: content_type_key,
