@@ -6,7 +6,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
   @moduledoc """
   Import markdonw file from github directory as follow:
 
-  1. [TODO] Create content type if not exist
+  1. Create content type if not exist
   2. List all markdown file
   3. For each file
     3.1 Get file content, info
@@ -21,8 +21,9 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
     case import_directory(project, content_type, content_type.github_config["content_dir"]) do
       {:ok, frontmatters} ->
         schema = construct_frontmatter_schema(frontmatters)
-        OrangeCms.Projects.Project.update!(project, %{setup_completed: true})
-        OrangeCms.Content.ContentType.update!(content_type, %{field_defs: schema})
+        # TODO: transaction
+        OrangeCms.Projects.update_project(project, %{setup_completed: true})
+        OrangeCms.Content.update_content_type(content_type, %{field_defs: schema})
 
       {:error, error} ->
         Logger.error(inspect(error))
@@ -69,7 +70,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
           end)
 
         # insert content entry
-        OrangeCms.Content.ContentEntry.create!(%{
+        OrangeCms.Content.create_content_entry(%{
           title: title,
           raw_body: content,
           frontmatter: Enum.into(frontmatter, %{}),

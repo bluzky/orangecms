@@ -64,6 +64,8 @@ defmodule OrangeCms.MixProject do
       {:yaml_elixir, "~> 2.9"},
       {:slugger, "~> 0.3.0"},
       {:filtery, "~> 0.2.3"},
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
+      {:styler, "~> 0.7", only: [:dev, :test], runtime: false},
 
       # authentication
       {:ash_authentication, "~> 3.10"},

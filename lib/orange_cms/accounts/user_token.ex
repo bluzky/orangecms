@@ -1,5 +1,5 @@
 defmodule OrangeCms.Accounts.UserToken do
-  use Ecto.Schema
+  use OrangeCms, :schema
   import Ecto.Query
   alias OrangeCms.Accounts.UserToken
 

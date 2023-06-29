@@ -2,7 +2,6 @@ defmodule OrangeCmsWeb.Router do
   use OrangeCmsWeb, :router
 
   import OrangeCmsWeb.UserAuth
-  # use AshAuthentication.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html", "json"]

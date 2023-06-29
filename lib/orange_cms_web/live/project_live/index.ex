@@ -30,12 +30,4 @@ defmodule OrangeCmsWeb.ProjectLive.Index do
   def handle_info({OrangeCmsWeb.ProjectLive.FormComponent, {:saved, project}}, socket) do
     {:noreply, stream_insert(socket, :projects, project)}
   end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    project = Project.get!(id)
-    :ok = Project.delete(project)
-
-    {:noreply, stream_delete(socket, :projects, project)}
-  end
 end

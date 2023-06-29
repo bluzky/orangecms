@@ -2,10 +2,9 @@ defmodule OrangeCms.Projects.Project do
   use OrangeCms, :schema
 
   @primary_key {:id, :string, autogenerate: {OrangeCms.Shared.Nanoid, :generate, []}}
-  @foreign_key_type :string
   schema "projects" do
     field :name, :string
-    field :type, :string, default: "github"
+    field :type, Ecto.Enum, values: [:github, :headless_cms], default: :github
     field :image, :string
     field :setup_completed, :boolean, default: false
     field :github_config, :map, default: %{}
@@ -18,7 +17,7 @@ defmodule OrangeCms.Projects.Project do
   @doc false
   def changeset(project, attrs) do
     project
-    |> cast(attrs, [:name, :image, :type, :github_config, :setup_completed])
-    |> validate_required([:name, :image, :type, :github_config, :setup_completed])
+    |> cast(attrs, [:name, :image, :type, :github_config, :setup_completed, :owner_id])
+    |> validate_required([:name, :type, :owner_id])
   end
 end
