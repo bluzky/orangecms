@@ -1,9 +1,7 @@
 defmodule OrangeCmsWeb.UploadController do
   use OrangeCmsWeb, :controller
 
-  def upload_image(conn, %{"file" => file, "project_id" => project_id, "content_type_id" => type_id}) do
-    Ash.set_tenant(project_id)
-
+  def upload_image(conn, %{"file" => file, "project_id" => _project_id, "content_type_id" => type_id}) do
     content_type =
       type_id
       |> OrangeCms.Content.get_content_type!()

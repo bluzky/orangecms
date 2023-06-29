@@ -80,7 +80,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
           </label>
         </div>
 
-        <.input type="select" field={@form[:role]} options={OrangeCms.Projects.MemberRole.values()} />
+        <.input type="select" field={@form[:role]} options={[:admin, :editor]} />
         <:actions>
           <.button class="btn-md btn-secondary" phx-disable-with="Saving...">
             <.icon name="inbox" /> Save Member

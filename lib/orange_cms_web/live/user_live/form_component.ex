@@ -36,46 +36,38 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
 
   @impl true
   def update(%{user: user} = assigns, socket) do
-    form =
-      if user.id do
-        AshPhoenix.Form.for_update(user, :update, api: Accounts)
-      else
-        AshPhoenix.Form.for_create(User, :create, api: Accounts)
-      end
+    form = Accounts.change_user(user)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(form: form)}
+     |> assign_form(form)}
   end
 
   @impl true
   def handle_event("validate", %{"form" => user_params}, socket) do
     form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        user_params
-      )
+      socket.assigns.user
+      |> Accounts.change_user(user_params)
+      |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :form, form)}
+    {:noreply, assign_form(socket, form)}
   end
 
   def handle_event("save", %{"form" => user_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        user_params
-      )
-
-    case AshPhoenix.Form.submit(form) do
+    case Accounts.create_user(user_params) do
       {:ok, entry} ->
         {:noreply,
          socket
          |> put_flash(:success, "User updated successfully")
          |> push_navigate(to: ~p"/users/#{entry}")}
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, changeset} ->
+        {:noreply, assign_form(socket, changeset)}
     end
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
   end
 end

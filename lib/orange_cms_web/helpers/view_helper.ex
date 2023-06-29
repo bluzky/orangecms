@@ -25,28 +25,5 @@ defmodule OrangeCmsWeb.ViewHelper do
     end
   end
 
-  @doc """
-  Check if current action has permissiont to do action or not.
-
-  Naming convention for resource: `<API><Resource>`
-
-  Example: `MyApp.Blog.Post`
-  - API: `MyApp.Blog`
-  - Resource:  `Post`
-  """
-  def can?(resource, action) do
-    actor = Ash.get_actor()
-
-    if is_nil(actor) do
-      raise "Actor is not set"
-    else
-      api =
-        resource
-        |> Module.split()
-        |> List.delete_at(-1)
-        |> Module.safe_concat()
-
-      Ash.Api.can?(api, {resource, action}, actor)
-    end
-  end
+  
 end

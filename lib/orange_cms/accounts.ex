@@ -1,18 +1,14 @@
 defmodule OrangeCms.Accounts do
   @moduledoc false
   use OrangeCms, :context
-  use Ash.Api
 
   alias OrangeCms.Accounts.User
   alias OrangeCms.Accounts.UserNotifier
   alias OrangeCms.Accounts.UserToken
 
-
-
-  def list_users() do
+  def list_users do
     Repo.all(User)
   end
-
 
   def delete_user(user) do
     Repo.delete(user)
@@ -73,6 +69,16 @@ defmodule OrangeCms.Accounts do
     User
     |> Filtery.apply(%{email: {:ilike, keyword}})
     |> Repo.all()
+  end
+
+  def change_user(%User{} = user, attrs \\ %{}) do
+    User.changeset(user, attrs)
+  end
+
+  def create_user(attrs) do
+    %User{}
+    |> change_user(attrs)
+    |> Repo.insert()
   end
 
   ## User registration

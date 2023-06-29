@@ -47,6 +47,13 @@ defmodule OrangeCms.Accounts.User do
     |> validate_password(opts)
   end
 
+  def changeset(user, attrs \\ %{}) do
+    user
+    |> cast(attrs, [:email, :password, :first_name, :last_name])
+    |> validate_email([])
+    |> validate_password([])
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])
