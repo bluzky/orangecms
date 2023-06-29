@@ -2,11 +2,12 @@ defmodule OrangeCmsWeb.UserLive.Index do
   @moduledoc false
   use OrangeCmsWeb, :live_view
 
-  alias OrangeCms.Accounts.OUser
+  alias OrangeCms.Accounts
+  alias OrangeCms.Accounts.User
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :users, OUser.read!())}
+    {:ok, stream(socket, :users, Accounts.list_users())}
   end
 
   @impl true
@@ -17,13 +18,13 @@ defmodule OrangeCmsWeb.UserLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit User")
-    |> assign(:user, OUser.get!(id))
+    |> assign(:user, Accounts.get_user!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New User")
-    |> assign(:user, %OUser{})
+    |> assign(:user, %User{})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -39,8 +40,8 @@ defmodule OrangeCmsWeb.UserLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    user = OUser.get!(id)
-    {:ok, _} = OUser.delete(user)
+    user = Accounts.get_user!(id)
+    Accounts.delete_user(user)
 
     {:noreply, stream_delete(socket, :users, user)}
   end

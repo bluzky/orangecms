@@ -61,15 +61,6 @@ defmodule OrangeCmsWeb.Router do
         live "/p", ProjectLive.Index, :index
         live "/p/new", ProjectLive.Index, :new
       end
-
-      # scope "/users" do
-      #   live "/", UserLive.Index, :index
-      #   live "/new", UserLive.Index, :new
-      #   live "/:id/edit", UserLive.Index, :edit
-
-      #   live "/:id", UserLive.Show, :show
-      #   live "/:id/show/edit", UserLive.Show, :edit
-      # end
     end
 
     scope "/p/:project_id" do
@@ -155,6 +146,15 @@ defmodule OrangeCmsWeb.Router do
       on_mount: [{OrangeCmsWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      scope "/users" do
+        live "/", UserLive.Index, :index
+        live "/new", UserLive.Index, :new
+        live "/:id/edit", UserLive.Index, :edit
+
+        live "/:id", UserLive.Show, :show
+        live "/:id/show/edit", UserLive.Show, :edit
+      end
     end
   end
 
