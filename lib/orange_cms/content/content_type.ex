@@ -1,4 +1,5 @@
 defmodule OrangeCms.Content.ContentType do
+  @moduledoc false
   use OrangeCms, :schema
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -29,6 +30,7 @@ defmodule OrangeCms.Content.ContentType do
 end
 
 defmodule OrangeCms.Content.ImageUploadSettings do
+  @moduledoc false
   use OrangeCms, :schema
 
   embedded_schema do
@@ -38,12 +40,12 @@ defmodule OrangeCms.Content.ImageUploadSettings do
   end
 
   def changeset(model, attrs) do
-    model
-    |> cast(attrs, [:upload_dir, :serve_at, :use_raw_link])
+    cast(model, attrs, [:upload_dir, :serve_at, :use_raw_link])
   end
 end
 
 defmodule OrangeCms.Content.FieldDef do
+  @moduledoc false
   use OrangeCms, :schema
 
   @primary_key false
@@ -73,8 +75,7 @@ defmodule OrangeCms.Content.FieldDef do
   end
 
   def changeset(model, attrs) do
-    model
-    |> cast(attrs, [:name, :key, :type, :default_value, :options_str, :is_required])
+    cast(model, attrs, [:name, :key, :type, :default_value, :options_str, :is_required])
   end
 
   def load(record, :options) do

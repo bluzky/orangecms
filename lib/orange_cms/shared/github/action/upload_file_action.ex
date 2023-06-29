@@ -14,7 +14,8 @@ defmodule OrangeCms.Shared.Github.UploadFileAction do
     {:ok, content} = File.read(upload.path)
 
     path =
-      Path.join(settings.upload_dir, upload.filename)
+      settings.upload_dir
+      |> Path.join(upload.filename)
       |> String.trim_leading("/")
 
     body = %{
@@ -24,16 +25,15 @@ defmodule OrangeCms.Shared.Github.UploadFileAction do
     }
 
     # save new hash after commit
-    Client.api(
-      project.github_config["access_token"],
-      &Tentacat.Contents.update(&1, owner, repo, path, body)
-    )
+    project.github_config["access_token"]
+    |> Client.api(&Tentacat.Contents.update(&1, owner, repo, path, body))
     |> case do
       {:ok, file} ->
         path = get_in(file, ["content", "path"])
 
         access_path =
-          Path.join("/", path)
+          "/"
+          |> Path.join(path)
           |> String.replace_leading(settings.upload_dir, "")
           |> then(&Path.join(settings.serve_at, &1))
 

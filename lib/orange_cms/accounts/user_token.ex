@@ -1,6 +1,9 @@
 defmodule OrangeCms.Accounts.UserToken do
+  @moduledoc false
   use OrangeCms, :schema
+
   import Ecto.Query
+
   alias OrangeCms.Accounts.UserToken
 
   @hash_algorithm :sha256

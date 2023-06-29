@@ -1,6 +1,8 @@
 defmodule OrangeCms.Content do
+  @moduledoc false
   use OrangeCms, :context
 
+  alias OrangeCms.Content.ContentEntry
   alias OrangeCms.Content.ContentType
 
   @doc """
@@ -106,8 +108,6 @@ defmodule OrangeCms.Content do
     ContentType.changeset(content_type, attrs)
   end
 
-  alias OrangeCms.Content.ContentEntry
-
   @doc """
   Returns the list of content_entries.
 
@@ -203,7 +203,8 @@ defmodule OrangeCms.Content do
 
   """
   def change_content_entry(%ContentEntry{} = content_entry, attrs \\ %{}) do
-    ContentEntry.changeset(content_entry, attrs)
+    content_entry
+    |> ContentEntry.changeset(attrs)
     |> OrangeCms.Content.CastFrontmatter.change(content_entry.content_type)
   end
 end

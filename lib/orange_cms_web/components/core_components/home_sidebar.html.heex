@@ -1,17 +1,23 @@
 <div class="px-2">
-    <ul class="menu text-sm font-medium">
-        <li>
-            <.link navigate={~p"/p"} class="collapsible-item w-full gap-4 p-3 rounded-xl hover:bg-blue-100 hover:text-blue-500">
-                <Heroicons.puzzle_piece class="h-6 w-6 no-collapse " stroke="currentColor" />
-                <span class="will-collapse">Projects</span>
-            </.link>
-        </li>
+  <ul class="menu text-sm font-medium">
+    <li>
+      <.link
+        navigate={~p"/p"}
+        class="collapsible-item w-full gap-4 p-3 rounded-xl hover:bg-blue-100 hover:text-blue-500"
+      >
+        <Heroicons.puzzle_piece class="h-6 w-6 no-collapse " stroke="currentColor" />
+        <span class="will-collapse">Projects</span>
+      </.link>
+    </li>
 
-        <li :if={@current_user.is_admin}>
-            <.link navigate={~p"/users"} class="collapsible-item w-full gap-4 p-3 rounded-xl hover:bg-blue-100 hover:text-blue-500">
-                <Heroicons.users class="h-6 w-6 no-collapse" stroke="currentColor" />
-                <span class="will-collapse">Users</span>
-            </.link>
-        </li>
-    </ul>
+    <li :if={@current_user.is_admin}>
+      <.link
+        navigate={~p"/users"}
+        class="collapsible-item w-full gap-4 p-3 rounded-xl hover:bg-blue-100 hover:text-blue-500"
+      >
+        <Heroicons.users class="h-6 w-6 no-collapse" stroke="currentColor" />
+        <span class="will-collapse">Users</span>
+      </.link>
+    </li>
+  </ul>
 </div>

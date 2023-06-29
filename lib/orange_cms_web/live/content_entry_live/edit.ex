@@ -1,22 +1,21 @@
 defmodule OrangeCmsWeb.ContentEntryLive.Edit do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
+
   import OrangeCmsWeb.ContentEntryLive.Components
 
   alias OrangeCms.Content
-  alias OrangeCms.Content.ContentType
   alias OrangeCms.Content.ContentEntry
+  alias OrangeCms.Content.ContentType
 
   def mount(_params, _session, socket) do
-    {:ok,
-     socket
-     |> assign(%{
-       form: nil
-     })}
+    {:ok, assign(socket, %{form: nil})}
   end
 
   def handle_params(%{"id" => id}, _uri, socket) do
     content_entry =
-      Content.get_content_entry!(id)
+      id
+      |> Content.get_content_entry!()
       |> OrangeCms.Repo.preload(:content_type)
 
     {:noreply,
@@ -30,8 +29,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
   def handle_params(params, _uri, socket) do
     content_type_key = params["type"]
 
-    content_type =
-      Content.find_content_type(socket.assigns.current_project.id, code: content_type_key)
+    content_type = Content.find_content_type(socket.assigns.current_project.id, code: content_type_key)
 
     {:noreply, assign(socket, content_type: content_type)}
   end

@@ -1,5 +1,7 @@
 defmodule OrangeCms.Shared.Github do
+  @moduledoc false
   alias OrangeCms.Shared.Github.Client
+
   require Logger
 
   def list_repository(token) do

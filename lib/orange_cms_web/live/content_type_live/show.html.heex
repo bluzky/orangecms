@@ -19,7 +19,12 @@
 
 <.back navigate={~p"/content_types"}>Back to content_types</.back>
 
-<.modal :if={@live_action == :edit} id="content_type-modal" show on_cancel={JS.patch(~p"/content_types/#{@content_type}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="content_type-modal"
+  show
+  on_cancel={JS.patch(~p"/content_types/#{@content_type}")}
+>
   <.live_component
     module={OrangeCmsWeb.ContentTypeLive.FormComponent}
     id={@content_type.id}

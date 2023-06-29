@@ -3,6 +3,7 @@ defmodule OrangeCmsWeb.LoadProject do
   Ensures common `assigns` are applied to all LiveViews attaching this hook.
   """
   use OrangeCmsWeb, :verified_routes
+
   import Phoenix.LiveView, only: [push_navigate: 2, put_flash: 3]
 
   def on_mount(_, params, _session, socket) do

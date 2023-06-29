@@ -1,5 +1,7 @@
 defmodule OrangeCmsWeb.ContentEntryLive.Components do
+  @moduledoc false
   use Phoenix.Component
+
   alias OrangeCms.Content.FieldDef
 
   @input_map %{
@@ -41,7 +43,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     field = OrangeCms.Content.load!(assigns.field, :options)
 
     assigns =
-      assign(assigns, :type, "select")
+      assigns
+      |> assign(:type, "select")
       |> assign(:assigns, nil)
       |> assign(:field, nil)
       |> assign(:data, nil)
@@ -134,7 +137,8 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     input_type = @input_map[assigns.type] || "text"
 
     assigns =
-      assign(assigns, :type, input_type)
+      assigns
+      |> assign(:type, input_type)
       |> assign(:assigns, nil)
       |> assign(:data, nil)
       |> assign(:field, nil)

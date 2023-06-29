@@ -4,9 +4,9 @@ defmodule OrangeCms.ProjectsTest do
   alias OrangeCms.Projects
 
   describe "projects" do
-    alias OrangeCms.Projects.Project
-
     import OrangeCms.ProjectsFixtures
+
+    alias OrangeCms.Projects.Project
 
     @invalid_attrs %{github_config: nil, image: nil, name: nil, setup_completed: nil, type: nil}
 
@@ -21,7 +21,13 @@ defmodule OrangeCms.ProjectsTest do
     end
 
     test "create_project/1 with valid data creates a project" do
-      valid_attrs = %{github_config: %{}, image: "some image", name: "some name", setup_completed: true, type: "some type"}
+      valid_attrs = %{
+        github_config: %{},
+        image: "some image",
+        name: "some name",
+        setup_completed: true,
+        type: "some type"
+      }
 
       assert {:ok, %Project{} = project} = Projects.create_project(valid_attrs)
       assert project.github_config == %{}
@@ -37,7 +43,14 @@ defmodule OrangeCms.ProjectsTest do
 
     test "update_project/2 with valid data updates the project" do
       project = project_fixture()
-      update_attrs = %{github_config: %{}, image: "some updated image", name: "some updated name", setup_completed: false, type: "some updated type"}
+
+      update_attrs = %{
+        github_config: %{},
+        image: "some updated image",
+        name: "some updated name",
+        setup_completed: false,
+        type: "some updated type"
+      }
 
       assert {:ok, %Project{} = project} = Projects.update_project(project, update_attrs)
       assert project.github_config == %{}
@@ -66,9 +79,9 @@ defmodule OrangeCms.ProjectsTest do
   end
 
   describe "project_users" do
-    alias OrangeCms.Projects.ProjectUser
-
     import OrangeCms.ProjectsFixtures
+
+    alias OrangeCms.Projects.ProjectUser
 
     @invalid_attrs %{is_owner: nil, role: nil}
 

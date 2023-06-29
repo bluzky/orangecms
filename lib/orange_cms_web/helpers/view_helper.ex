@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.ViewHelper do
+  @moduledoc false
   use OrangeCmsWeb, :verified_routes
 
   def scoped_path(socket_or_conn_or_assigns, relative_path, params \\ %{})
@@ -40,7 +41,8 @@ defmodule OrangeCmsWeb.ViewHelper do
       raise "Actor is not set"
     else
       api =
-        Module.split(resource)
+        resource
+        |> Module.split()
         |> List.delete_at(-1)
         |> Module.safe_concat()
 

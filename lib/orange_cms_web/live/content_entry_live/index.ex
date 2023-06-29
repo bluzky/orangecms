@@ -1,9 +1,10 @@
 defmodule OrangeCmsWeb.ContentEntryLive.Index do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Content
-  alias OrangeCms.Content.ContentType
   alias OrangeCms.Content.ContentEntry
+  alias OrangeCms.Content.ContentType
 
   @impl true
   def mount(_params, _session, socket) do

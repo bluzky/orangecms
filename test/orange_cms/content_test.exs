@@ -4,9 +4,9 @@ defmodule OrangeCms.ContentTest do
   alias OrangeCms.Content
 
   describe "content_types" do
-    alias OrangeCms.Content.ContentType
-
     import OrangeCms.ContentFixtures
+
+    alias OrangeCms.Content.ContentType
 
     @invalid_attrs %{anchor_field: nil, field_defs: nil, github_config: nil, image_settings: nil, key: nil, name: nil}
 
@@ -21,7 +21,14 @@ defmodule OrangeCms.ContentTest do
     end
 
     test "create_content_type/1 with valid data creates a content_type" do
-      valid_attrs = %{anchor_field: "some anchor_field", field_defs: %{}, github_config: %{}, image_settings: %{}, key: "some key", name: "some name"}
+      valid_attrs = %{
+        anchor_field: "some anchor_field",
+        field_defs: %{},
+        github_config: %{},
+        image_settings: %{},
+        key: "some key",
+        name: "some name"
+      }
 
       assert {:ok, %ContentType{} = content_type} = Content.create_content_type(valid_attrs)
       assert content_type.anchor_field == "some anchor_field"
@@ -38,7 +45,15 @@ defmodule OrangeCms.ContentTest do
 
     test "update_content_type/2 with valid data updates the content_type" do
       content_type = content_type_fixture()
-      update_attrs = %{anchor_field: "some updated anchor_field", field_defs: %{}, github_config: %{}, image_settings: %{}, key: "some updated key", name: "some updated name"}
+
+      update_attrs = %{
+        anchor_field: "some updated anchor_field",
+        field_defs: %{},
+        github_config: %{},
+        image_settings: %{},
+        key: "some updated key",
+        name: "some updated name"
+      }
 
       assert {:ok, %ContentType{} = content_type} = Content.update_content_type(content_type, update_attrs)
       assert content_type.anchor_field == "some updated anchor_field"
@@ -68,9 +83,9 @@ defmodule OrangeCms.ContentTest do
   end
 
   describe "content_entries" do
-    alias OrangeCms.Content.ContentEntry
-
     import OrangeCms.ContentFixtures
+
+    alias OrangeCms.Content.ContentEntry
 
     @invalid_attrs %{frontmatter: nil, integration_info: nil, json_body: nil, raw_body: nil, slug: nil, title: nil}
 
@@ -85,7 +100,14 @@ defmodule OrangeCms.ContentTest do
     end
 
     test "create_content_entry/1 with valid data creates a content_entry" do
-      valid_attrs = %{frontmatter: "some frontmatter", integration_info: "some integration_info", json_body: "some json_body", raw_body: "some raw_body", slug: "some slug", title: "some title"}
+      valid_attrs = %{
+        frontmatter: "some frontmatter",
+        integration_info: "some integration_info",
+        json_body: "some json_body",
+        raw_body: "some raw_body",
+        slug: "some slug",
+        title: "some title"
+      }
 
       assert {:ok, %ContentEntry{} = content_entry} = Content.create_content_entry(valid_attrs)
       assert content_entry.frontmatter == "some frontmatter"
@@ -102,7 +124,15 @@ defmodule OrangeCms.ContentTest do
 
     test "update_content_entry/2 with valid data updates the content_entry" do
       content_entry = content_entry_fixture()
-      update_attrs = %{frontmatter: "some updated frontmatter", integration_info: "some updated integration_info", json_body: "some updated json_body", raw_body: "some updated raw_body", slug: "some updated slug", title: "some updated title"}
+
+      update_attrs = %{
+        frontmatter: "some updated frontmatter",
+        integration_info: "some updated integration_info",
+        json_body: "some updated json_body",
+        raw_body: "some updated raw_body",
+        slug: "some updated slug",
+        title: "some updated title"
+      }
 
       assert {:ok, %ContentEntry{} = content_entry} = Content.update_content_entry(content_entry, update_attrs)
       assert content_entry.frontmatter == "some updated frontmatter"

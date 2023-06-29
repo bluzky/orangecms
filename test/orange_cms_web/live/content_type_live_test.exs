@@ -1,11 +1,25 @@
 defmodule OrangeCmsWeb.ContentTypeLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  import Phoenix.LiveViewTest
   import OrangeCms.ContentFixtures
+  import Phoenix.LiveViewTest
 
-  @create_attrs %{anchor_field: "some anchor_field", field_defs: %{}, github_config: %{}, image_settings: %{}, key: "some key", name: "some name"}
-  @update_attrs %{anchor_field: "some updated anchor_field", field_defs: %{}, github_config: %{}, image_settings: %{}, key: "some updated key", name: "some updated name"}
+  @create_attrs %{
+    anchor_field: "some anchor_field",
+    field_defs: %{},
+    github_config: %{},
+    image_settings: %{},
+    key: "some key",
+    name: "some name"
+  }
+  @update_attrs %{
+    anchor_field: "some updated anchor_field",
+    field_defs: %{},
+    github_config: %{},
+    image_settings: %{},
+    key: "some updated key",
+    name: "some updated name"
+  }
   @invalid_attrs %{anchor_field: nil, field_defs: nil, github_config: nil, image_settings: nil, key: nil, name: nil}
 
   defp create_content_type(_) do

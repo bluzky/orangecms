@@ -1,8 +1,8 @@
 defmodule OrangeCmsWeb.ProjectUserLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  import Phoenix.LiveViewTest
   import OrangeCms.ProjectsFixtures
+  import Phoenix.LiveViewTest
 
   @create_attrs %{is_owner: true, role: "some role"}
   @update_attrs %{is_owner: false, role: "some updated role"}

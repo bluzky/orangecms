@@ -1,11 +1,25 @@
 defmodule OrangeCmsWeb.ContentEntryLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  import Phoenix.LiveViewTest
   import OrangeCms.ContentFixtures
+  import Phoenix.LiveViewTest
 
-  @create_attrs %{frontmatter: "some frontmatter", integration_info: "some integration_info", json_body: "some json_body", raw_body: "some raw_body", slug: "some slug", title: "some title"}
-  @update_attrs %{frontmatter: "some updated frontmatter", integration_info: "some updated integration_info", json_body: "some updated json_body", raw_body: "some updated raw_body", slug: "some updated slug", title: "some updated title"}
+  @create_attrs %{
+    frontmatter: "some frontmatter",
+    integration_info: "some integration_info",
+    json_body: "some json_body",
+    raw_body: "some raw_body",
+    slug: "some slug",
+    title: "some title"
+  }
+  @update_attrs %{
+    frontmatter: "some updated frontmatter",
+    integration_info: "some updated integration_info",
+    json_body: "some updated json_body",
+    raw_body: "some updated raw_body",
+    slug: "some updated slug",
+    title: "some updated title"
+  }
   @invalid_attrs %{frontmatter: nil, integration_info: nil, json_body: nil, raw_body: nil, slug: nil, title: nil}
 
   defp create_content_entry(_) do

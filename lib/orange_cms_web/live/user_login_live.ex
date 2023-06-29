@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.UserLoginLive do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   def render(assigns) do

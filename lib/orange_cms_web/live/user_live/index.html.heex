@@ -1,44 +1,44 @@
 <div class="p-6 bg-white rounded-xl drop-shadow-lg">
-<.header>
-  Listing Users
-  <:actions>
-    <.link patch={~p"/users/new"}>
-      <.button>New User</.button>
-    </.link>
-  </:actions>
-</.header>
+  <.header>
+    Listing Users
+    <:actions>
+      <.link patch={~p"/users/new"}>
+        <.button>New User</.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<.table
-  id="users"
-  rows={@streams.users}
-  row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}") end}
->
-  <:col :let={{_id, _user}} label="Avatar">
+  <.table
+    id="users"
+    rows={@streams.users}
+    row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}") end}
+  >
+    <:col :let={{_id, _user}} label="Avatar">
       <div class="avatar placeholder">
         <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
           <span class="text-3xl">K</span>
         </div>
       </div>
-</:col>
-  <:col :let={{_id, user}} label="First name"><%= user.first_name %></:col>
-  <:col :let={{_id, user}} label="Last name"><%= user.last_name %></:col>
-  <:col :let={{_id, user}} label="Email"><%= user.email %></:col>
-  <:action :let={{_id, user}}>
-    <div class="sr-only">
-      <.link navigate={~p"/users/#{user}"}>Show</.link>
-    </div>
-    <.link :if={user.id != @current_user.id} patch={~p"/users/#{user}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, user}} >
-    <.link
-      :if={user.id != @current_user.id}
-      phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table>
+    </:col>
+    <:col :let={{_id, user}} label="First name"><%= user.first_name %></:col>
+    <:col :let={{_id, user}} label="Last name"><%= user.last_name %></:col>
+    <:col :let={{_id, user}} label="Email"><%= user.email %></:col>
+    <:action :let={{_id, user}}>
+      <div class="sr-only">
+        <.link navigate={~p"/users/#{user}"}>Show</.link>
+      </div>
+      <.link :if={user.id != @current_user.id} patch={~p"/users/#{user}/edit"}>Edit</.link>
+    </:action>
+    <:action :let={{id, user}}>
+      <.link
+        :if={user.id != @current_user.id}
+        phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
+        data-confirm="Are you sure?"
+      >
+        Delete
+      </.link>
+    </:action>
+  </.table>
 </div>
 <.modal
   :if={@live_action in [:new, :edit]}

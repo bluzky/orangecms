@@ -13,9 +13,9 @@ current_type = assigns[:current_type] %>
   </label>
   <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-xl w-52">
     <li class="menu-title">
-    <span>Projects</span>
-  </li>
-    
+      <span>Projects</span>
+    </li>
+
     <li :for={project <- assigns[:projects] || []}>
       <.link
         navigate={~p"/p/#{project}"}

@@ -1,4 +1,5 @@
 defmodule OrangeCms.Content.ContentEntry do
+  @moduledoc false
   use OrangeCms, :schema
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -36,6 +37,7 @@ defmodule OrangeCms.Content.ContentEntry do
 end
 
 defmodule OrangeCms.Content.GithubInfo do
+  @moduledoc false
   use OrangeCms, :schema
 
   @primary_key false
@@ -47,7 +49,6 @@ defmodule OrangeCms.Content.GithubInfo do
   end
 
   def changeset(github_info, attrs) do
-    github_info
-    |> cast(attrs, [:name, :relative_path, :full_path, :sha])
+    cast(github_info, attrs, [:name, :relative_path, :full_path, :sha])
   end
 end

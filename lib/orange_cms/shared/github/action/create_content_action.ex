@@ -1,4 +1,5 @@
 defmodule OrangeCms.Shared.Github.CreateContentAction do
+  @moduledoc false
   alias OrangeCms.Shared.Github.Client
   alias OrangeCms.Shared.Github.Helper
 
@@ -15,7 +16,7 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
     # TODO remove hard-coded
     file_name =
       Calendar.strftime(DateTime.utc_now(), "%Y-%m-%d-") <>
-        (Slugger.slugify_downcase(content_entry.title) |> String.slice(0, 50)) <> ".md"
+        (content_entry.title |> Slugger.slugify_downcase() |> String.slice(0, 50)) <> ".md"
 
     # TODO build from relative file name, subdir and contentdir
     path =
@@ -40,10 +41,8 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
       "content" => Base.encode64(content)
     }
 
-    Client.api(
-      project.github_config["access_token"],
-      &Tentacat.Contents.create(&1, owner, repo, path, body)
-    )
+    project.github_config["access_token"]
+    |> Client.api(&Tentacat.Contents.create(&1, owner, repo, path, body))
     |> case do
       {:ok, file} ->
         integration_info =

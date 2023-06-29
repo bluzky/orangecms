@@ -1,8 +1,9 @@
 defmodule OrangeCmsWeb.UserAuth do
+  @moduledoc false
   use OrangeCmsWeb, :verified_routes
 
-  import Plug.Conn
   import Phoenix.Controller
+  import Plug.Conn
 
   alias OrangeCms.Accounts
 

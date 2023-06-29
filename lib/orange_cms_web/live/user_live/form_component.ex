@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.UserLive.FormComponent do
+  @moduledoc false
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Accounts

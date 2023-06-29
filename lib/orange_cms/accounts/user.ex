@@ -1,4 +1,5 @@
 defmodule OrangeCms.Accounts.User do
+  @moduledoc false
   use OrangeCms, :schema
 
   schema "users" do
@@ -130,7 +131,7 @@ defmodule OrangeCms.Accounts.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    now = NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
     change(user, confirmed_at: now)
   end
 

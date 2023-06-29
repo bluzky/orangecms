@@ -1,8 +1,4 @@
 defmodule OrangeCms.Shared.Github.ImportContentAction do
-  alias OrangeCms.Shared.Github.Client
-  alias OrangeCms.Shared.Github.Helper
-  require Logger
-
   @moduledoc """
   Import markdonw file from github directory as follow:
 
@@ -16,6 +12,11 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
   4. Collect all frontmatter and build frontmatter schema
   5. Update content type frontmatter schema
   """
+
+  alias OrangeCms.Shared.Github.Client
+  alias OrangeCms.Shared.Github.Helper
+
+  require Logger
 
   def perform(project, content_type) do
     case import_directory(project, content_type, content_type.github_config["content_dir"]) do
@@ -73,14 +74,15 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
         OrangeCms.Content.create_content_entry(%{
           title: title,
           raw_body: content,
-          frontmatter: Enum.into(frontmatter, %{}),
+          frontmatter: Map.new(frontmatter),
           content_type_id: content_type.id,
           project_id: project.id,
           integration_info: %{
             name: file["name"],
             full_path: file["path"],
             relative_path:
-              String.replace_prefix(file["path"], content_type.github_config["content_dir"], "")
+              file["path"]
+              |> String.replace_prefix(content_type.github_config["content_dir"], "")
               |> String.replace_prefix("/", ""),
             sha: file["sha"]
           }

@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.ContentTypeLive.Index do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Content
@@ -37,9 +38,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.Index do
     content_type = Content.get_content_type!(id)
     Content.delete_content_type(content_type)
 
-    socket =
-      socket
-      |> stream_delete(:content_types, content_type)
+    socket = stream_delete(socket, :content_types, content_type)
 
     {:noreply, socket}
   end

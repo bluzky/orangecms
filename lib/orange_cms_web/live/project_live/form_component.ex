@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.ProjectLive.FormComponent do
+  @moduledoc false
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Projects

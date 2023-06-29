@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.ContentTypeLive.Edit do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Content
@@ -12,7 +13,8 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
     content_type =
-      Content.get_content_type!(id)
+      id
+      |> Content.get_content_type!()
       |> IO.inspect(label: "content_type")
 
     changeset = Content.change_content_type(content_type)

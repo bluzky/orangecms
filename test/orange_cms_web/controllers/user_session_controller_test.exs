@@ -56,13 +56,9 @@ defmodule OrangeCmsWeb.UserSessionControllerTest do
 
     test "login following registration", %{conn: conn, user: user} do
       conn =
-        conn
-        |> post(~p"/log_in", %{
+        post(conn, ~p"/log_in", %{
           "_action" => "registered",
-          "user" => %{
-            "email" => user.email,
-            "password" => valid_user_password()
-          }
+          "user" => %{"email" => user.email, "password" => valid_user_password()}
         })
 
       assert redirected_to(conn) == ~p"/"
@@ -71,13 +67,9 @@ defmodule OrangeCmsWeb.UserSessionControllerTest do
 
     test "login following password update", %{conn: conn, user: user} do
       conn =
-        conn
-        |> post(~p"/log_in", %{
+        post(conn, ~p"/log_in", %{
           "_action" => "password_updated",
-          "user" => %{
-            "email" => user.email,
-            "password" => valid_user_password()
-          }
+          "user" => %{"email" => user.email, "password" => valid_user_password()}
         })
 
       assert redirected_to(conn) == ~p"/users/settings"
