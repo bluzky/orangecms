@@ -112,8 +112,4 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
-
-  # For backwards compatibility, the following configuration is required.
-  # see https://ash-hq.org/docs/guides/ash/latest/get-started#temporary-config for more details
-  config :ash, :use_all_identities_in_manage_relationship?, false
 end
