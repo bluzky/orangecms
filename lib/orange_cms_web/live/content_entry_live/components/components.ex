@@ -40,7 +40,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   attr :rest, :global
 
   def render_input(%{type: :select} = assigns) do
-    field = OrangeCms.Content.load!(assigns.field, :options)
+    field = OrangeCms.Content.FieldDef.load(assigns.field, :options)
 
     assigns =
       assigns

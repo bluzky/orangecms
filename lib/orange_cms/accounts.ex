@@ -7,12 +7,15 @@ defmodule OrangeCms.Accounts do
   alias OrangeCms.Accounts.UserNotifier
   alias OrangeCms.Accounts.UserToken
 
-  resources do
-    registry(OrangeCms.Accounts.Registry)
+
+
+  def list_users() do
+    Repo.all(User)
   end
 
-  authorization do
-    authorize(:by_default)
+
+  def delete_user(user) do
+    Repo.delete(user)
   end
 
   ## Database getters

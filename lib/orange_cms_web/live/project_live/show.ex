@@ -3,7 +3,6 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Projects
-  alias OrangeCms.Projects.Project
 
   @impl true
   def mount(_params, _session, socket) do

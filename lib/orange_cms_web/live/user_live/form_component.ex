@@ -3,7 +3,6 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Accounts
-  alias OrangeCms.Accounts.User
 
   @impl true
   def render(assigns) do
@@ -73,7 +72,7 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:success, "User updated successfully")
-         |> push_navigate(to: ~p"/users/#{entry.id}")}
+         |> push_navigate(to: ~p"/users/#{entry}")}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}

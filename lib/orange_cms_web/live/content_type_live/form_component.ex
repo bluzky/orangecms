@@ -3,7 +3,6 @@ defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Content
-  alias OrangeCms.Content.ContentType
 
   @impl true
   def render(assigns) do

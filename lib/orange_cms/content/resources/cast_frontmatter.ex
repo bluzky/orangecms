@@ -3,7 +3,6 @@ defmodule OrangeCms.Content.CastFrontmatter do
   alias Ecto.Changeset
   alias OrangeCms.Content.FieldDef
 
-  @impl true
   def change(changeset, content_type) do
     frontmatter_params = Changeset.get_field(changeset, :frontmatter) || %{}
     # cast field value based on schema

@@ -4,7 +4,6 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
 
   alias OrangeCms.Accounts
   alias OrangeCms.Projects
-  alias OrangeCms.Projects.ProjectUser
 
   @impl true
   def render(assigns) do

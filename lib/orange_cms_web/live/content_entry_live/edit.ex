@@ -5,8 +5,6 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
   import OrangeCmsWeb.ContentEntryLive.Components
 
   alias OrangeCms.Content
-  alias OrangeCms.Content.ContentEntry
-  alias OrangeCms.Content.ContentType
 
   def mount(_params, _session, socket) do
     {:ok, assign(socket, %{form: nil})}
@@ -74,7 +72,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
           {:ok, updated_entry} ->
             {:noreply,
              socket
-             |> assign(form: Content.change_content_entry(updated_entry))
+             |> assign(form: Content.change_content_entry(updated_entry), content_entry: updated_entry)
              |> put_flash(:info, "Published entry successfully!")}
 
           {:error, _error} ->
