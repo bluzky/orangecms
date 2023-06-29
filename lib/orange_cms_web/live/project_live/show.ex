@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.ProjectLive.Show do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Projects
@@ -6,8 +7,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok,
-     assign(socket, project: nil, form: nil, repositories: nil, message: nil, ready_next: false)}
+    {:ok, assign(socket, project: nil, form: nil, repositories: nil, message: nil, ready_next: false)}
   end
 
   @impl true
@@ -23,8 +23,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
   end
 
   def apply_action(socket, :fetch_content, _params) do
-    socket
-    |> assign(:page_title, "Fetch content")
+    assign(socket, :page_title, "Fetch content")
   end
 
   @impl true
@@ -36,7 +35,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
 
       {:noreply,
        socket
-       |> reset_assigns
+       |> reset_assigns()
        |> assign(form: form, repositories: repositories)}
     else
       form =
@@ -44,16 +43,12 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
           errors: [token: {"Invalid github personal access token", []}]
         )
 
-      {:noreply, socket |> reset_assigns |> assign(:form, form)}
+      {:noreply, socket |> reset_assigns() |> assign(:form, form)}
     end
   end
 
   @impl true
-  def handle_event(
-        "form_changed",
-        %{"_target" => ["repository"], "repository" => repo_name} = params,
-        socket
-      ) do
+  def handle_event("form_changed", %{"_target" => ["repository"], "repository" => repo_name} = params, socket) do
     repository = Enum.find(socket.assigns.repositories, &(&1["full_name"] == repo_name))
 
     {:noreply,
@@ -80,8 +75,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
            content_dir
          ) do
       {:ok, files} ->
-        md_files =
-          Enum.filter(files, &(String.ends_with?(&1["name"], ".md") and &1["type"] == "file"))
+        md_files = Enum.filter(files, &(String.ends_with?(&1["name"], ".md") and &1["type"] == "file"))
 
         if length(md_files) > 0 do
           {:noreply,
@@ -112,12 +106,8 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
   def handle_event("import_content", params, socket) do
     # TODO handle update error
     {:ok, current_project} =
-      socket.assigns.current_project
-      |> Projects.update_project(%{
-        github_config: %{
-          "access_token" => params["token"],
-          "repo_name" => socket.assigns.repository["full_name"]
-        }
+      Projects.update_project(socket.assigns.current_project, %{
+        github_config: %{"access_token" => params["token"], "repo_name" => socket.assigns.repository["full_name"]}
       })
 
     # create content type
@@ -135,7 +125,8 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
     OrangeCms.Shared.Github.import_content(current_project, content_type)
 
     {:noreply,
-     assign(socket, current_project: current_project, content_type: content_type)
+     socket
+     |> assign(current_project: current_project, content_type: content_type)
      |> push_navigate(to: scoped_path(socket, "/"))}
   end
 

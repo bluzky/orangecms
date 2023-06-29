@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.UserForgotPasswordLive do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Accounts
@@ -20,8 +21,7 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
         </:actions>
       </.simple_form>
       <p class="text-center text-sm mt-4">
-        <.link href={~p"/register"}>Register</.link>
-        | <.link href={~p"/log_in"}>Log in</.link>
+        <.link href={~p"/register"}>Register</.link> | <.link href={~p"/log_in"}>Log in</.link>
       </p>
     </div>
     """
@@ -39,8 +39,7 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
       )
     end
 
-    info =
-      "If your email is in our system, you will receive instructions to reset your password shortly."
+    info = "If your email is in our system, you will receive instructions to reset your password shortly."
 
     {:noreply,
      socket

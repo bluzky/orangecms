@@ -1,7 +1,11 @@
 defmodule OrangeCms.Projects do
+  @moduledoc false
   use OrangeCms, :context
 
   alias OrangeCms.Projects.Project
+  # TODO: update query for my project
+  # TODO: find proper way to get actor
+  alias OrangeCms.Projects.ProjectUser
 
   @doc """
   Returns the list of projects.
@@ -13,7 +17,6 @@ defmodule OrangeCms.Projects do
 
   """
   def list_my_projects do
-    # TODO: update query for my project
     Repo.all(Project)
   end
 
@@ -46,7 +49,6 @@ defmodule OrangeCms.Projects do
 
   """
   def create_project(attrs \\ %{}) do
-    # TODO: find proper way to get actor
     actor = OrangeCms.get_actor()
 
     %Project{owner_id: actor.id}
@@ -100,8 +102,6 @@ defmodule OrangeCms.Projects do
   def change_project(%Project{} = project, attrs \\ %{}) do
     Project.changeset(project, attrs)
   end
-
-  alias OrangeCms.Projects.ProjectUser
 
   @doc """
   Returns the list of project_users.

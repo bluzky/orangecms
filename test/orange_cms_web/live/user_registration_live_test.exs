@@ -1,8 +1,8 @@
 defmodule OrangeCmsWeb.UserRegistrationLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  import Phoenix.LiveViewTest
   import OrangeCms.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   describe "Registration page" do
     test "renders registration page", %{conn: conn} do

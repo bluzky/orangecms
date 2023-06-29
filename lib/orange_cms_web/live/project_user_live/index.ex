@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.ProjectUserLive.Index do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Projects
@@ -7,9 +8,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    project =
-      socket.assigns.current_project
-      |> Repo.preload(project_users: :user)
+    project = Repo.preload(socket.assigns.current_project, project_users: :user)
 
     {:ok, stream(socket, :project_users, project.project_users)}
   end

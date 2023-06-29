@@ -18,12 +18,12 @@ defmodule OrangeCms.DataCase do
 
   using do
     quote do
-      alias OrangeCms.Repo
-
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
       import OrangeCms.DataCase
+
+      alias OrangeCms.Repo
     end
   end
 

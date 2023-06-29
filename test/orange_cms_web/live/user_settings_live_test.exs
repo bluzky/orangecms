@@ -1,9 +1,10 @@
 defmodule OrangeCmsWeb.UserSettingsLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  alias OrangeCms.Accounts
-  import Phoenix.LiveViewTest
   import OrangeCms.AccountsFixtures
+  import Phoenix.LiveViewTest
+
+  alias OrangeCms.Accounts
 
   describe "Settings page" do
     test "renders settings page", %{conn: conn} do

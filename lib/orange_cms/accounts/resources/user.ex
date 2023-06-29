@@ -1,4 +1,5 @@
 defmodule OrangeCms.Accounts.OUser do
+  @moduledoc false
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshAuthentication],
@@ -17,7 +18,7 @@ defmodule OrangeCms.Accounts.OUser do
   end
 
   calculations do
-    calculate :full_name, :string, expr(first_name <> " " <> last_name)
+    calculate(:full_name, :string, expr(first_name <> " " <> last_name))
   end
 
   code_interface do
@@ -48,23 +49,23 @@ defmodule OrangeCms.Accounts.OUser do
 
     read :search do
       argument(:q, :string, allow_nil?: false)
-      pagination offset?: true, keyset?: true, required?: false
+      pagination(offset?: true, keyset?: true, required?: false)
       filter(expr(contains(email, ^arg(:q))))
     end
 
     create :create do
-      allow_nil_input [:hashed_password]
-      reject [:hashed_password]
+      allow_nil_input([:hashed_password])
+      reject([:hashed_password])
 
       argument :password, :string do
-        allow_nil? false
+        allow_nil?(false)
       end
     end
   end
 
   changes do
-    change set_context(%{strategy_name: :password})
-    change AshAuthentication.Strategy.Password.HashPasswordChange
+    change(set_context(%{strategy_name: :password}))
+    change(AshAuthentication.Strategy.Password.HashPasswordChange)
   end
 
   authentication do
@@ -89,23 +90,23 @@ defmodule OrangeCms.Accounts.OUser do
 
   policies do
     bypass AshAuthentication.Checks.AshAuthenticationInteraction do
-      authorize_if always()
+      authorize_if(always())
     end
 
     policy accessing_from(OrangeCms.Projects.Project, :users) do
-      authorize_if always()
+      authorize_if(always())
     end
 
     policy accessing_from(OrangeCms.Projects.ProjectUser, :user) do
-      authorize_if always()
+      authorize_if(always())
     end
 
     bypass OrangeCms.Checks.IsAdmin do
-      authorize_if always()
+      authorize_if(always())
     end
 
     policy action(:get) do
-      authorize_if expr(^actor(:id) == id)
+      authorize_if(expr(^actor(:id) == id))
     end
   end
 end

@@ -1,4 +1,5 @@
 defmodule OrangeCms.Content.OFieldDef do
+  @moduledoc false
   use Ash.Resource,
     data_layer: :embedded
 
@@ -63,6 +64,7 @@ defmodule OrangeCms.Content.OFieldDef do
 end
 
 defmodule OrangeCms.Content.FieldDef.SplitOption do
+  @moduledoc false
   use Ash.Calculation
 
   @impl true

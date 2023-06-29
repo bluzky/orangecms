@@ -1,4 +1,5 @@
 defmodule OrangeCms.Accounts.UserNotifier do
+  @moduledoc false
   import Swoosh.Email
 
   alias OrangeCms.Mailer

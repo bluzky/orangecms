@@ -1,4 +1,5 @@
 defmodule OrangeCms.Projects.Project do
+  @moduledoc false
   use OrangeCms, :schema
 
   @primary_key {:id, :string, autogenerate: {OrangeCms.Shared.Nanoid, :generate, []}}

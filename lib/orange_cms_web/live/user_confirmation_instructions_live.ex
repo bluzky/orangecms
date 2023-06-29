@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.UserConfirmationInstructionsLive do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Accounts
@@ -21,8 +22,7 @@ defmodule OrangeCmsWeb.UserConfirmationInstructionsLive do
       </.simple_form>
 
       <p class="text-center mt-4">
-        <.link href={~p"/register"}>Register</.link>
-        | <.link href={~p"/log_in"}>Log in</.link>
+        <.link href={~p"/register"}>Register</.link> | <.link href={~p"/log_in"}>Log in</.link>
       </p>
     </div>
     """

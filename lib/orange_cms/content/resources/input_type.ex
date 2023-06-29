@@ -1,4 +1,5 @@
 defmodule OrangeCms.Content.InputType do
+  @moduledoc false
   use Ash.Type.Enum,
     values: [
       :string,

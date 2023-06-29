@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.UserSettingsLive do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Accounts

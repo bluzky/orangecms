@@ -1,4 +1,5 @@
 defmodule OrangeCms.Shared.Github.UpdateContentAction do
+  @moduledoc false
   alias OrangeCms.Shared.Github.Client
   alias OrangeCms.Shared.Github.Helper
 
@@ -29,10 +30,8 @@ defmodule OrangeCms.Shared.Github.UpdateContentAction do
     }
 
     # save new hash after commit
-    Client.api(
-      project.github_config["access_token"],
-      &Tentacat.Contents.update(&1, owner, repo, content_entry.integration_info.full_path, body)
-    )
+    project.github_config["access_token"]
+    |> Client.api(&Tentacat.Contents.update(&1, owner, repo, content_entry.integration_info.full_path, body))
     |> case do
       {:ok, file} ->
         integration_info =

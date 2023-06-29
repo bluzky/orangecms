@@ -1,4 +1,5 @@
 defmodule OrangeCms.Shared.Github.Helper do
+  @moduledoc false
   @doc """
   Decode file content return by github and parse frontmatter and content 
   """

@@ -1,8 +1,8 @@
 defmodule OrangeCmsWeb.UserConfirmationInstructionsLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  import Phoenix.LiveViewTest
   import OrangeCms.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   alias OrangeCms.Accounts
   alias OrangeCms.Repo

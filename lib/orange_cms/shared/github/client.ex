@@ -1,5 +1,7 @@
 defmodule OrangeCms.Shared.Github.Client do
+  @moduledoc false
   require Logger
+
   @endpoint "https://api.github.com/"
 
   defp new_client(token) do

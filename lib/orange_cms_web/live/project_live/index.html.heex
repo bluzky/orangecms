@@ -9,10 +9,7 @@
   </:actions>
 </.header>
 
-<div class="grid grid-cols-4 gap-4 mt-5"
-  id="project-list"
-phx-update="stream"
->
+<div class="grid grid-cols-4 gap-4 mt-5" id="project-list" phx-update="stream">
   <div
     :for={{id, project} <- @streams.projects}
     id={id}

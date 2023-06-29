@@ -1,20 +1,19 @@
 <div class="p-6 bg-white rounded-xl drop-shadow-lg">
-<.header>
-  User: <%= @user.first_name || @user.email %>
-  <:actions>
-    <.link patch={~p"/users/#{@user}/show/edit"} phx-click={JS.push_focus()}>
-      <.button class="btn-secondary btn-md" icon="pencil-square">Edit user</.button>
-    </.link>
-  </:actions>
-</.header>
+  <.header>
+    User: <%= @user.first_name || @user.email %>
+    <:actions>
+      <.link patch={~p"/users/#{@user}/show/edit"} phx-click={JS.push_focus()}>
+        <.button class="btn-secondary btn-md" icon="pencil-square">Edit user</.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<.list>
-  <:item title="Avatar"><%= @user.avatar %></:item>
-  <:item title="First name"><%= @user.first_name %></:item>
-  <:item title="Last name"><%= @user.last_name %></:item>
-  <:item title="Email"><%= @user.email %></:item>
-</.list>
-
+  <.list>
+    <:item title="Avatar"><%= @user.avatar %></:item>
+    <:item title="First name"><%= @user.first_name %></:item>
+    <:item title="Last name"><%= @user.last_name %></:item>
+    <:item title="Email"><%= @user.email %></:item>
+  </.list>
 </div>
 
 <.back navigate={~p"/users"}>Back to users</.back>

@@ -1,24 +1,23 @@
 defmodule OrangeCms.Content.CastFrontmatter do
+  @moduledoc false
+  alias Ecto.Changeset
   alias OrangeCms.Content.FieldDef
-alias Ecto.Changeset
+
   @impl true
   def change(changeset, content_type) do
     frontmatter_params = Changeset.get_field(changeset, :frontmatter) || %{}
     # cast field value based on schema
 
-    field_map = Enum.into(content_type.field_defs, %{}, &{&1.key, &1})
+    field_map = Map.new(content_type.field_defs, &{&1.key, &1})
 
     # get default values
     frontmatter_default =
-      content_type.field_defs
-      |> Enum.map(fn field ->
-        {field.key, OrangeCms.Content.FieldDef.default_value(field)}
-      end)
-      |> Enum.into(%{})
+      Map.new(content_type.field_defs, fn field -> {field.key, OrangeCms.Content.FieldDef.default_value(field)} end)
 
     # cast value from params
     frontmatter_params =
-      Enum.map(frontmatter_params, fn {k, v} ->
+      frontmatter_params
+      |> Enum.map(fn {k, v} ->
         case field_map[k] do
           nil ->
             # keep undefined field
@@ -33,7 +32,7 @@ alias Ecto.Changeset
         end
       end)
       |> Enum.reject(fn {_, v} -> is_nil(v) end)
-      |> Enum.into(%{})
+      |> Map.new()
 
     # merge default values with values from params
     # this will override default values

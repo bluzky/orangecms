@@ -1,11 +1,17 @@
 defmodule OrangeCmsWeb.ProjectLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  import Phoenix.LiveViewTest
   import OrangeCms.ProjectsFixtures
+  import Phoenix.LiveViewTest
 
   @create_attrs %{github_config: %{}, image: "some image", name: "some name", setup_completed: true, type: "some type"}
-  @update_attrs %{github_config: %{}, image: "some updated image", name: "some updated name", setup_completed: false, type: "some updated type"}
+  @update_attrs %{
+    github_config: %{},
+    image: "some updated image",
+    name: "some updated name",
+    setup_completed: false,
+    type: "some updated type"
+  }
   @invalid_attrs %{github_config: nil, image: nil, name: nil, setup_completed: false, type: nil}
 
   defp create_project(_) do

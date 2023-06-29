@@ -1,16 +1,19 @@
 defmodule OrangeCms.Accounts do
+  @moduledoc false
   use OrangeCms, :context
   use Ash.Api
+
+  alias OrangeCms.Accounts.User
+  alias OrangeCms.Accounts.UserNotifier
+  alias OrangeCms.Accounts.UserToken
 
   resources do
     registry(OrangeCms.Accounts.Registry)
   end
 
   authorization do
-    authorize :by_default
+    authorize(:by_default)
   end
-
-  alias OrangeCms.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
 
@@ -42,8 +45,7 @@ defmodule OrangeCms.Accounts do
       nil
 
   """
-  def get_user_by_email_and_password(email, password)
-      when is_binary(email) and is_binary(password) do
+  def get_user_by_email_and_password(email, password) when is_binary(email) and is_binary(password) do
     user = Repo.get_by(User, email: email)
     if User.valid_password?(user, password), do: user
   end
@@ -65,7 +67,8 @@ defmodule OrangeCms.Accounts do
   def get_user!(id), do: Repo.get!(User, id)
 
   def search_user(keyword) do
-    Filtery.apply(User, %{email: {:ilike, keyword}})
+    User
+    |> Filtery.apply(%{email: {:ilike, keyword}})
     |> Repo.all()
   end
 
