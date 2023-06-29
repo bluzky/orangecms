@@ -52,11 +52,6 @@ defmodule OrangeCms.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:ash, "~> 2.6.31"},
-      {:ash_postgres, "~> 1.3"},
-      {:ash_phoenix, "~> 1.2"},
-      {:ash_graphql, "~> 0.22"},
-      {:absinthe_plug, "~> 1.5"},
       # {:eva_icons, github: "bluzky/eva_icons", branch: "main"}
       {:lucide_icons, "~> 1.0.0"},
       {:nanoid, "~> 2.0"},
@@ -65,11 +60,7 @@ defmodule OrangeCms.MixProject do
       {:slugger, "~> 0.3.0"},
       {:filtery, "~> 0.2.3"},
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
-      {:styler, "~> 0.7", only: [:dev, :test], runtime: false},
-
-      # authentication
-      {:ash_authentication, "~> 3.10"},
-      {:ash_authentication_phoenix, "~> 1.6"}
+      {:styler, "~> 0.7", only: [:dev, :test], runtime: false}
     ]
   end
 

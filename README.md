@@ -1,23 +1,22 @@
-# OrangeCMS - CMS admin for your static site 
-
+# OrangeCMS - CMS admin for your static site
 
 > **OrangeCMS is a admin app for static site on github. Instead of creating/editing file on your local and push to git repo. You are now can manage your content with Web UI and your content editors don't have to know anything about git**
 
 ## DEMO
+
 - [Admin page](http://demo-orangecms.pawtools.org/) username: demo@example.com, password: 123123
 - [Content page](http://orange-demo-site.pawtools.org/)
 - [Github repo](https://github.com/bluzky/orange-demo-site)
-
 
 ## Start dev server
 
 - Requirement: elixir, nodejs installed on your machine. Nodejs is used to build assets only
 
 - Install dependencies
-`mix setup`
+  `mix setup`
 
 - Start project
-`mix phx.server`
+  `mix phx.server`
 
 ## Build release
 
@@ -31,6 +30,7 @@
 Then run `fly launch`
 
 ## Roadmap
+
 - Project
   - [x] Creat project
   - [x] Setup project flow
@@ -54,6 +54,7 @@ Then run `fly launch`
   - [ ] Delete content both in database and on repo
   - [ ] Search, filter post
 - User
+
   - [ ] first time setup create user
   - [x] Manage user
   - [x] Assign user to project
@@ -62,6 +63,7 @@ Then run `fly launch`
   - [x] Login / logout
 
 - Integration
+
   - [ ] Cloudinary image upload
   - [ ] Manage API token
 
@@ -73,7 +75,6 @@ Then run `fly launch`
 ## This project is impossible without these excellenct works:
 
 - [Phoenix framework](https://phoenixframework.org/)
-- [Ash framework](https://ash-hq.org/)
 - [Tailwind css](https://tailwindcss.com/)
 - [Daisy UI](https://daisyui.com/)
 - [Lucide icons](https://lucide.dev/)
