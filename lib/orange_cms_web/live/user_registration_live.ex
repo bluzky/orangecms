@@ -7,46 +7,48 @@ defmodule OrangeCmsWeb.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
-        <div class="w-full h-screen flex items-center bg-background">
-    <div class="mx-auto max-w-sm">
-      <.card>
-      <.card_header class="text-center">
-        <.card_title class="text-2xl">
-        Register for an account
-          </.card_title>
-        <.card_description>
-          Already registered?
-          <.link navigate={~p"/log_in"} class="font-semibold text-primary hover:underline">
-            Sign in
-          </.link>
-          to your account now.
-        </.card_description>
-      </.card_header>
+    <div class="w-full h-screen flex items-center bg-background">
+      <div class="mx-auto max-w-sm">
+        <.card>
+          <.card_header class="text-center">
+            <.card_title class="text-2xl">
+              Register for an account
+            </.card_title>
+            <.card_description>
+              Already registered?
+              <.link navigate={~p"/log_in"} class="font-semibold text-primary hover:underline">
+                Sign in
+              </.link>
+              to your account now.
+            </.card_description>
+          </.card_header>
 
-        <.card_content>
-      <.simple_form
-        for={@form}
-        id="registration_form"
-        phx-submit="save"
-        phx-change="validate"
-        phx-trigger-action={@trigger_submit}
-        action={~p"/log_in?_action=registered"}
-        method="post"
-      >
-        <.error :if={@check_errors}>
-          Oops, something went wrong! Please check the errors below.
-        </.error>
+          <.card_content>
+            <.simple_form
+              for={@form}
+              id="registration_form"
+              phx-submit="save"
+              phx-change="validate"
+              phx-trigger-action={@trigger_submit}
+              action={~p"/log_in?_action=registered"}
+              method="post"
+            >
+              <.error :if={@check_errors}>
+                Oops, something went wrong! Please check the errors below.
+              </.error>
 
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
+              <.input field={@form[:email]} type="email" label="Email" required />
+              <.input field={@form[:password]} type="password" label="Password" required />
 
-        <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
-        </:actions>
-      </.simple_form>
-        </.card_content>
-          </.card>
-    </div>
+              <:actions>
+                <.button phx-disable-with="Creating account..." class="w-full">
+                  Create an account
+                </.button>
+              </:actions>
+            </.simple_form>
+          </.card_content>
+        </.card>
+      </div>
     </div>
     """
   end
