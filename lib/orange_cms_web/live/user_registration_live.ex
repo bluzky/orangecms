@@ -7,18 +7,23 @@ defmodule OrangeCmsWeb.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
+        <div class="w-full h-screen flex items-center bg-background">
     <div class="mx-auto max-w-sm">
-      <.header class="text-center">
+      <.card>
+      <.card_header class="text-center">
+        <.card_title class="text-2xl">
         Register for an account
-        <:subtitle>
+          </.card_title>
+        <.card_description>
           Already registered?
-          <.link navigate={~p"/log_in"} class="font-semibold text-brand hover:underline">
+          <.link navigate={~p"/log_in"} class="font-semibold text-primary hover:underline">
             Sign in
           </.link>
           to your account now.
-        </:subtitle>
-      </.header>
+        </.card_description>
+      </.card_header>
 
+        <.card_content>
       <.simple_form
         for={@form}
         id="registration_form"
@@ -39,6 +44,9 @@ defmodule OrangeCmsWeb.UserRegistrationLive do
           <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
         </:actions>
       </.simple_form>
+        </.card_content>
+          </.card>
+    </div>
     </div>
     """
   end

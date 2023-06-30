@@ -6,12 +6,15 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
 
   def render(assigns) do
     ~H"""
+        <div class="w-full h-screen flex items-center bg-background">
     <div class="mx-auto max-w-sm">
-      <.header class="text-center">
-        Forgot your password?
-        <:subtitle>We'll send a password reset link to your inbox</:subtitle>
-      </.header>
+      <.card>
+      <.card_header class="text-center">
+        <.card_title class="text-2xl">Forgot your password?</.card_title>
+        <.card_description>We'll send a password reset link to your inbox</.card_description>
+      </.card_header>
 
+        <.card_content>
       <.simple_form for={@form} id="reset_password_form" phx-submit="send_email">
         <.input field={@form[:email]} type="email" placeholder="Email" required />
         <:actions>
@@ -23,7 +26,10 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
       <p class="text-center text-sm mt-4">
         <.link href={~p"/register"}>Register</.link> | <.link href={~p"/log_in"}>Log in</.link>
       </p>
+          </.card_content>
+      </.card>
     </div>
+  </div>
     """
   end
 
