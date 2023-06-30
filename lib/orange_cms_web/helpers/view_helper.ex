@@ -24,6 +24,4 @@ defmodule OrangeCmsWeb.ViewHelper do
       relative_path
     end
   end
-
-  
 end

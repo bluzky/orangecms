@@ -6,30 +6,30 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
 
   def render(assigns) do
     ~H"""
-        <div class="w-full h-screen flex items-center bg-background">
-    <div class="mx-auto max-w-sm">
-      <.card>
-      <.card_header class="text-center">
-        <.card_title class="text-2xl">Forgot your password?</.card_title>
-        <.card_description>We'll send a password reset link to your inbox</.card_description>
-      </.card_header>
+    <div class="w-full h-screen flex items-center bg-background">
+      <div class="mx-auto max-w-sm">
+        <.card>
+          <.card_header class="text-center">
+            <.card_title class="text-2xl">Forgot your password?</.card_title>
+            <.card_description>We'll send a password reset link to your inbox</.card_description>
+          </.card_header>
 
-        <.card_content>
-      <.simple_form for={@form} id="reset_password_form" phx-submit="send_email">
-        <.input field={@form[:email]} type="email" placeholder="Email" required />
-        <:actions>
-          <.button phx-disable-with="Sending..." class="w-full">
-            Send password reset instructions
-          </.button>
-        </:actions>
-      </.simple_form>
-      <p class="text-center text-sm mt-4">
-        <.link href={~p"/register"}>Register</.link> | <.link href={~p"/log_in"}>Log in</.link>
-      </p>
+          <.card_content>
+            <.simple_form for={@form} id="reset_password_form" phx-submit="send_email">
+              <.input field={@form[:email]} type="email" placeholder="Email" required />
+              <:actions>
+                <.button phx-disable-with="Sending..." class="w-full">
+                  Send password reset instructions
+                </.button>
+              </:actions>
+            </.simple_form>
+            <p class="text-center text-sm mt-4">
+              <.link href={~p"/register"}>Register</.link> | <.link href={~p"/log_in"}>Log in</.link>
+            </p>
           </.card_content>
-      </.card>
+        </.card>
+      </div>
     </div>
-  </div>
     """
   end
 
