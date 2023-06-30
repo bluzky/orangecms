@@ -169,35 +169,28 @@ defmodule OrangeCmsWeb.CoreComponents do
       phx-mounted={@autoshow && show("##{@id}")}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
-      class={[
-        "fixed hidden top-2 right-2 w-80 sm:w-96 z-50 alert shadow-lg",
-        @kind == :info && "alert-info",
-        @kind == :success && "alert-success",
-        @kind == :error && "alert-error"
-      ]}
+      class="fixed hidden top-2 right-2 w-80 sm:w-96 z-50"
+      style="user-select: none; touch-action: none;"
       {@rest}
     >
-      <div>
-        <%= if @title do %>
-          <.icon :if={@kind == :info} name="information-circle" class="h-5 w-5" />
-          <.icon :if={@kind == :success} name="check-circle" class="h-5 w-5" />
-          <.icon :if={@kind == :error} name="exclamation-circle" class="h-5 w-5" />
-        <% end %>
-        <div>
-          <p :if={@title} class="font-semibold">
-            <%= @title %>
-          </p>
-          <p class="text-sm"><%= msg %></p>
+      <div class={[
+        "group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden rounded-md border p-4 pr-6 shadow-lg transition-all group ",
+        (@kind == :error &&
+           "border-destructive bg-destructive text-destructive-foreground destructive") ||
+          "border bg-background"
+      ]}>
+        <div class="grid gap-1">
+          <div :if={@title} class="text-sm font-semibold [&+div]:text-xs"><%= @title %></div>
+          <div class="text-sm opacity-90"><%= msg %></div>
         </div>
+
+        <button
+          type="button"
+          class="absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600"
+        >
+          <.icon name="x-mark" />
+        </button>
       </div>
-      <button
-        :if={@close}
-        type="button"
-        class="group absolute top-2 right-1 p-2"
-        aria-label={gettext("close")}
-      >
-        <.icon name="x-mark" solid class="h-5 w-5 stroke-current opacity-40 group-hover:opacity-70" />
-      </button>
     </div>
     """
   end
@@ -255,7 +248,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="space-y-8 bg-white mt-10">
+      <div class="space-y-4">
         <%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           <%= render_slot(action, f) %>
@@ -275,18 +268,29 @@ defmodule OrangeCmsWeb.CoreComponents do
   """
   attr :type, :string, default: nil
   attr :class, :string, default: nil
+  attr :variant, :string, default: "primary"
   attr :icon, :string, default: nil
   attr :icon_right, :string, default: nil
   attr :rest, :global, include: ~w(disabled form name value)
 
   slot :inner_block, required: true
 
+  @button_variants %{
+    "primary" => "bg-primary text-primary-foreground hover:bg-primary/90",
+    "secondary" => "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+    "destructive" => "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+    "outline" => "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+    "ghost" => "hover:bg-accent hover:text-accent-foreground",
+    "link" => "text-primary underline-offset-4 hover:underline"
+  }
   def button(assigns) do
+    assigns = assign(assigns, :variant_class, @button_variants[assigns.variant])
+
     ~H"""
     <button
       type={@type}
       class={[
-        "btn",
+        "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 shadow h-9 px-4 py-2 #{@variant_class}",
         "gap-1",
         "phx-submit-loading:opacity-75 btn",
         @class
@@ -353,28 +357,14 @@ defmodule OrangeCmsWeb.CoreComponents do
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
-          class="checkbox"
+          class="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary"
           id={@id || @name}
           name={@name}
           value="true"
           checked={@checked}
           {@rest}
         />
-        <label for={@id || @name} class="label-text font-bold"><%= @label %></label>
-
-        <div :if={@helper != []} class="dropdown">
-          <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
-            <.icon name="question-mark-circle" class="w-4 h-4" />
-          </label>
-          <div
-            tabindex="0"
-            class="card compact dropdown-content shadow-lg bg-base-300 rounded-box w-80"
-          >
-            <div class="card-body font-normal">
-              <%= render_slot(@helper) %>
-            </div>
-          </div>
-        </div>
+        <.label for={@id || @name} helper={@helper}><%= @label %></.label>
       </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
@@ -429,7 +419,7 @@ defmodule OrangeCmsWeb.CoreComponents do
         id={@id || @name}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "input input-bordered w-full",
+          "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5",
           @errors != [] && "input-error"
         ]}
@@ -449,7 +439,10 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="label font-bold text-sm p-0 mb-1">
+    <label
+      for={@for}
+      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+    >
       <%= render_slot(@inner_block) %>
 
       <div :if={@helper != []} class="dropdown">
@@ -623,9 +616,11 @@ defmodule OrangeCmsWeb.CoreComponents do
   Render alert
   """
 
-  attr :kind, :any
+  attr :kind, :any, default: nil
   attr :icon, :string
+  attr :class, :string
   slot :inner_block, required: true
+  attr :rest, :global, default: %{}
 
   def alert(assigns) do
     assigns = assign(assigns, kind: to_string(assigns.kind))
@@ -635,9 +630,9 @@ defmodule OrangeCmsWeb.CoreComponents do
         icon =
           case to_string(assigns.kind) do
             "success" -> "check-circle"
-            "warning" -> "exclamation_triangle"
-            "error" -> "x_circle"
-            _ -> "info"
+            "info" -> "information_circle"
+            "error" -> "exclamation_triangle"
+            _ -> nil
           end
 
         assign(assigns, :icon, icon)
@@ -647,16 +642,104 @@ defmodule OrangeCmsWeb.CoreComponents do
 
     # We have to specify full class name for tailwind to extract class name
     ~H"""
-    <div class={[
-      "alert shadow-lg",
-      @kind == "success" && "alert-success",
-      @kind == "warning" && "alert-warning",
-      @kind == "error" && "alert-error"
-    ]}>
-      <div class="w-full">
-        <.icon name={@icon} />
-        <%= render_slot(@inner_block) %>
+    <div
+      class={[
+        "rounded-lg border px-4 py-3 text-sm bg-background text-foreground",
+        @class,
+        @kind == "error" && "border-destructive/50 text-destructive dark:border-destructive"
+      ]}
+      {@rest}
+    >
+      <div class="w-full flex gap-2">
+        <.icon :if={not is_nil(@icon)} name={@icon} />
+        <div>
+          <%= render_slot(@inner_block) %>
+        </div>
       </div>
+    </div>
+    """
+  end
+
+  @doc """
+  Card component
+
+  ## Examples:
+
+        <.card>
+          <.card_header>
+            <.card_title>Card title</.card_title>
+            <.card_descroption>Card subtitle</.card_description>
+          </.card_header>
+          <.card_content>
+            Card text
+          </.card_content>
+          <.card_footer>
+            <.button>Button</.button>
+          </.card_footer>
+        </.card>
+  """
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
+
+  def card(assigns) do
+    ~H"""
+    <div class={["rounded-xl border bg-card text-card-foreground shadow", @class]}>
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
+
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
+
+  def card_header(assigns) do
+    ~H"""
+    <div class={["flex flex-col space-y-1.5 p-6", @class]}>
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
+
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
+
+  def card_title(assigns) do
+    ~H"""
+    <h3 class={["font-semibold leading-none tracking-tight", @class]}>
+      <%= render_slot(@inner_block) %>
+    </h3>
+    """
+  end
+
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
+
+  def card_description(assigns) do
+    ~H"""
+    <p class={["text-sm text-muted-foreground", @class]}>
+      <%= render_slot(@inner_block) %>
+    </p>
+    """
+  end
+
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
+
+  def card_content(assigns) do
+    ~H"""
+    <div class={["p-6 pt-0", @class]}>
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
+
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
+
+  def card_footer(assigns) do
+    ~H"""
+    <div class={["flex items-center justify-between p-6 pt-0 ", @class]}>
+      <%= render_slot(@inner_block) %>
     </div>
     """
   end
