@@ -13,11 +13,8 @@ defmodule OrangeCmsWeb.CoreComponents do
   use OrangeCmsWeb, :verified_routes
 
   import OrangeCmsWeb.Gettext
-  import OrangeCmsWeb.ViewHelper
 
   alias Phoenix.LiveView.JS
-
-  embed_templates "core_components/*"
 
   @doc """
   Renders a modal.
@@ -661,210 +658,6 @@ defmodule OrangeCmsWeb.CoreComponents do
   end
 
   @doc """
-  Card component
-
-  ## Examples:
-
-        <.card>
-          <.card_header>
-            <.card_title>Card title</.card_title>
-            <.card_descroption>Card subtitle</.card_description>
-          </.card_header>
-          <.card_content>
-            Card text
-          </.card_content>
-          <.card_footer>
-            <.button>Button</.button>
-          </.card_footer>
-        </.card>
-  """
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def card(assigns) do
-    ~H"""
-    <div class={["rounded-xl border bg-card text-card-foreground shadow", @class]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def card_header(assigns) do
-    ~H"""
-    <div class={["flex flex-col space-y-1.5 p-6", @class]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def card_title(assigns) do
-    ~H"""
-    <h3 class={["font-semibold leading-none tracking-tight", @class]}>
-      <%= render_slot(@inner_block) %>
-    </h3>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def card_description(assigns) do
-    ~H"""
-    <p class={["text-sm text-muted-foreground", @class]}>
-      <%= render_slot(@inner_block) %>
-    </p>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def card_content(assigns) do
-    ~H"""
-    <div class={["p-6 pt-0", @class]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def card_footer(assigns) do
-    ~H"""
-    <div class={["flex items-center justify-between p-6 pt-0 ", @class]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  @doc """
-  Render dropdown menu
-
-
-  ## Examples:
-
-   <.dropdown_menu>
-   <.dropdown_menu_trigger>
-   <.button variant="outline">Open</.button>
-   </.dropdown_menu_trigger>
-   <.dropdown_menu_content>
-   <.dropdown_menu_label>Account</.dropdown_menu_label>
-   <.dropdown_menu_separator />
-   <.dropdown_menu_group>
-   <.dropdown_menu_item>
-       Profile
-     <.dropdown_menu_shortcut>⌘P</.dropdown_menu_shortcut>
-   </.dropdown_menu_item>
-   <.dropdown_menu_item>
-       Billing
-     <.dropdown_menu_shortcut>⌘B</.dropdown_menu_shortcut>
-   </.dropdown_menu_item>
-   <.dropdown_menu_item>
-       Settings
-     <.dropdown_menu_shortcut>⌘S</.dropdown_menu_shortcut>
-   </.dropdown_menu_item>
-   </.dropdown_menu_group>
-   </.dropdown_menu_content>
-   </.dropdown_menu>
-  """
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def dropdown_menu(assigns) do
-    ~H"""
-    <div class={["relative group inline-block", @class]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def dropdown_menu_trigger(assigns) do
-    ~H"""
-    <%= render_slot(@inner_block) %>
-    """
-  end
-
-  attr :class, :string, default: "top-0 left-full"
-  attr :hover_open, :boolean, default: false
-  slot :inner_block, required: true
-
-  def dropdown_menu_content(assigns) do
-    ~H"""
-    <div class={[
-      "hidden z-50 min-w-[8rem] w-56 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md absolute",
-      (@hover_open && "group-hover:block") || "group-focus-within:block",
-      @class
-    ]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def dropdown_menu_label(assigns) do
-    ~H"""
-    <div class={["px-2 py-1.5 text-sm font-semibold", @class]}><%= render_slot(@inner_block) %></div>
-    """
-  end
-
-  attr :class, :string, default: nil
-
-  def dropdown_menu_separator(assigns) do
-    ~H"""
-    <div role="separator" aria-orientation="horizontal" class={["-mx-1 my-1 h-px bg-muted", @class]}>
-    </div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def dropdown_menu_group(assigns) do
-    ~H"""
-    <div class={[@class]} role="group"><%= render_slot(@inner_block) %></div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  attr :disabled, :boolean, default: false
-  slot :inner_block, required: true
-
-  def dropdown_menu_item(assigns) do
-    ~H"""
-    <div class={[
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
-      @disabled && "pointer-events-none opacity-50",
-      @class
-    ]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr :class, :string, default: nil
-  slot :inner_block, required: true
-
-  def dropdown_menu_shortcut(assigns) do
-    ~H"""
-    <span class={["ml-auto text-xs tracking-widest opacity-60", @class]}>
-      <%= render_slot(@inner_block) %>
-    </span>
-    """
-  end
-
-  @doc """
   Render avatar
   """
 
@@ -885,7 +678,28 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def avatar_image(assigns) do
     ~H"""
-    <img class={["aspect-square h-full w-full", @class]}  src={@src} {@rest} />
+    <img class={["aspect-square h-full w-full", @class]} src={@src} {@rest} />
+    """
+  end
+
+  @doc """
+  Render badge
+  """
+  attr :class, :string, default: "bg-primary text-primary-foreground hover:bg-primary/80"
+  slot :inner_block, required: true
+  attr :rest, :global
+
+  def badge(assigns) do
+    ~H"""
+    <div
+      class={[
+        "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow border-transparent",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </div>
     """
   end
 

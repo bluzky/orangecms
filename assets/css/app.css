@@ -84,9 +84,9 @@ ul.menu li > :where(:not(ul)) {
   @apply text-sm;
 }
 
-/* .action-btn { */
-/*   @apply btn  btn-xs flex gap-1; */
-/* } */
+.action-btn {
+  @apply inline-flex gap-1 items-center rounded-lg hover:bg-secondary border border-transparent hover:border-border px-1;
+}
 
 .label {
   @apply justify-start;

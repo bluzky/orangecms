@@ -8,9 +8,6 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-      </.header>
       <.simple_form
         for={@form}
         id="project-form"
@@ -26,13 +23,15 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
           options={OrangeCms.Projects.ProjectType.values()}
         /> -->
         <:actions>
-          <.button
-            class="btn btn-secondary btn-md"
-            icon="inbox_arrow_down"
-            phx-disable-with="Saving..."
-          >
-            Save project
-          </.button>
+          <.dialog_footer class="w-full">
+            <.button
+              class="btn btn-secondary btn-md"
+              icon="inbox_arrow_down"
+              phx-disable-with="Saving..."
+            >
+              Save project
+            </.button>
+          </.dialog_footer>
         </:actions>
       </.simple_form>
     </div>
