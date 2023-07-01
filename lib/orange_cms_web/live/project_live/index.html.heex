@@ -1,49 +1,41 @@
 <.header>
-  Listing Projects
+  All Projects
   <:actions>
     <.link patch={~p"/p/new"}>
-      <.button class="btn btn-md btn-secondary">
+      <.button>
         <Heroicons.plus class="w-5 h-5" /> New project
       </.button>
     </.link>
   </:actions>
 </.header>
 
-<div class="grid grid-cols-4 gap-4 mt-5" id="project-list" phx-update="stream">
-  <div
-    :for={{id, project} <- @streams.projects}
-    id={id}
-    class="card bg-base-100 shadow-xl border hover:bg-base-200"
-  >
-    <div class="card-body">
-      <.link navigate={~p"/p/#{project.id}"} class="flex flex-row">
-        <div class="avatar placeholder">
-          <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
-            <span class="text-3xl"><%= String.at(project.name, 0) %></span>
-          </div>
-        </div>
-
-        <div class="flex-1 ml-3">
-          <div class="font-bold"><%= project.name %></div>
-          <span class="text-sm"><%= project.type %></span>
-        </div>
-      </.link>
-    </div>
-  </div>
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-10" phx-update="stream" id="project-list">
+  <.card :for={{id, project} <- @streams.projects} id={id} class="hover:bg-secondary">
+    <.link navigate={~p"/p/#{project.id}"}>
+      <.card_header class="pb-2">
+        <.card_title class="text-2xl font-bold">
+          <%= project.name %>
+        </.card_title>
+      </.card_header>
+      <.card_content>
+        <div class="text-sm font-medium"><%= project.type %></div>
+      </.card_content>
+    </.link>
+  </.card>
 </div>
 
-                                                       <.dialog :if={@live_action in [:new, :edit]} id="pro-dialog" show on_cancel={JS.navigate(~p"/p")}>
-  <.dialog_content >
+<.dialog :if={@live_action in [:new, :edit]} id="pro-dialog" show on_cancel={JS.navigate(~p"/p")}>
+  <.dialog_content>
     <.dialog_header>
-      <.dialog_title>New project</.dialog_title>
+      <.dialog_title><%= @page_title %></.dialog_title>
+      <.dialog_description>Let create an awesome project</.dialog_description>
     </.dialog_header>
     <.live_component
-    module={OrangeCmsWeb.ProjectLive.FormComponent}
-    id={@project.id || :new}
-    title={@page_title}
-    action={@live_action}
-    project={@project}
-    patch={~p"/p"}
-  />
+      module={OrangeCmsWeb.ProjectLive.FormComponent}
+      id={@project.id || :new}
+      action={@live_action}
+      project={@project}
+      patch={~p"/p"}
+    />
   </.dialog_content>
 </.dialog>

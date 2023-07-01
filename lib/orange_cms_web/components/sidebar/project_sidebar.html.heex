@@ -1,85 +1,56 @@
-<% content_types = assigns[:content_types] || []
-current_type = assigns[:current_type] %>
 
-<div class="dropdown dropdown-right dropdown-hover w-full border-y border-slate-200 ">
-  <label tabindex="0" class=" flex items-center p-2 w-full">
-    <div class="collapsible-item w-full gap-4 p-3 rounded-xl hover:bg-blue-100 hover:text-blue-500">
-      <Heroicons.puzzle_piece class="w-6 h-6 no-collapse" />
-      <p class="text-sm will-collapse grow">
-        <strong class="block font-medium font-bold">Projects</strong>
-      </p>
-      <Heroicons.chevron_down class="w-5 h-5 flex-none collapsed-hidden" />
-    </div>
-  </label>
-  <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-xl w-52">
-    <li class="menu-title">
-      <span>Projects</span>
-    </li>
+<div class="px-2">
+  <div class="py-4">
+    <.link
+      navigate={~p"/p"}
+      class="group relative flex justify-center px-2 py-3 hover:bg-accent hover:text-accent-foreground rounded-xl border-2 border-primary"
+    >
+      <.icon name="rocket-launch" class="w-5 h-5" />
 
-    <li :for={project <- assigns[:projects] || []}>
-      <.link
-        navigate={~p"/p/#{project}"}
-        class={[
-          "text-sm",
-          (@current_project.id == project.id && "font-bold text-blue-500 bg-blue-100") ||
-            "font-medium"
-        ]}
-      >
-        <%= project.name %>
-      </.link>
-    </li>
+      <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
+        Project
+      </span>
+    </.link>
+  </div>
 
-    <li class="border-t">
-      <.link navigate={~p"/p"} class="text-sm font-medium text-primary">All projects</.link>
-    </li>
-  </ul>
-</div>
-
-<div class="px-2 mt-4">
-  <ul class="menu text-sm font-medium">
-    <li :for={item <- content_types} class="w-full tooltip tooltip-right" data-tip={item.name}>
-      <.link
-        navigate={scoped_path(assigns, "/content/#{item.key}")}
-        class={[
-          "flex gap-4 collapsible-item p-3 hover:bg-blue-100 hover:text-blue-500",
-          current_type && item.key == current_type.key && "bg-blue-100 text-blue-500"
-        ]}
-      >
-        <Heroicons.inbox class="h-6 w-6 no-collapse" stroke="currentColor" />
-
-        <span class="will-collapse"><%= item.name %></span>
-      </.link>
-    </li>
-
+  <ul class="space-y-1 border-t border-gray-100 pt-4">
     <li>
-      <details class="group [&_summary::-webkit-details-marker]:hidden -mx-2 py-0 px-2 hover:bg-transparent">
-        <summary class="flex cursor-pointer items-center justify-between rounded-xl hover:bg-blue-100 hover:text-blue-500">
-          <div class="flex items-center gap-2 collapsible-item p-3">
-            <Heroicons.cog_6_tooth class="h-6 w-6 no-collapse" stroke="currentColor" />
+      <.link
+        navigate={scoped_path(assigns, "/content")}
+        class="group relative flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+      >
+        <.icon name="inbox" class="w-5 h-5" />
 
-            <span class="will-collapse"> Settings </span>
-          </div>
+        <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
+          Collections
+        </span>
+      </.link>
+    </li>
 
-          <span class="shrink-0 transition duration-300 group-open:-rotate-180 collapsed-hidden">
-            <Heroicons.chevron_down class="h-5 w-5" stroke="currentColor" />
-          </span>
-        </summary>
+        <li>
+      <.link
+        navigate={scoped_path(assigns, "/content_types")}
+        class="group relative flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+      >
+        <.icon name="document_text" class="w-5 h-5" />
 
-        <ul class="menu menu-compact mt-2">
-          <li>
-            <a href={scoped_path(assigns, "/content_types")}>
-              <Heroicons.document_text class="h-5 w-5" stroke="currentColor" />
-              <span> Content type </span>
-            </a>
-          </li>
-          <li>
-            <a href={scoped_path(assigns, "/members")}>
-              <Heroicons.users class="h-5 w-5" stroke="currentColor" />
-              <span> Team </span>
-            </a>
-          </li>
-        </ul>
-      </details>
+        <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
+          Content types
+        </span>
+      </.link>
+    </li>
+
+            <li>
+      <.link
+        navigate={scoped_path(assigns, "/members")}
+        class="group relative flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+      >
+        <.icon name="users" class="w-5 h-5" />
+
+        <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
+          Members
+        </span>
+      </.link>
     </li>
   </ul>
 </div>

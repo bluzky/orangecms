@@ -1,19 +1,19 @@
-<div class="p-6 bg-white rounded-xl drop-shadow-lg">
+<div class="p-6">
   <.header>
-    Listing <%= @content_type.name %>
+    <%= @content_type.name %>
     <:actions>
-      <.button class="btn-secondary btn-md" icon="plus" phx-click="create_entry">
-        New <%= @content_type.name %>
+      <.button icon="plus" phx-click="create_entry">
+        Add <%= @content_type.name %>
       </.button>
     </:actions>
   </.header>
 
   <.stable>
-    <.table_header>
+    <.table_header class="uppercase">
       <.table_row>
         <.table_head class="w-[10px]">id</.table_head>
         <.table_head>Title</.table_head>
-        <.table_head class="w-[50px]">Project id</.table_head>
+        <.table_head class="w-[100px]">Project id</.table_head>
         <.table_head class="text-right">Action</.table_head>
       </.table_row>
     </.table_header>

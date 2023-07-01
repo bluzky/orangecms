@@ -15,7 +15,12 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" phx-debounce="500" />
+        <.input
+          field={@form[:name]}
+          type="text"
+          label="What is your project's name?"
+          phx-debounce="500"
+        />
         <!--        <.input
           field={@form[:type]}
           type="select"

@@ -684,6 +684,10 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   @doc """
   Render badge
+
+  ## Examples
+
+      <.badge>Published</.badge>
   """
   attr :class, :string, default: "bg-primary text-primary-foreground hover:bg-primary/80"
   slot :inner_block, required: true
