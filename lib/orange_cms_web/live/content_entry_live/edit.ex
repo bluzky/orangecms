@@ -86,16 +86,4 @@ defmodule OrangeCmsWeb.ContentEntryLive.Edit do
         {:noreply, assign(socket, form: changeset)}
     end
   end
-
-  def toggle_class(js \\ %JS{}, class, to: target) do
-    js
-    |> JS.remove_class(
-      class,
-      to: "#{target}.#{class}"
-    )
-    |> JS.add_class(
-      class,
-      to: "#{target}:not(.#{class})"
-    )
-  end
 end
