@@ -15,6 +15,7 @@ defmodule OrangeCmsWeb.Components.Sidebar do
   import OrangeCmsWeb.ViewHelper
   import OrangeCmsWeb.CoreComponents
   import OrangeCmsWeb.Components.DropdownMenu
+  import OrangeCmsWeb.Components.Tooltip
 
 
   embed_templates "sidebar/*"

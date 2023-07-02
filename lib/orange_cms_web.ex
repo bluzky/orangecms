@@ -88,6 +88,7 @@ defmodule OrangeCmsWeb do
       import OrangeCmsWeb.Components.DropdownMenu
       import OrangeCmsWeb.Components.Table
       import OrangeCmsWeb.Components.Form
+      import OrangeCmsWeb.Components.Tooltip
       import OrangeCmsWeb.Components.JS
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext

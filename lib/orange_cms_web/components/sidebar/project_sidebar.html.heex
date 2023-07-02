@@ -1,56 +1,59 @@
-
 <div class="px-2">
   <div class="py-4">
-    <.link
-      navigate={~p"/p"}
-      class="group relative flex justify-center px-2 py-3 hover:bg-accent hover:text-accent-foreground rounded-xl border-2 border-primary"
-    >
-      <.icon name="rocket-launch" class="w-5 h-5" />
-
-      <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
-        Project
-      </span>
-    </.link>
+    <.tooltip>
+      <.link
+        navigate={~p"/p"}
+        class="flex justify-center px-2 py-3 hover:bg-accent hover:text-accent-foreground rounded-xl border-2 border-primary"
+      >
+        <.icon name="rocket-launch" class="w-5 h-5" />
+      </.link>
+      <.tooltip_content position="right">
+        Projects
+      </.tooltip_content>
+    </.tooltip>
   </div>
 
   <ul class="space-y-1 border-t border-gray-100 pt-4">
     <li>
-      <.link
-        navigate={scoped_path(assigns, "/content")}
-        class="group relative flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
-      >
-        <.icon name="inbox" class="w-5 h-5" />
-
-        <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
+      <.tooltip>
+        <.link
+          navigate={scoped_path(assigns, "/content")}
+          class="flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+        >
+          <.icon name="inbox" class="w-5 h-5" />
+        </.link>
+        <.tooltip_content position="right">
           Collections
-        </span>
-      </.link>
+        </.tooltip_content>
+      </.tooltip>
     </li>
 
-        <li>
-      <.link
-        navigate={scoped_path(assigns, "/content_types")}
-        class="group relative flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
-      >
-        <.icon name="document_text" class="w-5 h-5" />
-
-        <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
+    <li>
+      <.tooltip>
+        <.link
+          navigate={scoped_path(assigns, "/content_types")}
+          class="flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+        >
+          <.icon name="document_text" class="w-5 h-5" />
+        </.link>
+        <.tooltip_content position="right">
           Content types
-        </span>
-      </.link>
+        </.tooltip_content>
+      </.tooltip>
     </li>
 
-            <li>
-      <.link
-        navigate={scoped_path(assigns, "/members")}
-        class="group relative flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
-      >
-        <.icon name="users" class="w-5 h-5" />
-
-        <span class="absolute left-full ml-4 top-1/2 -translate-y-1/2 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block">
+    <li>
+      <.tooltip>
+        <.link
+          navigate={scoped_path(assigns, "/members")}
+          class="flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+        >
+          <.icon name="users" class="w-5 h-5" />
+        </.link>
+        <.tooltip_content position="right">
           Members
-        </span>
-      </.link>
+        </.tooltip_content>
+      </.tooltip>
     </li>
   </ul>
 </div>
