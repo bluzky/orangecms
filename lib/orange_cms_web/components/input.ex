@@ -32,6 +32,39 @@ defmodule OrangeCmsWeb.Components.Input do
     """
   end
 
+
+  @doc"""
+  Implement textarea component
+
+  If a form field is provided, value is used from the form field, otherwise `inner_block` is used as the value.
+
+  ## Examples
+
+      <.textarea field={@form[:name]} class="h-32">My content</.textarea>
+  """
+  attr :id, :any, default: nil
+  attr :name, :any, default: nil
+  attr :value, :any, default: nil
+  attr :field, Phoenix.HTML.FormField
+  attr :class, :string, default: nil
+  attr :rest, :global
+  slot :inner_block
+
+  def textarea(assigns) do
+    assigns = prepare_assign(assigns)
+    ~H"""
+    <textarea
+      class={[
+        "flex min-h-[80px] w-full px-3 py-2 rounded-md border border-input bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        @class
+        ]}
+      id={@id}
+      name={@name}
+      {@rest}
+    ><%= @value || render_block(@inner_block) %></textarea>
+    """
+  end
+
   defp prepare_assign(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
       assigns
       |> assign(field: nil, id: assigns.id || field.id)
