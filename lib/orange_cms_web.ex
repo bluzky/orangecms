@@ -91,6 +91,7 @@ defmodule OrangeCmsWeb do
       import OrangeCmsWeb.Components.JS
       import OrangeCmsWeb.Components.Table
       import OrangeCmsWeb.Components.Tooltip
+      import OrangeCmsWeb.Components.Display
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext
       import OrangeCmsWeb.ViewHelper
