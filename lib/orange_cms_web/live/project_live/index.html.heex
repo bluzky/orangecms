@@ -10,7 +10,7 @@
 </.header>
 
 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-10" phx-update="stream" id="project-list">
-  <.card :for={{id, project} <- @streams.projects} id={id} class="hover:bg-secondary">
+  <.card :for={{id, project} <- @streams.projects} class="hover:bg-secondary">
     <.link navigate={~p"/p/#{project.id}"}>
       <.card_header class="pb-2">
         <.card_title class="text-2xl font-bold">
