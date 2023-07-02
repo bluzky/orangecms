@@ -12,12 +12,10 @@ defmodule OrangeCmsWeb.Components.Sidebar do
   use Phoenix.Component
   use OrangeCmsWeb, :verified_routes
 
-  import OrangeCmsWeb.ViewHelper
-  import OrangeCmsWeb.CoreComponents
   import OrangeCmsWeb.Components.DropdownMenu
   import OrangeCmsWeb.Components.Tooltip
-
+  import OrangeCmsWeb.CoreComponents
+  import OrangeCmsWeb.ViewHelper
 
   embed_templates "sidebar/*"
-
 end

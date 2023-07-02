@@ -47,6 +47,7 @@ defmodule OrangeCmsWeb.Components.Table do
   attr :class, :string, default: nil
   attr :rest, :global
   slot :inner_block, required: true
+
   def stable(assigns) do
     ~H"""
     <table class={["w-full text-sm", @class]} {@rest}>
@@ -67,17 +68,17 @@ defmodule OrangeCmsWeb.Components.Table do
     """
   end
 
-
   attr :class, :string, default: nil
   attr :rest, :global
   slot :inner_block, required: true
+
   def table_caption(assigns) do
     ~H"""
-    <caption class={["mt-4 text-sm text-muted-foreground caption-bottom", @class]}  {@rest}>
+    <caption class={["mt-4 text-sm text-muted-foreground caption-bottom", @class]} {@rest}>
       <%= render_slot(@inner_block) %>
     </caption>
     """
-end
+  end
 
   attr :class, :string, default: nil
   attr :rest, :global
@@ -85,7 +86,10 @@ end
 
   def table_row(assigns) do
     ~H"""
-    <tr class={["border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", @class]}  {@rest}>
+    <tr
+      class={["border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", @class]}
+      {@rest}
+    >
       <%= render_slot(@inner_block) %>
     </tr>
     """
@@ -97,7 +101,13 @@ end
 
   def table_head(assigns) do
     ~H"""
-    <th class={["h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]", @class]}  {@rest}>
+    <th
+      class={[
+        "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        @class
+      ]}
+      {@rest}
+    >
       <%= render_slot(@inner_block) %>
     </th>
     """
@@ -109,7 +119,7 @@ end
 
   def table_body(assigns) do
     ~H"""
-    <tbody class={["[&_tr:last-child]:border-0", @class]}  {@rest}>
+    <tbody class={["[&_tr:last-child]:border-0", @class]} {@rest}>
       <%= render_slot(@inner_block) %>
     </tbody>
     """
@@ -121,7 +131,7 @@ end
 
   def table_cell(assigns) do
     ~H"""
-    <td class={["p-4 align-middle [&:has([role=checkbox])]:pr-0", @class]}  {@rest}>
+    <td class={["p-4 align-middle [&:has([role=checkbox])]:pr-0", @class]} {@rest}>
       <%= render_slot(@inner_block) %>
     </td>
     """

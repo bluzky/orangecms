@@ -85,13 +85,13 @@ defmodule OrangeCmsWeb do
       # Core UI components and translation
       import OrangeCmsWeb.Components.Card
       import OrangeCmsWeb.Components.Dialog
+      import OrangeCmsWeb.Components.Display
       import OrangeCmsWeb.Components.DropdownMenu
       import OrangeCmsWeb.Components.Form
       import OrangeCmsWeb.Components.Input, except: [input: 1]
       import OrangeCmsWeb.Components.JS
       import OrangeCmsWeb.Components.Table
       import OrangeCmsWeb.Components.Tooltip
-      import OrangeCmsWeb.Components.Display
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext
       import OrangeCmsWeb.ViewHelper

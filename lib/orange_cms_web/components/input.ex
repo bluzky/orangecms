@@ -106,8 +106,6 @@ defmodule OrangeCmsWeb.Components.Input do
     """
   end
 
-
-
   @doc """
   Implement switch input checkbox
 
@@ -130,21 +128,21 @@ defmodule OrangeCmsWeb.Components.Input do
   def switch(assigns) do
     assigns =
       assigns
-        |> prepare_assign()
+      |> prepare_assign()
       |> assign_new(:checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", assigns.value) end)
 
     ~H"""
     <label class={["relative inline-flex items-center p-0.5 h-[24px] w-[44px]", @class]} {@rest}>
       <input type="hidden" name={@name} value="false" />
-      <input type="checkbox"
+      <input
+        type="checkbox"
         id={@id || @name}
         name={@name}
         value="true"
         checked={@checked}
-        class="sr-only peer" />
-      <span
-        class="absolute inset-0 shrink-0 cursor-pointer rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 peer-checked:bg-primary bg-input"
-      >
+        class="sr-only peer"
+      />
+      <span class="absolute inset-0 shrink-0 cursor-pointer rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 peer-checked:bg-primary bg-input">
       </span>
       <span class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform peer-checked:translate-x-5 translate-x-0">
       </span>

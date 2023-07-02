@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.Components.JS do
+  @moduledoc false
   alias Phoenix.LiveView.JS
 
   def toggle_class(js \\ %JS{}, class, to: target) do
