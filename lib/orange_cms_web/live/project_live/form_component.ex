@@ -3,42 +3,40 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Projects
+  alias OrangeCmsWeb.Components.Input
 
   @impl true
   def render(assigns) do
     ~H"""
     <div>
-      <.simple_form
+      <.form
+        class="space-y-6"
         for={@form}
         id="project-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
-        <.input
-          field={@form[:name]}
-          type="text"
-          label="What is your project's name?"
-          phx-debounce="500"
-        />
-        <!--        <.input
-          field={@form[:type]}
-          type="select"
-          label="Type"
-          options={OrangeCms.Projects.ProjectType.values()}
-        /> -->
-        <:actions>
-          <.dialog_footer class="w-full">
-            <.button
-              class="btn btn-secondary btn-md"
-              icon="inbox_arrow_down"
-              phx-disable-with="Saving..."
-            >
-              Save project
-            </.button>
-          </.dialog_footer>
-        </:actions>
-      </.simple_form>
+        <.form_item>
+          <.form_label>What is your project's name?</.form_label>
+          <.form_control>
+            <Input.input field={@form[:name]} type="text" phx-debounce="500" />
+          </.form_control>
+          <.form_description>
+            This is your public display name.
+          </.form_description>
+          <.form_message field={@form[:name]} />
+        </.form_item>
+        <div class="w-full flex flex-row-reverse">
+          <.button
+            class="btn btn-secondary btn-md"
+            icon="inbox_arrow_down"
+            phx-disable-with="Saving..."
+          >
+            Save project
+          </.button>
+        </div>
+      </.form>
     </div>
     """
   end
