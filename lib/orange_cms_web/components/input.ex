@@ -93,13 +93,62 @@ defmodule OrangeCmsWeb.Components.Input do
     <input type="hidden" name={@name} value="false" />
     <input
       type="checkbox"
-      class={["peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary", @class]}
+      class={[
+        "peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary",
+        @class
+      ]}
       id={@id || @name}
       name={@name}
       value="true"
       checked={@checked}
       {@rest}
     />
+    """
+  end
+
+
+
+  @doc """
+  Implement switch input checkbox
+
+  ## Examples:
+
+      <.switch field={@form[:remember_me]} />
+
+      <div class="flex items-center space-x-2">
+        <.switch id="airplane-mode" />
+        <.label for="airplane-mode">Airplane Mode</.label>
+      </div>
+  """
+  attr :id, :any, default: nil
+  attr :name, :any, default: nil
+  attr :value, :any, default: nil
+  attr :field, Phoenix.HTML.FormField
+  attr :class, :string, default: nil
+  attr :rest, :global
+
+  def switch(assigns) do
+    assigns =
+      assigns
+        |> prepare_assign()
+      |> assign_new(:checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", assigns.value) end)
+
+    ~H"""
+    <label class={["relative inline-flex items-center p-0.5 h-[24px] w-[44px]", @class]} {@rest}>
+      <input type="hidden" name={@name} value="false" />
+      <input type="checkbox"
+        id={@id || @name}
+        name={@name}
+        value="true"
+        checked={@checked}
+        class="sr-only peer" />
+      <span
+        class="absolute inset-0 shrink-0 cursor-pointer rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 peer-checked:bg-primary bg-input"
+      >
+      </span>
+      <span class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform peer-checked:translate-x-5 translate-x-0">
+      </span>
+    </label>
     """
   end
 
