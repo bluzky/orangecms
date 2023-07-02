@@ -41,9 +41,25 @@ defmodule OrangeCmsWeb.Components.Form do
 
   import OrangeCmsWeb.Gettext
 
+  attr :label, :string, default: nil
+  attr :description, :string, default: nil
   attr :class, :string, default: nil
+  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]"
   slot :inner_block, required: true
   attr :rest, :global
+
+  def form_item(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    ~H"""
+    <.form_item class={@class} {@rest} phx-feedback-for={@field.name}>
+      <.form_label :if={@label}><%= @label %></.form_label>
+      <.form_description :if={@description}><%= @description %></.form_description>
+      <.form_control>
+        <%= render_slot(@inner_block) %>
+      </.form_control>
+      <.form_message field={@field} />
+    </.form_item>
+    """
+  end
 
   def form_item(assigns) do
     ~H"""
@@ -113,7 +129,7 @@ defmodule OrangeCmsWeb.Components.Form do
       class={["text-sm font-medium text-destructive", @class]}
       {@rest}
     >
-      <span class="block" :for={msg <- @errors}><%= msg %></span>
+      <span :for={msg <- @errors} class="block"><%= msg %></span>
       <%= if @errors == [] do %>
         <%= msg %>
       <% end %>

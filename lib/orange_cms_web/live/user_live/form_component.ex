@@ -3,28 +3,36 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Accounts
+  alias OrangeCmsWeb.Components.Input
 
   @impl true
   def render(assigns) do
     ~H"""
     <div>
-      <.simple_form
-        :let={f}
+      <.form
+        class="space-y-4"
         for={@form}
         id="user-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={f[:first_name]} type="text" label="First name" />
-        <.input field={f[:last_name]} type="text" label="Last name" />
-        <.input field={f[:email]} type="text" label="Email" />
-        <.input field={f[:password]} type="text" label="Password" />
-        <.input field={f[:avatar]} type="text" label="Avatar" />
-        <:actions>
-          <.button phx-disable-with="Saving...">Save User</.button>
-        </:actions>
-      </.simple_form>
+        <.form_item field={@form[:first_name]} label="First name">
+          <Input.input field={@form[:first_name]} type="text" />
+        </.form_item>
+        <.form_item field={@form[:last_name]} label="Last name">
+          <Input.input field={@form[:last_name]} type="text" />
+        </.form_item>
+        <.form_item field={@form[:email]} label="Email">
+          <Input.input field={@form[:email]} type="email" />
+        </.form_item>
+        <.form_item field={@form[:password]} label="Password">
+          <Input.input field={@form[:password]} type="text" />
+        </.form_item>
+        <div class="w-full flex flex-row-reverse">
+          <.button icon="inbox_arrow_down" phx-disable-with="Saving...">Save User</.button>
+        </div>
+      </.form>
     </div>
     """
   end
@@ -40,7 +48,7 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"form" => user_params}, socket) do
+  def handle_event("validate", %{"user" => user_params}, socket) do
     form =
       socket.assigns.user
       |> Accounts.change_user(user_params)
@@ -49,13 +57,30 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
     {:noreply, assign_form(socket, form)}
   end
 
-  def handle_event("save", %{"form" => user_params}, socket) do
-    case Accounts.create_user(user_params) do
-      {:ok, entry} ->
+  def handle_event("save", %{"user" => user_params}, socket) do
+    save_user(socket, socket.assigns.action, user_params)
+  end
+
+  defp save_user(socket, :edit, params) do
+    case Accounts.update_user(socket.assigns.user, params) do
+      {:ok, user} ->
         {:noreply,
          socket
-         |> put_flash(:success, "User updated successfully")
-         |> push_navigate(to: ~p"/users/#{entry}")}
+         |> put_flash(:info, "User updated successfully")
+         |> push_patch(to: ~p"/users")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp save_user(socket, :new, user_params) do
+    case Accounts.create_user(user_params) do
+      {:ok, _entry} ->
+        {:noreply,
+         socket
+         |> put_flash(:success, "User created successfully")
+         |> push_navigate(to: ~p"/users")}
 
       {:error, changeset} ->
         {:noreply, assign_form(socket, changeset)}

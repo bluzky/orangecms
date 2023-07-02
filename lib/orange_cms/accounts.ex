@@ -81,6 +81,12 @@ defmodule OrangeCms.Accounts do
     |> Repo.insert()
   end
 
+  def update_user(%User{} = user, attrs) do
+    user
+    |> change_user(attrs)
+    |> Repo.update()
+  end
+
   ## User registration
 
   @doc """
