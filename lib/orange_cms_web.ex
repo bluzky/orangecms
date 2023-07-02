@@ -86,14 +86,17 @@ defmodule OrangeCmsWeb do
       import OrangeCmsWeb.Components.Card
       import OrangeCmsWeb.Components.Dialog
       import OrangeCmsWeb.Components.DropdownMenu
-      import OrangeCmsWeb.Components.Table
       import OrangeCmsWeb.Components.Form
-      import OrangeCmsWeb.Components.Tooltip
+      import OrangeCmsWeb.Components.Input, except: [input: 1]
       import OrangeCmsWeb.Components.JS
+      import OrangeCmsWeb.Components.Table
+      import OrangeCmsWeb.Components.Tooltip
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext
       import OrangeCmsWeb.ViewHelper
       import Phoenix.HTML
+
+      alias OrangeCmsWeb.Components.Input
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
