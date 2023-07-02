@@ -8,11 +8,6 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage user records in your database.</:subtitle>
-      </.header>
-
       <.simple_form
         :let={f}
         for={@form}

@@ -121,7 +121,7 @@ end
 
   def table_cell(assigns) do
     ~H"""
-    <td class={["p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] font-medium", @class]}  {@rest}>
+    <td class={["p-4 align-middle [&:has([role=checkbox])]:pr-0", @class]}  {@rest}>
       <%= render_slot(@inner_block) %>
     </td>
     """
