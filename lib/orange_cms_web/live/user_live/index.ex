@@ -34,11 +34,6 @@ defmodule OrangeCmsWeb.UserLive.Index do
   end
 
   @impl true
-  def handle_info({OrangeCmsWeb.UserLive.FormComponent, {:saved, user}}, socket) do
-    {:noreply, stream_insert(socket, :users, user)}
-  end
-
-  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     user = Accounts.get_user!(id)
     Accounts.delete_user(user)

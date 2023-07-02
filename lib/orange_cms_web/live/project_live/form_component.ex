@@ -22,17 +22,10 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
           <.form_control>
             <Input.input field={@form[:name]} type="text" phx-debounce="500" />
           </.form_control>
-          <.form_description>
-            This is your public display name.
-          </.form_description>
           <.form_message field={@form[:name]} />
         </.form_item>
         <div class="w-full flex flex-row-reverse">
-          <.button
-            class="btn btn-secondary btn-md"
-            icon="inbox_arrow_down"
-            phx-disable-with="Saving..."
-          >
+          <.button icon="inbox_arrow_down" phx-disable-with="Saving...">
             Save project
           </.button>
         </div>
