@@ -7,16 +7,19 @@ defmodule OrangeCmsWeb.Components.Input do
   attr :id, :any, default: nil
   attr :name, :any
   attr :value, :any
+
   attr :type, :string,
     default: "text",
     values: ~w(date datetime-local email file hidden month number password
       tel text time url week)
-    attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]"
+
+  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]"
   attr :class, :string, default: nil
   attr :rest, :global
 
   def input(assigns) do
     assigns = prepare_assign(assigns)
+
     ~H"""
     <input
       class={[
@@ -32,8 +35,7 @@ defmodule OrangeCmsWeb.Components.Input do
     """
   end
 
-
-  @doc"""
+  @doc """
   Implement textarea component
 
   If a form field is provided, value is used from the form field, otherwise `inner_block` is used as the value.
@@ -52,12 +54,13 @@ defmodule OrangeCmsWeb.Components.Input do
 
   def textarea(assigns) do
     assigns = prepare_assign(assigns)
+
     ~H"""
     <textarea
       class={[
         "flex min-h-[80px] w-full px-3 py-2 rounded-md border border-input bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         @class
-        ]}
+      ]}
       id={@id}
       name={@name}
       {@rest}
@@ -65,11 +68,46 @@ defmodule OrangeCmsWeb.Components.Input do
     """
   end
 
-  defp prepare_assign(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+  @doc """
+  Implement checkbox input component
+
+  ## Examples:
+
+      <.checkbox field={@form[:remember_me]} />
+      <.checkbox class="!border-destructive" name="agree" value={true} />
+  """
+  attr :id, :any, default: nil
+  attr :name, :any, default: nil
+  attr :value, :any, default: nil
+  attr :field, Phoenix.HTML.FormField
+  attr :class, :string, default: nil
+  attr :rest, :global
+
+  def checkbox(assigns) do
+    assigns =
       assigns
-      |> assign(field: nil, id: assigns.id || field.id)
-      |> assign_new(:name, fn -> if assigns[:multiple] == true, do: field.name <> "[]", else: field.name end)
-      |> assign_new(:value, fn -> field.value end)
+      |> prepare_assign()
+      |> assign_new(:checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", assigns.value) end)
+
+    ~H"""
+    <input type="hidden" name={@name} value="false" />
+    <input
+      type="checkbox"
+      class={["peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary", @class]}
+      id={@id || @name}
+      name={@name}
+      value="true"
+      checked={@checked}
+      {@rest}
+    />
+    """
+  end
+
+  defp prepare_assign(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign_new(:name, fn -> if assigns[:multiple] == true, do: field.name <> "[]", else: field.name end)
+    |> assign_new(:value, fn -> field.value end)
   end
 
   defp prepare_assign(assigns) do
