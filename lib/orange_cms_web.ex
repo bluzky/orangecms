@@ -90,6 +90,7 @@ defmodule OrangeCmsWeb do
       import OrangeCmsWeb.Components.Form
       import OrangeCmsWeb.Components.Input, except: [input: 1]
       import OrangeCmsWeb.Components.JS
+      import OrangeCmsWeb.Components.Select
       import OrangeCmsWeb.Components.Table
       import OrangeCmsWeb.Components.Tooltip
       import OrangeCmsWeb.CoreComponents
