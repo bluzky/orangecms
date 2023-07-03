@@ -3,22 +3,27 @@ defmodule OrangeCmsWeb.Components.Input do
   Implement of form component
   """
   use Phoenix.Component
+  alias OrangeCmsWeb.Components.ComponentHelpers
 
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :value, :any
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:value, :any)
 
-  attr :type, :string,
+  attr(:type, :string,
     default: "text",
     values: ~w(date datetime-local email file hidden month number password
       tel text time url week)
+  )
 
-  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]"
-  attr :class, :string, default: nil
-  attr :rest, :global
+  attr(:field, Phoenix.HTML.FormField,
+    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+  )
+
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
 
   def input(assigns) do
-    assigns = prepare_assign(assigns)
+    assigns = ComponentHelpers.prepare_assign(assigns)
 
     ~H"""
     <input
@@ -44,16 +49,16 @@ defmodule OrangeCmsWeb.Components.Input do
 
       <.textarea field={@form[:name]} class="h-32">My content</.textarea>
   """
-  attr :id, :any, default: nil
-  attr :name, :any, default: nil
-  attr :value, :any, default: nil
-  attr :field, Phoenix.HTML.FormField
-  attr :class, :string, default: nil
-  attr :rest, :global
-  slot :inner_block
+  attr(:id, :any, default: nil)
+  attr(:name, :any, default: nil)
+  attr(:value, :any, default: nil)
+  attr(:field, Phoenix.HTML.FormField)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+  slot(:inner_block)
 
   def textarea(assigns) do
-    assigns = prepare_assign(assigns)
+    assigns = ComponentHelpers.prepare_assign(assigns)
 
     ~H"""
     <textarea
@@ -76,18 +81,20 @@ defmodule OrangeCmsWeb.Components.Input do
       <.checkbox field={@form[:remember_me]} />
       <.checkbox class="!border-destructive" name="agree" value={true} />
   """
-  attr :id, :any, default: nil
-  attr :name, :any, default: nil
-  attr :value, :any, default: nil
-  attr :field, Phoenix.HTML.FormField
-  attr :class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :any, default: nil)
+  attr(:name, :any, default: nil)
+  attr(:value, :any, default: nil)
+  attr(:field, Phoenix.HTML.FormField)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
 
   def checkbox(assigns) do
     assigns =
       assigns
-      |> prepare_assign()
-      |> assign_new(:checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", assigns.value) end)
+      |> ComponentHelpers.prepare_assign()
+      |> assign_new(:checked, fn ->
+        Phoenix.HTML.Form.normalize_value("checkbox", assigns.value)
+      end)
 
     ~H"""
     <input type="hidden" name={@name} value="false" />
@@ -118,18 +125,20 @@ defmodule OrangeCmsWeb.Components.Input do
         <.label for="airplane-mode">Airplane Mode</.label>
       </div>
   """
-  attr :id, :any, default: nil
-  attr :name, :any, default: nil
-  attr :value, :any, default: nil
-  attr :field, Phoenix.HTML.FormField
-  attr :class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :any, default: nil)
+  attr(:name, :any, default: nil)
+  attr(:value, :any, default: nil)
+  attr(:field, Phoenix.HTML.FormField)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
 
   def switch(assigns) do
     assigns =
       assigns
-      |> prepare_assign()
-      |> assign_new(:checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", assigns.value) end)
+      |> ComponentHelpers.prepare_assign()
+      |> assign_new(:checked, fn ->
+        Phoenix.HTML.Form.normalize_value("checkbox", assigns.value)
+      end)
 
     ~H"""
     <label class={["relative inline-flex items-center p-0.5 h-[24px] w-[44px]", @class]} {@rest}>
@@ -148,16 +157,5 @@ defmodule OrangeCmsWeb.Components.Input do
       </span>
     </label>
     """
-  end
-
-  defp prepare_assign(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
-    assigns
-    |> assign(field: nil, id: assigns.id || field.id)
-    |> assign_new(:name, fn -> if assigns[:multiple] == true, do: field.name <> "[]", else: field.name end)
-    |> assign_new(:value, fn -> field.value end)
-  end
-
-  defp prepare_assign(assigns) do
-    assigns
   end
 end
