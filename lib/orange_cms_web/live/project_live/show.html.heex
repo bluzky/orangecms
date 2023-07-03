@@ -18,8 +18,25 @@
   </div>
 </div>
 
+
+<.dialog :if={@live_action in [:setup_github]} id="import-github" show on_cancel={JS.navigate(~p"/p")}>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title>Import existing content</.dialog_title>
+      <.dialog_description>This will guide you to import content from github repo</.dialog_description>
+    </.dialog_header>
+    <.live_component
+      module={OrangeCmsWeb.ProjectLive.ImportGithubForm}
+      id={@project.id}
+      action={@live_action}
+      project={@project}
+      patch={~p"/p"}
+    />
+  </.dialog_content>
+</.dialog>
+
 <.modal
-  :if={@live_action in [:setup_github]}
+  :if={@live_action in [:ssetup_github]}
   id="project-modal"
   show
   on_cancel={JS.navigate(~p"/p")}

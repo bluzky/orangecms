@@ -1,43 +1,43 @@
 const select = {
   mounted() {
     const el = this.el;
+    let show = false;
 
     // close select popup
     function dismissSelect(event) {
+      console.log("dismiss");
       const target = event?.target || el.querySelector(".select-content");
-      target.classList.add("hidden");
       target.removeEventListener("dismiss", dismissSelect);
+      show = false;
+      showSelect(false);
     }
 
-    // update display label of selected option
-    function updateDisplayLabel() {
-      el.querySelector(".select-value").innerText = el.querySelector(
-        `input:checked ~ .select-item-label`
-      )?.innerText;
-    }
-
-    // propgate name to all inputs
-    const name = el.getAttribute("data-name");
-    if (name)
-      el.querySelectorAll(`input`).forEach((input) => {
-        input.setAttribute("name", name);
-      });
-
-    // checked selected value
-    const value = el.getAttribute("data-value");
-    if (value) {
-      el.querySelector(`input[value="${value}"]`).checked = true;
-      updateDisplayLabel();
+    function showSelect(visible) {
+      const contentEl = el.querySelector(".select-content");
+      if (visible) {
+        contentEl.classList.remove("hidden");
+        el.setAttribute("data-open", "true");
+      } else {
+        el.setAttribute("data-open", "false");
+        const onTransitionEnd = () => {
+          contentEl.classList.add("hidden");
+          contentEl.removeEventListener("transitionend", onTransitionEnd);
+        };
+        contentEl.addEventListener("transitionend", onTransitionEnd);
+      }
     }
 
     // add event listener trigger select
     el.querySelector(".select-trigger").addEventListener("click", () => {
       const contentEl = el.querySelector(".select-content");
-      contentEl.classList.toggle("hidden");
-
+      if (!show) {
+        console.log("show");
+        show = true;
+        showSelect(true);
+      }
       setTimeout(() => {
         // handle click outside
-        if (!contentEl.classList.contains("hidden")) {
+        if (show) {
           // set focus on selected option or first option
           const selectedOption = contentEl.querySelector("input:checked");
           if (selectedOption) {
@@ -46,20 +46,8 @@ const select = {
             contentEl.querySelector("input")?.focus();
           }
           contentEl.addEventListener("dismiss", dismissSelect);
-        } else {
-          dismissSelect();
         }
       }, 100);
-    });
-
-    // handle click on option
-    el.querySelectorAll(".select-content input").forEach((option) => {
-      option.addEventListener("change", (event) => {
-        if (event.target.checked) {
-          updateDisplayLabel();
-          dismissSelect();
-        }
-      });
     });
 
     // handle escape or enter key
@@ -71,6 +59,26 @@ const select = {
         return false;
       }
     });
+
+    // observe changes in select content
+    const observerOptions = {
+      childList: true,
+      subtree: true,
+    };
+
+    function updateDisplayText() {
+      console.log("changing");
+      const selectedValue =
+        el.querySelector("input:checked")?.value ||
+        el.querySelector(".select-value")?.getAttribute("data-placeholder") ||
+        "";
+      el.querySelector(".select-value")?.setAttribute(
+        "data-content",
+        selectedValue
+      );
+    }
+    const observer = new MutationObserver(updateDisplayText);
+    observer.observe(el, observerOptions);
   },
 };
 
