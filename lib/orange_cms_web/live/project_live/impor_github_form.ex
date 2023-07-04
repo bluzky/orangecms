@@ -17,36 +17,62 @@ defmodule OrangeCmsWeb.ProjectLive.ImportGithubForm do
         id="github-import-form"
         phx-target={@myself}
       >
-        <.form_item field={@form[:name]} label="Github access token"
-        description="You can obtain this token at Profile > Settings > Developer settings > Personal access tokens">
-          <Input.input field={@form[:token]}
+        <.form_item
+          field={@form[:name]}
+          label="Github access token"
+          description="You can obtain this token at Profile > Settings > Developer settings > Personal access tokens"
+        >
+          <Input.input
+            field={@form[:token]}
             phx-debounce="500"
-            label="Paste your personal github token here" />
+            label="Paste your personal github token here"
+          />
         </.form_item>
 
         <.form_item field={@form[:repository]} label="Select your desired repo">
-        <.select field={@form[:repository]} class="w-full">
-          <.select_trigger {%{disabled: Enum.empty?(@repositories || [])}}>
-            <.select_value placeholder="Select repository" />
-          </.select_trigger>
-          <.select_content>
-            <.select_group>
-              <.select_item :for={item <- (@repositories || [])} field={@form[:repository]} value={item["full_name"]}><%= item["full_name"] %></.select_item>
-            </.select_group>
-          </.select_content>
-        </.select>
-          </.form_item>
+          <.select field={@form[:repository]} class="w-full">
+            <.select_trigger {%{disabled: Enum.empty?(@repositories || [])}}>
+              <.select_value placeholder="Select repository" />
+            </.select_trigger>
+            <.select_content>
+              <.select_group>
+                <.select_item
+                  :for={item <- @repositories || []}
+                  field={@form[:repository]}
+                  value={item["full_name"]}
+                >
+                  <%= item["full_name"] %>
+                </.select_item>
+              </.select_group>
+            </.select_content>
+          </.select>
+        </.form_item>
 
-        <.form_item field={@form[:name]} label="Path to content directory"
-          description="Relative to repository root">
-          <Input.input field={@form[:content_dir]}
+        <.form_item
+          field={@form[:name]}
+          label="Path to content directory"
+          description="Relative to repository root"
+        >
+          <Input.input
+            field={@form[:content_dir]}
             phx-debounce="blur"
             {%{disabled: Enum.empty?(@repositories ||[])}}
           />
         </.form_item>
 
+        <%= if @message do %>
+          <% {kind, content} = @message %>
+          <.alert kind={kind}>
+            <%= content %>
+          </.alert>
+        <% end %>
+
         <div class="w-full flex flex-row-reverse">
-          <.button icon="inbox_arrow_down" phx-disable-with="Saving...">
+          <.button
+            icon="inbox_arrow_down"
+            {%{disabled: (not @ready_next)}}
+            phx-disable-with="Saving..."
+          >
             Save project
           </.button>
         </div>
@@ -74,7 +100,7 @@ defmodule OrangeCmsWeb.ProjectLive.ImportGithubForm do
     if String.starts_with?(token, "github_pat_") do
       {:ok, repositories} = OrangeCms.Shared.Github.list_repository(token)
 
-      repositories = repositories |> Enum.filter(& &1["permissions"]["push"])
+      repositories = Enum.filter(repositories, & &1["permissions"]["push"])
 
       form = to_form(params)
 
@@ -126,6 +152,7 @@ defmodule OrangeCmsWeb.ProjectLive.ImportGithubForm do
       {:ok, files} ->
         md_files =
           Enum.filter(files, &(String.ends_with?(&1["name"], ".md") and &1["type"] == "file"))
+          |> IO.inspect()
 
         if length(md_files) > 0 do
           {:noreply,
@@ -153,11 +180,7 @@ defmodule OrangeCmsWeb.ProjectLive.ImportGithubForm do
   end
 
   @impl true
-  def handle_event(
-        "form_changed",
-        _params,
-        socket
-      ) do
+  def handle_event("form_changed", _params, socket) do
     {:noreply, socket}
   end
 
