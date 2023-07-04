@@ -40,7 +40,7 @@ defmodule OrangeCms do
   end
 
   def change_actor(changeset, key) do
-    case IO.inspect(get_actor()) do
+    case get_actor() do
       %{id: id} -> Ecto.Changeset.put_change(changeset, key, id)
       _ -> changeset
     end

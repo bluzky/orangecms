@@ -18,58 +18,35 @@
   </div>
 </div>
 
-<.modal
-  :if={@live_action in [:setup_github]}
-  id="project-modal"
-  show
-  on_cancel={JS.navigate(~p"/p")}
->
-  <:title>
-    Configure github repo
-  </:title>
 
-  <.simple_form
-    :let={f}
-    for={@form}
-    id="setup_github"
-    phx-change="form_changed"
-    phx-submit="import_content"
-  >
-    <.input type="text" field={f[:token]} label="Paste your personal github token here" />
-
-    <.input
-      type="select"
-      field={f[:repository]}
-      label="Specify your github repo"
-      options={
-        (@repositories || [])
-        |> Enum.filter(& &1["permissions"]["push"])
-        |> Enum.map(& &1["full_name"])
-      }
-      {%{disabled: is_nil(@repositories)}}
+<.dialog :if={@live_action in [:github_setup]} id="github-setup" show on_cancel={JS.navigate(scoped_path(assigns, "/"))}>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title>Connect Github Repo</.dialog_title>
+    </.dialog_header>
+    <.live_component
+      module={OrangeCmsWeb.ProjectLive.SetupGithubForm}
+      id={@project.id}
+      action={@live_action}
+      project={@project}
+      patch={scoped_path(assigns, "/setup/github_import_content")}
     />
-    <.input
-      type="text"
-      field={f[:content_dir]}
-      {%{disabled: is_nil(@repositories)}}
-      label="Specify path to your content directory"
-      phx-debounce="blur"
-    />
+  </.dialog_content>
+</.dialog>
 
-    <%= if @message do %>
-      <% {kind, content} = @message %>
-      <.alert kind={kind}>
-        <%= content %>
-      </.alert>
-    <% end %>
-    <div class="text-center">
-      <.button
-        class="btn btn-secondary btn-md"
-        {%{disabled: (not @ready_next)}}
-        icon="inbox-arrow-down"
-      >
-        Import content
-      </.button>
-    </div>
-  </.simple_form>
-</.modal>
+<.dialog :if={@live_action in [:github_import_content]} id="github-import-content" show on_cancel={JS.navigate(scoped_path(assigns, "/"))}>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title>Import existing content</.dialog_title>
+      <.dialog_description>This will guide you to import content from github repo</.dialog_description>
+    </.dialog_header>
+    <.live_component
+      module={OrangeCmsWeb.ProjectLive.SetupGithubForm}
+      id={@project.id}
+      action={@live_action}
+      project={@project}
+      patch={scoped_path(assigns, "/setup/github_import_content")}
+    />
+  </.dialog_content>
+</.dialog>
+

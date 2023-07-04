@@ -1,76 +1,94 @@
 const select = {
   mounted() {
     const el = this.el;
+    const contentEl = this.el.querySelector(".select-content");
+    const inputEl = el.querySelector(`#${el.id}-input`);
+    let show = false;
+    let opening = false;
 
     // close select popup
-    function dismissSelect(event) {
-      const target = event?.target || el.querySelector(".select-content");
-      target.classList.add("hidden");
-      target.removeEventListener("dismiss", dismissSelect);
+    function dismissSelect() {
+      console.log("dismiss");
+      contentEl.classList.add("hidden");
+      show = false;
+
+      // wait for click event to populated to input control
+      setTimeout(() => {
+        syncInputValue(true);
+      }, 100);
     }
 
-    // update display label of selected option
-    function updateDisplayLabel() {
-      el.querySelector(".select-value").innerText = el.querySelector(
-        `input:checked ~ .select-item-label`
-      )?.innerText;
-    }
+    // sync input value with select value and display text
+    // if DOM changed, in case of option list does not contain selected value, reset it
+    // if user press enter or escape, update to new selected option
 
-    // propgate name to all inputs
-    const name = el.getAttribute("data-name");
-    if (name)
-      el.querySelectorAll(`input`).forEach((input) => {
-        input.setAttribute("name", name);
-      });
+    function syncInputValue(triggerChange = false) {
+      const selectedValue =
+        el.querySelector("input:checked")?.getAttribute("data-value") || "";
+      const currentValue = inputEl.value;
 
-    // checked selected value
-    const value = el.getAttribute("data-value");
-    if (value) {
-      el.querySelector(`input[value="${value}"]`).checked = true;
-      updateDisplayLabel();
+      console.log("sync input value", selectedValue, currentValue);
+      if (selectedValue !== currentValue) {
+        inputEl.value = selectedValue;
+        inputEl.dispatchEvent(
+          new Event("input", { bubbles: true, cancelable: true })
+        );
+      }
+
+      const label =
+        selectedValue ||
+        el.querySelector(".select-value")?.getAttribute("data-placeholder") ||
+        "";
+      console.log("sync input value", label);
+      el.querySelector(".select-value")?.setAttribute("data-content", label);
     }
 
     // add event listener trigger select
     el.querySelector(".select-trigger").addEventListener("click", () => {
-      const contentEl = el.querySelector(".select-content");
-      contentEl.classList.toggle("hidden");
+      if (!show) {
+        show = true;
+        opening = true;
+        contentEl.classList.remove("hidden");
 
-      setTimeout(() => {
-        // handle click outside
-        if (!contentEl.classList.contains("hidden")) {
-          // set focus on selected option or first option
-          const selectedOption = contentEl.querySelector("input:checked");
-          if (selectedOption) {
-            selectedOption.focus();
-          } else {
-            contentEl.querySelector("input")?.focus();
-          }
-          contentEl.addEventListener("dismiss", dismissSelect);
+        // set focus on selected option or first option
+        const selectedOption = contentEl.querySelector("input:checked");
+        if (selectedOption) {
+          selectedOption.focus();
         } else {
-          dismissSelect();
+          contentEl.querySelector("input")?.focus();
         }
+      }
+
+      // this prevent dissmiss event fired too early
+      setTimeout(() => {
+        opening = false;
       }, 100);
     });
 
-    // handle click on option
-    el.querySelectorAll(".select-content input").forEach((option) => {
-      option.addEventListener("change", (event) => {
-        if (event.target.checked) {
-          updateDisplayLabel();
-          dismissSelect();
-        }
-      });
+    // close if select is opened
+    contentEl.addEventListener("dismiss", (e) => {
+      console.log("dismiss event", e);
+      if (show && !opening) dismissSelect();
     });
 
     // handle escape or enter key
-    el.querySelector(".select-content").addEventListener("keydown", (event) => {
-      if (event.key === "Escape" || event.key === "Enter") {
+    contentEl.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
         dismissSelect();
         event.preventDefault();
         event.stopPropagation();
         return false;
       }
     });
+
+    // observe changes in select content
+    const observerOptions = {
+      childList: true,
+      subtree: true,
+    };
+
+    const observer = new MutationObserver(syncInputValue);
+    observer.observe(el, observerOptions);
   },
 };
 

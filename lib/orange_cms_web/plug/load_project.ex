@@ -22,11 +22,11 @@ defmodule OrangeCmsWeb.LoadProject do
         cond do
           !project.setup_completed and
               not (socket.view == OrangeCmsWeb.ProjectLive.Show and
-                       socket.assigns.live_action in [:setup_github, :fetch_content]) ->
-            {:halt, push_navigate(socket, to: ~p"/p/#{project.id}/setup_github")}
+                       socket.assigns.live_action in [:github_setup]) ->
+            {:halt, push_navigate(socket, to: ~p"/p/#{project.id}/setup/github")}
 
           project.setup_completed and socket.view == OrangeCmsWeb.ProjectLive.Show and
-              socket.assigns.live_action in [:setup_github, :fetch_content] ->
+              socket.assigns.live_action in [:github_setup] ->
             {:halt, push_navigate(socket, to: ~p"/p/#{project.id}")}
 
           true ->

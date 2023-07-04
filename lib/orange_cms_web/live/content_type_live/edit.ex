@@ -14,7 +14,6 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
     content_type =
       id
       |> Content.get_content_type!()
-      |> IO.inspect(label: "content_type")
 
     changeset = Content.change_content_type(content_type)
 

@@ -32,23 +32,31 @@ defmodule OrangeCmsWeb.Components.Select do
 
   ## Examples with form field:
 
-      <.select id="type-select" class="w-full">
-        <.select_trigger class="w-full">
-            <.select_value placeholder="Select project type" />
-        </.select_trigger>
-        <.select_content>
-            <.select_group>
-                <.select_label>Project type</.select_label>
-                <.select_item :for={type <- ["github", "headless_cms" ]} name="fruit" value={type}><%= type %></.select_item>
-            </.select_group>
-        </.select_content>
-      </.select>
+       <.form_item field={@form[:repository]} label="Select your desired repo">
+          <.select field={@form[:repository]} class="w-full">
+            <.select_trigger {%{disabled: Enum.empty?(@repositories || [])}}>
+              <.select_value placeholder="Select repository" />
+            </.select_trigger>
+            <.select_content>
+              <.select_group>
+                <.select_item
+                  :for={item <- @repositories || []}
+                  field={@form[:repository]}
+                  value={item["full_name"]}
+                >
+                  <%= item["full_name"] %>
+                </.select_item>
+              </.select_group>
+            </.select_content>
+          </.select>
+        </.form_item>
   """
   use Phoenix.Component
-  alias Phoenix.LiveView.JS
-  alias OrangeCmsWeb.Components.ComponentHelpers
 
-  attr(:id, :string, required: true)
+  alias OrangeCmsWeb.Components.ComponentHelpers
+  alias Phoenix.LiveView.JS
+
+  attr(:id, :string, default: nil)
   attr(:name, :any)
   attr(:value, :any)
 
@@ -58,21 +66,29 @@ defmodule OrangeCmsWeb.Components.Select do
 
   attr(:default, :any, default: nil)
   attr(:class, :string, default: nil)
+  attr(:phx_change, :any, default: nil)
   slot(:inner_block, required: true)
   attr(:rest, :global)
 
   def select(assigns) do
     assigns = ComponentHelpers.prepare_assign(assigns)
-    assigns = assign(assigns, :value, assigns[:value] || assigns[:default])
+    assigns = assign(assigns, value: assigns[:value] || assigns[:default])
 
     ~H"""
     <div
       id={@id}
-      class={["relative inline-block", @class]} {@rest}
-      data-value={assigns[:value]}
+      class={["group relative inline-block", @class]}
+      {@rest}
       data-name={assigns[:name]}
       phx-hook="shad-select"
     >
+      <input
+        type="hidden"
+        id={"#{@id}-input"}
+        name={assigns[:name]}
+        value={assigns[:value]}
+        {%{"phx-change": @phx_change}}
+      />
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -93,6 +109,7 @@ defmodule OrangeCmsWeb.Components.Select do
       {@rest}
     >
       <%= render_slot(@inner_block) %>
+      <Heroicons.chevron_down class="w-4 h-4 opacity-50" />
     </button>
     """
   end
@@ -101,7 +118,14 @@ defmodule OrangeCmsWeb.Components.Select do
 
   def select_value(assigns) do
     ~H"""
-    <span class="select-value pointer-events-none before:content-[attr(data-content)]" phx-update="ignore" id={"select-value-#{:rand.uniform(999999)}"}><%= @placeholder %></span>
+    <span id="__ignore_this_label__" phx-update="ignore">
+      <span
+        class="select-value pointer-events-none before:content-[attr(data-content)]"
+        data-placeholder={@placeholder}
+        data-content={@placeholder}
+      >
+      </span>
+    </span>
     """
   end
 
@@ -113,7 +137,7 @@ defmodule OrangeCmsWeb.Components.Select do
     ~H"""
     <div
       class={[
-        "select-content hidden transition-all absolute top-full mt-2 left-0 w-full z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        "select-content hidden transition-all duration-150 ease-in-out absolute top-full mt-2 left-0 w-full z-50 min-w-[8rem] max-h-[285px] overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md",
         @class
       ]}
       {@rest}
@@ -150,35 +174,71 @@ defmodule OrangeCmsWeb.Components.Select do
     """
   end
 
-  attr(:name, :string, default: nil)
-  attr(:value, :any, default: nil)
-  attr(:checked, :boolean, default: false)
+  attr(:name, :any)
+  attr(:target, :string, default: nil, doc: "target is the id of parent select tag")
+
+  attr(:field, Phoenix.HTML.FormField,
+    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+  )
+
+  attr(:value, :any, required: true)
+  attr(:selected, :boolean, default: false)
   attr(:disabled, :boolean, default: false)
   attr(:class, :string, default: nil)
   slot(:inner_block, required: true)
 
   attr(:rest, :global)
 
+  def select_item(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, target: field.id)
+    |> assign_new(:name, fn ->
+      if assigns[:multiple] == true,
+        do: field.name <> "[]",
+        else: field.name
+    end)
+    |> assign(:selected, field.value == assigns.value)
+    |> select_item()
+  end
+
+  # Here I don't store value in the input's value attribute, because it will be submit to server
+  # and increase request payload. Instead, I store it in data-value attribute, and use JS to update to input's value
+  # I try using hidden radio directly but, phx-update event is not sent to server, because I use it to update display label
+  # There are some logic for select here
+  # 1. if click on item -> select item & close dropdown -> trigger phx-change event
+  #
+  # when input change by key navigation it trigger phx-click on label, this is so strange
+  # so I created a absolute div and add phx-click event handler to make it work as expected
   def select_item(assigns) do
     ~H"""
+    <% content = render_slot(@inner_block) %>
     <label
       role="option"
       class={[
-        "group relative flex w-full overflow-hidden cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground  data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "select-item group relative flex w-full overflow-hidden cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground  data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         @class
       ]}
       {%{"data-disabled": @disabled}}
       {@rest}
     >
-      <input type="radio" name={@name} disabled={@disabled} checked={@checked}
-        class="select-item peer sr-only" value={@value}
-        id={@value}
+      <input
+        type="radio"
+        name={"__hidden_#{@name}"}
+        disabled={@disabled}
+        checked={@selected}
+        class="select-item peer sr-only"
+        id={"#{@target}-#{String.replace(@value, " ", "-")}"}
+        value=""
+        data-value={@value}
+        phx-change={%JS{}}
       />
       <div class="absolute top-0 left-0 w-full h-full peer-focus:bg-accent"></div>
       <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center opacity-0 peer-checked:opacity-100">
         <Heroicons.check class="h-4 w-4" />
       </span>
-      <span class="select-item-label z-0 peer-focus:text-accent-foreground"><%= render_slot(@inner_block) %></span>
+      <span class="select-item-label z-0 peer-focus:text-accent-foreground"><%= content %></span>
+      <div class="absolute top-0 left-0 w-full h-full" phx-click={select_value(@value, @target)}>
+      </div>
     </label>
     """
   end
@@ -187,5 +247,11 @@ defmodule OrangeCmsWeb.Components.Select do
     ~H"""
     <div class={["-mx-1 my-1 h-px bg-muted"]}></div>
     """
+  end
+
+  defp select_value(value, parent_id) do
+    # JS.set_attribute({"value", value}, to: "##{parent_id}>input")
+    # |> JS.set_attribute({"data-content", value}, to: "##{parent_id} .select-value")
+    JS.dispatch("dismiss")
   end
 end
