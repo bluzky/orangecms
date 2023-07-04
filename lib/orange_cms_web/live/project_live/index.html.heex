@@ -9,8 +9,22 @@
   </:actions>
 </.header>
 
+<div
+  :if={Enum.count(@streams.projects) == 0}
+  class="w-full max-w-2xl min-h-[275px] bg-accent mx-auto mt-24 flex flex-col items-center justify-center rounded-lg p-20"
+>
+  <Heroicons.fire class="h-20 w-20" />
+  <h3 class="text-xl">Welcome to OrangeCMS</h3>
+  <p class="text-muted-foreground">Let create your first project!</p>
+  <div>
+    <.link patch={~p"/p/new"}>
+      <.button icon="rocket-launch" class="mt-5">Create now</.button>
+    </.link>
+  </div>
+</div>
+
 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-10" phx-update="stream" id="project-list">
-  <.card :for={{id, project} <- @streams.projects} class="hover:bg-secondary">
+  <.card :for={{id, project} <- @streams.projects} class="hover:bg-secondary" id={id}>
     <.link navigate={~p"/p/#{project.id}"}>
       <.card_header class="pb-2">
         <.card_title class="text-2xl font-bold">
@@ -35,7 +49,6 @@
       id={@project.id || :new}
       action={@live_action}
       project={@project}
-      patch={~p"/p"}
     />
   </.dialog_content>
 </.dialog>

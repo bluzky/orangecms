@@ -4,7 +4,8 @@ defmodule OrangeCms.Repo.Migrations.CreateUsersAuthTables do
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""
 
-    create table(:users) do
+    create table(:users, primary_key: false) do
+      add :id, :uuid, null: false, primary_key: true
       add :email, :citext, null: false
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
@@ -18,8 +19,9 @@ defmodule OrangeCms.Repo.Migrations.CreateUsersAuthTables do
 
     create unique_index(:users, [:email])
 
-    create table(:users_tokens) do
-      add :user_id, references(:users, on_delete: :delete_all), null: false
+    create table(:users_tokens, primary_key: false) do
+      add :id, :uuid, null: false, primary_key: true
+      add :user_id, references(:users, type: :uuid, on_delete: :delete_all), null: false
       add :token, :binary, null: false
       add :context, :string, null: false
       add :sent_to, :string
