@@ -8,7 +8,7 @@
     </:actions>
   </.header>
 
-  <.table id="project_users" rows={@streams.project_users}>
+  <.table id="project_members" rows={@streams.project_members}>
     <:col :let={{_id, %{user: user}}} label="User">
       <div class="flex gap-3">
         <div class="avatar placeholder">
@@ -22,24 +22,24 @@
         </div>
       </div>
     </:col>
-    <:col :let={{_id, project_user}} label="Role">
-      <span :if={project_user.is_owner} class="badge badge-accent">Owner</span>
-      <span class="badge badge-primary"><%= project_user.role %></span>
+    <:col :let={{_id, project_member}} label="Role">
+      <span :if={project_member.is_owner} class="badge badge-accent">Owner</span>
+      <span class="badge badge-primary"><%= project_member.role %></span>
     </:col>
 
-    <:action :let={{_id, project_user}}>
+    <:action :let={{_id, project_member}}>
       <.link
-        :if={project_user.user_id != @current_user.id}
-        patch={scoped_path(assigns, "/members/#{project_user.id}/edit")}
+        :if={project_member.user_id != @current_user.id}
+        patch={scoped_path(assigns, "/members/#{project_member.id}/edit")}
       >
         Edit
       </.link>
     </:action>
 
-    <:action :let={{id, %{user: user} = project_user}}>
+    <:action :let={{id, %{user: user} = project_member}}>
       <.link
         :if={user.id != @current_user.id}
-        phx-click={JS.push("delete", value: %{id: project_user.id}) |> hide("##{id}")}
+        phx-click={JS.push("delete", value: %{id: project_member.id}) |> hide("##{id}")}
         data-confirm="Are you sure?"
       >
         Delete
@@ -54,11 +54,11 @@
   on_cancel={JS.navigate(scoped_path(assigns, "/members"))}
 >
   <.live_component
-    module={OrangeCmsWeb.ProjectUserLive.FormComponent}
-    id={@project_user.id || :new}
+    module={OrangeCmsWeb.ProjectMemberLive.FormComponent}
+    id={@project_member.id || :new}
     title={@page_title}
     action={@live_action}
-    project_user={@project_user}
+    project_member={@project_member}
     patch={scoped_path(assigns, "/members")}
     current_project={@current_project}
   />

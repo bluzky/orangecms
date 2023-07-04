@@ -5,7 +5,7 @@ defmodule OrangeCms.Projects do
   alias OrangeCms.Projects.Project
   # TODO: update query for my project
   # TODO: find proper way to get actor
-  alias OrangeCms.Projects.ProjectUser
+  alias OrangeCms.Projects.ProjectMember
 
   @doc """
   Returns the list of projects.
@@ -51,8 +51,13 @@ defmodule OrangeCms.Projects do
   def create_project(attrs \\ %{}) do
     actor = OrangeCms.get_actor()
 
+    # add default member
+    attrs =
+      Map.put(attrs, "project_members", [%{user_id: actor.id, role: :admin, is_owner: true}])
+
     %Project{owner_id: actor.id}
     |> Project.changeset(attrs)
+    |> Project.change_members()
     |> Repo.insert()
   end
 
@@ -104,99 +109,99 @@ defmodule OrangeCms.Projects do
   end
 
   @doc """
-  Returns the list of project_users.
+  Returns the list of project_members.
 
   ## Examples
 
-      iex> list_project_users()
-      [%ProjectUser{}, ...]
+      iex> list_project_members()
+      [%ProjectMember{}, ...]
 
   """
-  def list_project_users(project) do
-    ProjectUser
+  def list_project_members(project) do
+    ProjectMember
     |> Filtery.filter(:project_id, project.id)
     |> Repo.all()
     |> Repo.preload(:user)
   end
 
   @doc """
-  Gets a single project_user.
+  Gets a single project_member.
 
   Raises `Ecto.NoResultsError` if the Project user does not exist.
 
   ## Examples
 
-      iex> get_project_user!(123)
-      %ProjectUser{}
+      iex> get_project_member!(123)
+      %ProjectMember{}
 
-      iex> get_project_user!(456)
+      iex> get_project_member!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_project_user!(id), do: Repo.get!(ProjectUser, id)
+  def get_project_member!(id), do: Repo.get!(ProjectMember, id)
 
   @doc """
-  Creates a project_user.
+  Creates a project_member.
 
   ## Examples
 
-      iex> create_project_user(%{field: value})
-      {:ok, %ProjectUser{}}
+      iex> create_project_member(%{field: value})
+      {:ok, %ProjectMember{}}
 
-      iex> create_project_user(%{field: bad_value})
+      iex> create_project_member(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_project_user(attrs \\ %{}) do
-    %ProjectUser{}
-    |> ProjectUser.changeset(attrs)
+  def create_project_member(attrs \\ %{}) do
+    %ProjectMember{}
+    |> ProjectMember.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a project_user.
+  Updates a project_member.
 
   ## Examples
 
-      iex> update_project_user(project_user, %{field: new_value})
-      {:ok, %ProjectUser{}}
+      iex> update_project_member(project_member, %{field: new_value})
+      {:ok, %ProjectMember{}}
 
-      iex> update_project_user(project_user, %{field: bad_value})
+      iex> update_project_member(project_member, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_project_user(%ProjectUser{} = project_user, attrs) do
-    project_user
-    |> ProjectUser.changeset(attrs)
+  def update_project_member(%ProjectMember{} = project_member, attrs) do
+    project_member
+    |> ProjectMember.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a project_user.
+  Deletes a project_member.
 
   ## Examples
 
-      iex> delete_project_user(project_user)
-      {:ok, %ProjectUser{}}
+      iex> delete_project_member(project_member)
+      {:ok, %ProjectMember{}}
 
-      iex> delete_project_user(project_user)
+      iex> delete_project_member(project_member)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_project_user(%ProjectUser{} = project_user) do
-    Repo.delete(project_user)
+  def delete_project_member(%ProjectMember{} = project_member) do
+    Repo.delete(project_member)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking project_user changes.
+  Returns an `%Ecto.Changeset{}` for tracking project_member changes.
 
   ## Examples
 
-      iex> change_project_user(project_user)
-      %Ecto.Changeset{data: %ProjectUser{}}
+      iex> change_project_member(project_member)
+      %Ecto.Changeset{data: %ProjectMember{}}
 
   """
-  def change_project_user(%ProjectUser{} = project_user, attrs \\ %{}) do
-    ProjectUser.changeset(project_user, attrs)
+  def change_project_member(%ProjectMember{} = project_member, attrs \\ %{}) do
+    ProjectMember.changeset(project_member, attrs)
   end
 end

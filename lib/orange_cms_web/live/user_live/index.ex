@@ -40,4 +40,9 @@ defmodule OrangeCmsWeb.UserLive.Index do
 
     {:noreply, stream_delete(socket, :users, user)}
   end
+
+  @impl true
+  def handle_info({OrangeCmsWeb.UserLive.FormComponent, {:saved, user}}, socket) do
+    {:noreply, stream_insert(socket, :users, user)}
+  end
 end

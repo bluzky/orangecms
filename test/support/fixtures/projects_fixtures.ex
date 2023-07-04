@@ -23,17 +23,17 @@ defmodule OrangeCms.ProjectsFixtures do
   end
 
   @doc """
-  Generate a project_user.
+  Generate a project_member.
   """
-  def project_user_fixture(attrs \\ %{}) do
-    {:ok, project_user} =
+  def project_member_fixture(attrs \\ %{}) do
+    {:ok, project_member} =
       attrs
       |> Enum.into(%{
         is_owner: true,
         role: "some role"
       })
-      |> OrangeCms.Projects.create_project_user()
+      |> OrangeCms.Projects.create_project_member()
 
-    project_user
+    project_member
   end
 end

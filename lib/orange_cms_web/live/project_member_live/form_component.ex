@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
+defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
   @moduledoc false
   use OrangeCmsWeb, :live_component
 
@@ -28,7 +28,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
             class={[
               "dropdown w-full group",
               @search && "dropdown-open",
-              not is_nil(@project_user.id) && "disabled"
+              not is_nil(@project_member.id) && "disabled"
             ]}
             phx-click-away="hide-search-box"
             phx-target={@myself}
@@ -46,7 +46,7 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
               tabindex="0"
               class={[
                 "dropdown-content menu flex-row shadow bg-base-100 rounded-box w-full overflow-y-auto",
-                (not @search || not is_nil(@project_user.id)) && "hidden"
+                (not @search || not is_nil(@project_member.id)) && "hidden"
               ]}
               style="max-height: 330px"
             >
@@ -92,8 +92,8 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
   end
 
   @impl true
-  def update(%{project_user: project_user} = assigns, socket) do
-    changeset = Projects.change_project_user(project_user)
+  def update(%{project_member: project_member} = assigns, socket) do
+    changeset = Projects.change_project_member(project_member)
 
     {:ok,
      socket
@@ -151,23 +151,23 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"project_user" => project_user_params}, socket) do
+  def handle_event("validate", %{"project_member" => project_member_params}, socket) do
     changeset =
       socket.assigns.project
-      |> Projects.change_project_user(project_user_params)
+      |> Projects.change_project_member(project_member_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"project_user" => params}, socket) do
+  def handle_event("save", %{"project_member" => params}, socket) do
     save_project(socket, socket.assigns.action, params)
   end
 
   defp save_project(socket, :edit, params) do
-    case Projects.update_project_user(socket.assigns.project_user, params) do
-      {:ok, project_user} ->
-        notify_parent({:saved, project_user})
+    case Projects.update_project_member(socket.assigns.project_member, params) do
+      {:ok, project_member} ->
+        notify_parent({:saved, project_member})
 
         {:noreply,
          socket
@@ -185,9 +185,9 @@ defmodule OrangeCmsWeb.ProjectUserLive.FormComponent do
         "project_id" => socket.assigns.current_project.id
       })
 
-    case Projects.create_project_user(params) do
-      {:ok, project_user} ->
-        notify_parent({:saved, project_user})
+    case Projects.create_project_member(params) do
+      {:ok, project_member} ->
+        notify_parent({:saved, project_member})
 
         {:noreply,
          socket
