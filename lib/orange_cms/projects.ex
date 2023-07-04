@@ -17,7 +17,16 @@ defmodule OrangeCms.Projects do
 
   """
   def list_my_projects do
-    Repo.all(Project)
+    actor = OrangeCms.get_actor()
+
+    query =
+      from(p in Project,
+        join: pm in assoc(p, :project_members),
+        where: pm.user_id == ^actor.id,
+        order_by: [asc: p.name]
+      )
+
+    Repo.all(query)
   end
 
   @doc """

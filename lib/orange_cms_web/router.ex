@@ -69,9 +69,9 @@ defmodule OrangeCmsWeb.Router do
         on_mount: [
           {OrangeCmsWeb.UserAuth, :ensure_authenticated},
           # {OrangeCmsWeb.LiveUserAuth, :live_user_required},
-          OrangeCmsWeb.LoadProject,
+          OrangeCmsWeb.LoadProject
           # OrangeCmsWeb.LoadMembership,
-          OrangeCmsWeb.MenuAssign
+          # OrangeCmsWeb.MenuAssign
         ] do
         live("/", ProjectLive.Show, :show)
         live("/setup/github", ProjectLive.Show, :github_setup)
