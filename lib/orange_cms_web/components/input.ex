@@ -50,12 +50,11 @@ defmodule OrangeCmsWeb.Components.Input do
       <.textarea field={@form[:name]} class="h-32">My content</.textarea>
   """
   attr(:id, :any, default: nil)
-  attr(:name, :any, default: nil)
-  attr(:value, :any, default: nil)
+  attr(:name, :any)
+  attr(:value, :any)
   attr(:field, Phoenix.HTML.FormField)
   attr(:class, :string, default: nil)
   attr(:rest, :global)
-  slot(:inner_block)
 
   def textarea(assigns) do
     assigns = ComponentHelpers.prepare_assign(assigns)
@@ -69,7 +68,7 @@ defmodule OrangeCmsWeb.Components.Input do
       id={@id}
       name={@name}
       {@rest}
-    ><%= @value || render_block(@inner_block) %></textarea>
+    ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
     """
   end
 

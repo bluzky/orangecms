@@ -4,18 +4,18 @@ defmodule OrangeCmsWeb.Router do
   import OrangeCmsWeb.UserAuth
 
   pipeline :browser do
-    plug :accepts, ["html", "json"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {OrangeCmsWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug(:accepts, ["html", "json"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {OrangeCmsWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(:fetch_current_user)
     # plug :load_from_session
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
     # plug :load_from_session
   end
 
@@ -25,7 +25,7 @@ defmodule OrangeCmsWeb.Router do
   end
 
   pipeline :not_auth do
-    plug :put_layout, false
+    plug(:put_layout, false)
   end
 
   # scope "/", OrangeCmsWeb do
@@ -37,19 +37,19 @@ defmodule OrangeCmsWeb.Router do
   # end
 
   scope "/", OrangeCmsWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through([:browser, :require_authenticated_user])
 
-    get "/", PageController, :home
+    get("/", PageController, :home)
 
     scope "/" do
-      pipe_through [:auth]
+      pipe_through([:auth])
 
-      get "/assets/preview/:project_id/:content_type_id", PreviewController, :preview
+      get("/assets/preview/:project_id/:content_type_id", PreviewController, :preview)
     end
 
     scope "/api" do
-      pipe_through [:api, :auth]
-      post "/upload_image/:project_id/:content_type_id", UploadController, :upload_image
+      pipe_through([:api, :auth])
+      post("/upload_image/:project_id/:content_type_id", UploadController, :upload_image)
     end
 
     live_session :authenticated_only,
@@ -58,8 +58,8 @@ defmodule OrangeCmsWeb.Router do
       #   {OrangeCmsWeb.LiveUserAuth, :live_user_required}
       # ] do
       scope "/" do
-        live "/p", ProjectLive.Index, :index
-        live "/p/new", ProjectLive.Index, :new
+        live("/p", ProjectLive.Index, :index)
+        live("/p/new", ProjectLive.Index, :new)
       end
     end
 
@@ -73,28 +73,28 @@ defmodule OrangeCmsWeb.Router do
           # OrangeCmsWeb.LoadMembership,
           OrangeCmsWeb.MenuAssign
         ] do
-        live "/", ProjectLive.Show, :show
-        live "/setup_github", ProjectLive.Show, :setup_github
-        live "/fetch_content", ProjectLive.Show, :fetch_content
+        live("/", ProjectLive.Show, :show)
+        live("/setup/github", ProjectLive.Show, :github_setup)
+        live("/setup/github_import_content", ProjectLive.Show, :github_import_content)
 
         scope "/content/:type", ContentEntryLive do
-          live "/", Index
-          live "/:id", Edit
+          live("/", Index)
+          live("/:id", Edit)
         end
 
         scope "/content_types" do
-          live "/", ContentTypeLive.Index, :index
-          live "/new", ContentTypeLive.Index, :new
-          live "/:id", ContentTypeLive.Edit
+          live("/", ContentTypeLive.Index, :index)
+          live("/new", ContentTypeLive.Index, :new)
+          live("/:id", ContentTypeLive.Edit)
         end
 
         scope "/members" do
-          live "/", ProjectUserLive.Index, :index
-          live "/new", ProjectUserLive.Index, :new
-          live "/:id/edit", ProjectUserLive.Index, :edit
+          live("/", ProjectUserLive.Index, :index)
+          live("/new", ProjectUserLive.Index, :new)
+          live("/:id/edit", ProjectUserLive.Index, :edit)
 
-          live "/:id", ProjectUserLive.Show, :show
-          live "/:id/show/edit", ProjectUserLive.Show, :edit
+          live("/:id", ProjectUserLive.Show, :show)
+          live("/:id/show/edit", ProjectUserLive.Show, :edit)
         end
       end
     end
@@ -115,58 +115,58 @@ defmodule OrangeCmsWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: OrangeCmsWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: OrangeCmsWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 
   ## Authentication routes
 
   scope "/", OrangeCmsWeb do
-    pipe_through [:browser, :not_auth, :redirect_if_user_is_authenticated]
+    pipe_through([:browser, :not_auth, :redirect_if_user_is_authenticated])
 
     live_session :redirect_if_user_is_authenticated,
       layout: false,
       on_mount: [{OrangeCmsWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/register", UserRegistrationLive, :new
-      live "/log_in", UserLoginLive, :new
-      live "/users/reset_password", UserForgotPasswordLive, :new
-      live "/users/reset_password/:token", UserResetPasswordLive, :edit
+      live("/register", UserRegistrationLive, :new)
+      live("/log_in", UserLoginLive, :new)
+      live("/users/reset_password", UserForgotPasswordLive, :new)
+      live("/users/reset_password/:token", UserResetPasswordLive, :edit)
     end
 
-    post "/log_in", UserSessionController, :create
+    post("/log_in", UserSessionController, :create)
   end
 
   scope "/", OrangeCmsWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through([:browser, :require_authenticated_user])
 
     live_session :require_authenticated_user,
       on_mount: [{OrangeCmsWeb.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live("/users/settings", UserSettingsLive, :edit)
+      live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
 
       scope "/users" do
-        live "/", UserLive.Index, :index
-        live "/new", UserLive.Index, :new
-        live "/:id/edit", UserLive.Index, :edit
+        live("/", UserLive.Index, :index)
+        live("/new", UserLive.Index, :new)
+        live("/:id/edit", UserLive.Index, :edit)
 
-        live "/:id", UserLive.Show, :show
-        live "/:id/show/edit", UserLive.Show, :edit
+        live("/:id", UserLive.Show, :show)
+        live("/:id/show/edit", UserLive.Show, :edit)
       end
     end
   end
 
   scope "/", OrangeCmsWeb do
-    pipe_through [:browser]
+    pipe_through([:browser])
 
-    delete "/users/log_out", UserSessionController, :delete
+    delete("/users/log_out", UserSessionController, :delete)
 
     live_session :current_user,
       on_mount: [{OrangeCmsWeb.UserAuth, :mount_current_user}] do
-      live "/users/confirm/:token", UserConfirmationLive, :edit
-      live "/users/confirm", UserConfirmationInstructionsLive, :new
+      live("/users/confirm/:token", UserConfirmationLive, :edit)
+      live("/users/confirm", UserConfirmationInstructionsLive, :new)
     end
   end
 end
