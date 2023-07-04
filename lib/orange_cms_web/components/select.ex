@@ -32,17 +32,24 @@ defmodule OrangeCmsWeb.Components.Select do
 
   ## Examples with form field:
 
-      <.select id="type-select" class="w-full">
-        <.select_trigger class="w-full">
-            <.select_value placeholder="Select project type" />
-        </.select_trigger>
-        <.select_content>
-            <.select_group>
-                <.select_label>Project type</.select_label>
-                <.select_item :for={type <- ["github", "headless_cms" ]} name="fruit" value={type}><%= type %></.select_item>
-            </.select_group>
-        </.select_content>
-      </.select>
+       <.form_item field={@form[:repository]} label="Select your desired repo">
+          <.select field={@form[:repository]} class="w-full">
+            <.select_trigger {%{disabled: Enum.empty?(@repositories || [])}}>
+              <.select_value placeholder="Select repository" />
+            </.select_trigger>
+            <.select_content>
+              <.select_group>
+                <.select_item
+                  :for={item <- @repositories || []}
+                  field={@form[:repository]}
+                  value={item["full_name"]}
+                >
+                  <%= item["full_name"] %>
+                </.select_item>
+              </.select_group>
+            </.select_content>
+          </.select>
+        </.form_item>
   """
   use Phoenix.Component
 
