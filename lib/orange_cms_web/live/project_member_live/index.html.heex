@@ -8,58 +8,65 @@
     </:actions>
   </.header>
 
-  <.table id="project_members" rows={@streams.project_members}>
-    <:col :let={{_id, %{user: user}}} label="User">
-      <div class="flex gap-3">
-        <div class="avatar placeholder">
-          <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
-            <span class="text-3xl">K</span>
-          </div>
-        </div>
-        <div>
-          <div class="font-bold"><%= "#{user.first_name} #{user.last_name}" %></div>
-          <div class="text-sm text-base"><%= user.email %></div>
-        </div>
-      </div>
-    </:col>
-    <:col :let={{_id, project_member}} label="Role">
-      <span :if={project_member.is_owner} class="badge badge-accent">Owner</span>
-      <span class="badge badge-primary"><%= project_member.role %></span>
-    </:col>
+  <.stable>
+    <.table_header>
+      <.table_row>
+        <.table_head>Name</.table_head>
+        <.table_head>Email</.table_head>
+        <.table_head class="w-[100px]">Role</.table_head>
+        <.table_head class="text-right"></.table_head>
+      </.table_row>
+    </.table_header>
+    <.table_body phx-update="stream" id="member-list">
+      <.table_row :for={{id, member} <- @streams.project_members} id={id}>
+        <.table_cell class="font-medium">
+          <%= "#{member.user.first_name} #{member.user.last_name}" %>
+        </.table_cell>
+        <.table_cell><%= member.user.email %></.table_cell>
+        <.table_cell><%= member.role %></.table_cell>
+        <.table_cell class="text-right">
+          <.link
+            :if={member.user_id != @current_user.id}
+            patch={scoped_path(assigns, "/members/#{member.id}/edit")}
+            class="action-btn"
+          >
+            <Heroicons.pencil_square class="w-4 h-4" /> Edit
+          </.link>
 
-    <:action :let={{_id, project_member}}>
-      <.link
-        :if={project_member.user_id != @current_user.id}
-        patch={scoped_path(assigns, "/members/#{project_member.id}/edit")}
-      >
-        Edit
-      </.link>
-    </:action>
-
-    <:action :let={{id, %{user: user} = project_member}}>
-      <.link
-        :if={user.id != @current_user.id}
-        phx-click={JS.push("delete", value: %{id: project_member.id}) |> hide("##{id}")}
-        data-confirm="Are you sure?"
-      >
-        Delete
-      </.link>
-    </:action>
-  </.table>
+          <.link
+            :if={member.user_id != @current_user.id}
+            phx-click={JS.push("delete", value: %{id: member.id}) |> hide("##{id}")}
+            data-confirm="Are you sure?"
+            class="action-btn"
+          >
+            <Heroicons.x_mark class="w-4 h-4" /> Delete
+          </.link>
+        </.table_cell>
+      </.table_row>
+    </.table_body>
+  </.stable>
 </div>
-<.modal
+<.dialog
   :if={@live_action in [:new, :edit]}
   id="user-modal"
   show
   on_cancel={JS.navigate(scoped_path(assigns, "/members"))}
 >
-  <.live_component
-    module={OrangeCmsWeb.ProjectMemberLive.FormComponent}
-    id={@project_member.id || :new}
-    title={@page_title}
-    action={@live_action}
-    project_member={@project_member}
-    patch={scoped_path(assigns, "/members")}
-    current_project={@current_project}
-  />
-</.modal>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title><%= @page_title %></.dialog_title>
+      <.dialog_description>
+        Add member and assign a role to limit permissions.
+      </.dialog_description>
+    </.dialog_header>
+    <.live_component
+      module={OrangeCmsWeb.ProjectMemberLive.FormComponent}
+      id={@project_member.id || :new}
+      title={@page_title}
+      action={@live_action}
+      project_member={@project_member}
+      patch={scoped_path(assigns, "/members")}
+      current_project={@current_project}
+    />
+  </.dialog_content>
+</.dialog>
