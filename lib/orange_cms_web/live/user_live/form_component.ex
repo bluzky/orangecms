@@ -64,6 +64,8 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
   defp save_user(socket, :edit, params) do
     case Accounts.update_user(socket.assigns.user, params) do
       {:ok, user} ->
+        notify_parent({:saved, user})
+
         {:noreply,
          socket
          |> put_flash(:info, "User updated successfully")
@@ -76,7 +78,9 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
 
   defp save_user(socket, :new, user_params) do
     case Accounts.create_user(user_params) do
-      {:ok, _entry} ->
+      {:ok, user} ->
+        notify_parent({:saved, user})
+
         {:noreply,
          socket
          |> put_flash(:success, "User created successfully")
@@ -90,4 +94,6 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
   end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

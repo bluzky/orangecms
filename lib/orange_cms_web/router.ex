@@ -69,9 +69,9 @@ defmodule OrangeCmsWeb.Router do
         on_mount: [
           {OrangeCmsWeb.UserAuth, :ensure_authenticated},
           # {OrangeCmsWeb.LiveUserAuth, :live_user_required},
-          OrangeCmsWeb.LoadProject,
+          OrangeCmsWeb.LoadProject
           # OrangeCmsWeb.LoadMembership,
-          OrangeCmsWeb.MenuAssign
+          # OrangeCmsWeb.MenuAssign
         ] do
         live("/", ProjectLive.Show, :show)
         live("/setup/github", ProjectLive.Show, :github_setup)
@@ -89,12 +89,12 @@ defmodule OrangeCmsWeb.Router do
         end
 
         scope "/members" do
-          live("/", ProjectUserLive.Index, :index)
-          live("/new", ProjectUserLive.Index, :new)
-          live("/:id/edit", ProjectUserLive.Index, :edit)
+          live("/", ProjectMemberLive.Index, :index)
+          live("/new", ProjectMemberLive.Index, :new)
+          live("/:id/edit", ProjectMemberLive.Index, :edit)
 
-          live("/:id", ProjectUserLive.Show, :show)
-          live("/:id/show/edit", ProjectUserLive.Show, :edit)
+          live("/:id", ProjectMemberLive.Show, :show)
+          live("/:id/show/edit", ProjectMemberLive.Show, :edit)
         end
       end
     end

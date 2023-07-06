@@ -1,0 +1,72 @@
+<div class="p-6 bg-white rounded-xl drop-shadow-lg">
+  <.header>
+    Team members
+    <:actions>
+      <.link patch={scoped_path(assigns, "/members/new")}>
+        <.button class="btn-md btn-secondary" icon="plus">Add Member</.button>
+      </.link>
+    </:actions>
+  </.header>
+
+  <.stable>
+    <.table_header>
+      <.table_row>
+        <.table_head>Name</.table_head>
+        <.table_head>Email</.table_head>
+        <.table_head class="w-[100px]">Role</.table_head>
+        <.table_head class="text-right"></.table_head>
+      </.table_row>
+    </.table_header>
+    <.table_body phx-update="stream" id="member-list">
+      <.table_row :for={{id, member} <- @streams.project_members} id={id}>
+        <.table_cell class="font-medium">
+          <%= "#{member.user.first_name} #{member.user.last_name}" %>
+        </.table_cell>
+        <.table_cell><%= member.user.email %></.table_cell>
+        <.table_cell><%= member.role %></.table_cell>
+        <.table_cell class="text-right">
+          <.link
+            :if={member.user_id != @current_user.id}
+            patch={scoped_path(assigns, "/members/#{member.id}/edit")}
+            class="action-btn"
+          >
+            <Heroicons.pencil_square class="w-4 h-4" /> Edit
+          </.link>
+
+          <.link
+            :if={member.user_id != @current_user.id}
+            phx-click={JS.push("delete", value: %{id: member.id}) |> hide("##{id}")}
+            data-confirm="Are you sure?"
+            class="action-btn"
+          >
+            <Heroicons.x_mark class="w-4 h-4" /> Delete
+          </.link>
+        </.table_cell>
+      </.table_row>
+    </.table_body>
+  </.stable>
+</div>
+<.dialog
+  :if={@live_action in [:new, :edit]}
+  id="user-modal"
+  show
+  on_cancel={JS.navigate(scoped_path(assigns, "/members"))}
+>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title><%= @page_title %></.dialog_title>
+      <.dialog_description>
+        Add member and assign a role to limit permissions.
+      </.dialog_description>
+    </.dialog_header>
+    <.live_component
+      module={OrangeCmsWeb.ProjectMemberLive.FormComponent}
+      id={@project_member.id || :new}
+      title={@page_title}
+      action={@live_action}
+      project_member={@project_member}
+      patch={scoped_path(assigns, "/members")}
+      current_project={@current_project}
+    />
+  </.dialog_content>
+</.dialog>

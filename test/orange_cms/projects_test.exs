@@ -78,59 +78,59 @@ defmodule OrangeCms.ProjectsTest do
     end
   end
 
-  describe "project_users" do
+  describe "project_members" do
     import OrangeCms.ProjectsFixtures
 
-    alias OrangeCms.Projects.ProjectUser
+    alias OrangeCms.Projects.ProjectMember
 
     @invalid_attrs %{is_owner: nil, role: nil}
 
-    test "list_project_users/0 returns all project_users" do
-      project_user = project_user_fixture()
-      assert Projects.list_project_users() == [project_user]
+    test "list_project_members/0 returns all project_members" do
+      project_member = project_member_fixture()
+      assert Projects.list_project_members() == [project_member]
     end
 
-    test "get_project_user!/1 returns the project_user with given id" do
-      project_user = project_user_fixture()
-      assert Projects.get_project_user!(project_user.id) == project_user
+    test "get_project_member!/1 returns the project_member with given id" do
+      project_member = project_member_fixture()
+      assert Projects.get_project_member!(project_member.id) == project_member
     end
 
-    test "create_project_user/1 with valid data creates a project_user" do
+    test "create_project_member/1 with valid data creates a project_member" do
       valid_attrs = %{is_owner: true, role: "some role"}
 
-      assert {:ok, %ProjectUser{} = project_user} = Projects.create_project_user(valid_attrs)
-      assert project_user.is_owner == true
-      assert project_user.role == "some role"
+      assert {:ok, %ProjectMember{} = project_member} = Projects.create_project_member(valid_attrs)
+      assert project_member.is_owner == true
+      assert project_member.role == "some role"
     end
 
-    test "create_project_user/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Projects.create_project_user(@invalid_attrs)
+    test "create_project_member/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Projects.create_project_member(@invalid_attrs)
     end
 
-    test "update_project_user/2 with valid data updates the project_user" do
-      project_user = project_user_fixture()
+    test "update_project_member/2 with valid data updates the project_member" do
+      project_member = project_member_fixture()
       update_attrs = %{is_owner: false, role: "some updated role"}
 
-      assert {:ok, %ProjectUser{} = project_user} = Projects.update_project_user(project_user, update_attrs)
-      assert project_user.is_owner == false
-      assert project_user.role == "some updated role"
+      assert {:ok, %ProjectMember{} = project_member} = Projects.update_project_member(project_member, update_attrs)
+      assert project_member.is_owner == false
+      assert project_member.role == "some updated role"
     end
 
-    test "update_project_user/2 with invalid data returns error changeset" do
-      project_user = project_user_fixture()
-      assert {:error, %Ecto.Changeset{}} = Projects.update_project_user(project_user, @invalid_attrs)
-      assert project_user == Projects.get_project_user!(project_user.id)
+    test "update_project_member/2 with invalid data returns error changeset" do
+      project_member = project_member_fixture()
+      assert {:error, %Ecto.Changeset{}} = Projects.update_project_member(project_member, @invalid_attrs)
+      assert project_member == Projects.get_project_member!(project_member.id)
     end
 
-    test "delete_project_user/1 deletes the project_user" do
-      project_user = project_user_fixture()
-      assert {:ok, %ProjectUser{}} = Projects.delete_project_user(project_user)
-      assert_raise Ecto.NoResultsError, fn -> Projects.get_project_user!(project_user.id) end
+    test "delete_project_member/1 deletes the project_member" do
+      project_member = project_member_fixture()
+      assert {:ok, %ProjectMember{}} = Projects.delete_project_member(project_member)
+      assert_raise Ecto.NoResultsError, fn -> Projects.get_project_member!(project_member.id) end
     end
 
-    test "change_project_user/1 returns a project_user changeset" do
-      project_user = project_user_fixture()
-      assert %Ecto.Changeset{} = Projects.change_project_user(project_user)
+    test "change_project_member/1 returns a project_member changeset" do
+      project_member = project_member_fixture()
+      assert %Ecto.Changeset{} = Projects.change_project_member(project_member)
     end
   end
 end

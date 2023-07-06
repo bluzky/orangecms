@@ -62,7 +62,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Project created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: ~p"/p/#{project.code}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}

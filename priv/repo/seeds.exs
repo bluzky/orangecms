@@ -88,16 +88,16 @@
 # end)
 
 # create admin
-# OrangeCms.Accounts.User
-# |> Ash.Changeset.for_create(:register_with_password, %{
-#   # first_name: "Supper",
-#   # last_name: "admin",
-#   email: "admin@example.com",
-#   password: "123123123",
-#   password_confirmation: "123123123"
-# })
-# |> Ash.Changeset.force_change_attribute(:is_admin, true)
-# |> OrangeCms.Accounts.create!(authorize?: false)
+alias OrangeCms.Accounts.User
+
+OrangeCms.Accounts.change_user(%User{}, %{
+  first_name: "Supper",
+  last_name: "admin",
+  email: "admin@example.com",
+  password: "123123123"
+})
+|> Ecto.Changeset.change(%{is_admin: true})
+|> OrangeCms.Repo.insert!()
 
 Enum.map(1..10, fn i ->
   OrangeCms.Accounts.register_user(%{
