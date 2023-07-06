@@ -31,7 +31,7 @@ defmodule OrangeCms.Shared.Github.Helper do
   Keep order as in frontmatter schema
   """
   def build_frontmatter_yaml(content_type, content_entry) do
-    content_type.field_defs
+    content_type.frontmatter_schema
     |> Enum.map(fn field ->
       {field.key, content_entry.frontmatter[field.key]}
     end)

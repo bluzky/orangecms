@@ -12,7 +12,7 @@ defmodule OrangeCms.ContentFixtures do
       attrs
       |> Enum.into(%{
         anchor_field: "some anchor_field",
-        field_defs: %{},
+        frontmatter_schema: %{},
         github_config: %{},
         image_settings: %{},
         key: "some key",

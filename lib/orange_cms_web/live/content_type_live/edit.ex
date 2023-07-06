@@ -31,8 +31,8 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
   def handle_event("add_field", _params, socket) do
     socket =
       update(socket, :form, fn changeset ->
-        existing = Ecto.Changeset.get_field(changeset, :field_defs, [])
-        Ecto.Changeset.put_embed(changeset, :field_defs, existing ++ [%{name: "new field"}])
+        existing = Ecto.Changeset.get_field(changeset, :frontmatter_schema, [])
+        Ecto.Changeset.put_embed(changeset, :frontmatter_schema, existing ++ [%{name: "new field"}])
       end)
 
     {:noreply, socket}
@@ -44,8 +44,8 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
     # TODO: fix bugs "remove all field cannot save"
     socket =
       update(socket, :form, fn changeset ->
-        existing = Ecto.Changeset.get_field(changeset, :field_defs, [])
-        Ecto.Changeset.put_embed(changeset, :field_defs, List.delete_at(existing, index))
+        existing = Ecto.Changeset.get_field(changeset, :frontmatter_schema, [])
+        Ecto.Changeset.put_embed(changeset, :frontmatter_schema, List.delete_at(existing, index))
       end)
 
     {:noreply, socket}

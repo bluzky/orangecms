@@ -19,7 +19,7 @@
 #     name: "Page",
 #     key: "page",
 #     image_settings: %{},
-#     field_defs: [],
+#     frontmatter_schema: [],
 #     anchor_field: :title,
 #     project_id: project.id
 #   },
@@ -28,7 +28,7 @@
 #     key: "post",
 #     image_settings: %{},
 #     project_id: project.id,
-#     field_defs: [
+#     frontmatter_schema: [
 #       %{
 #         name: "title",
 #         key: "title",

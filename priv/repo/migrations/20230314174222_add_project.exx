@@ -22,7 +22,7 @@ defmodule OrangeCms.Repo.Migrations.AddProject do
       add :name, :text, null: false
       add :key, :text, null: false
       add :image_settings, :map
-      add :field_defs, {:array, :map}
+      add :frontmatter_schema, {:array, :map}
       add :anchor_field, :text
       add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")

@@ -7,11 +7,11 @@ defmodule OrangeCms.Content.CastFrontmatter do
     frontmatter_params = Changeset.get_field(changeset, :frontmatter) || %{}
     # cast field value based on schema
 
-    field_map = Map.new(content_type.field_defs, &{&1.key, &1})
+    field_map = Map.new(content_type.frontmatter_schema, &{&1.key, &1})
 
     # get default values
     frontmatter_default =
-      Map.new(content_type.field_defs, fn field -> {field.key, OrangeCms.Content.FieldDef.default_value(field)} end)
+      Map.new(content_type.frontmatter_schema, fn field -> {field.key, OrangeCms.Content.FieldDef.default_value(field)} end)
 
     # cast value from params
     frontmatter_params =

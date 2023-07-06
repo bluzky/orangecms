@@ -2,16 +2,15 @@ defmodule OrangeCms.Content.ContentType do
   @moduledoc false
   use OrangeCms, :schema
 
-  @primary_key {:id, :binary_id, autogenerate: true}
   schema "content_types" do
-    field :name, :string
-    field :key, :string
-    field :anchor_field, :string
-    embeds_many :field_defs, OrangeCms.Content.FieldDef, on_replace: :delete
-    field :github_config, :map, default: %{}
-    embeds_one :image_settings, OrangeCms.Content.ImageUploadSettings, on_replace: :update
+    field(:name, :string)
+    field(:key, :string)
+    field(:anchor_field, :string)
+    embeds_many(:frontmatter_schema, OrangeCms.Content.FieldDef, on_replace: :delete)
+    field(:github_config, :map, default: %{})
+    embeds_one(:image_settings, OrangeCms.Content.ImageUploadSettings, on_replace: :update)
 
-    belongs_to :project, OrangeCms.Projects.Project, type: :binary
+    belongs_to(:project, OrangeCms.Projects.Project, type: :binary)
     timestamps()
   end
 
@@ -20,7 +19,7 @@ defmodule OrangeCms.Content.ContentType do
     content_type
     |> cast(attrs, [:name, :key, :anchor_field, :github_config, :project_id])
     |> cast_embed(:image_settings, default: %{})
-    |> cast_embed(:field_defs, default: [])
+    |> cast_embed(:frontmatter_schema, default: [])
     |> validate_required([
       :name,
       :key,
@@ -34,9 +33,9 @@ defmodule OrangeCms.Content.ImageUploadSettings do
   use OrangeCms, :schema
 
   embedded_schema do
-    field :upload_dir, :string
-    field :serve_at, :string, default: "/"
-    field :use_raw_link, :boolean, default: false
+    field(:upload_dir, :string)
+    field(:serve_at, :string, default: "/")
+    field(:use_raw_link, :boolean, default: false)
   end
 
   def changeset(model, attrs) do
@@ -50,10 +49,10 @@ defmodule OrangeCms.Content.FieldDef do
 
   @primary_key false
   embedded_schema do
-    field :name, :string
-    field :key, :string
+    field(:name, :string)
+    field(:key, :string)
 
-    field :type, Ecto.Enum,
+    field(:type, Ecto.Enum,
       values: [
         :string,
         :text,
@@ -67,11 +66,12 @@ defmodule OrangeCms.Content.FieldDef do
         :upload
       ],
       default: :string
+    )
 
-    field :default_value, :string
-    field :options_str, :string, default: ""
-    field :options, {:array, :string}, default: [], virtual: true
-    field :is_required, :boolean, default: false
+    field(:default_value, :string)
+    field(:options_str, :string, default: "")
+    field(:options, {:array, :string}, default: [], virtual: true)
+    field(:is_required, :boolean, default: false)
   end
 
   def changeset(model, attrs) do

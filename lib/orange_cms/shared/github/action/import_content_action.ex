@@ -24,7 +24,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
         schema = construct_frontmatter_schema(frontmatters)
         # TODO: transaction
         OrangeCms.Projects.update_project(project, %{setup_completed: true})
-        OrangeCms.Content.update_content_type(content_type, %{field_defs: schema})
+        OrangeCms.Content.update_content_type(content_type, %{frontmatter_schema: schema})
 
       {:error, error} ->
         Logger.error(inspect(error))
