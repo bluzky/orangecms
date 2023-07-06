@@ -37,9 +37,9 @@ defmodule OrangeCmsWeb.ProjectMemberLive.Index do
   end
 
   @impl true
-  def handle_info({OrangeCmsWeb.ProjectMemberLive.FormComponent, {:saved, user}}, socket) do
-    user = Repo.preload(user, :user)
-    {:noreply, stream_insert(socket, :project_members, user)}
+  def handle_info({OrangeCmsWeb.ProjectMemberLive.FormComponent, {:saved, member}}, socket) do
+    member = Repo.preload(member, :user)
+    {:noreply, stream_insert(socket, :project_members, member)}
   end
 
   @impl true

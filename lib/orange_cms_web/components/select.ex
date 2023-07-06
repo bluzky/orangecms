@@ -56,6 +56,39 @@ defmodule OrangeCmsWeb.Components.Select do
   alias OrangeCmsWeb.Components.ComponentHelpers
   alias Phoenix.LiveView.JS
 
+  @doc """
+  Ready to use select component with all required parts.
+  """
+  attr(:field, Phoenix.HTML.FormField,
+    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+  )
+
+  attr(:placeholder, :string, default: nil)
+  attr(:disabled, :boolean, default: false)
+  attr(:options, :list, required: true)
+  attr(:rest, :global)
+
+  def simple_select(assigns) do
+    ~H"""
+    <.select field={@field} {@rest}>
+      <.select_trigger {%{disabled: @disabled}}>
+        <.select_value placeholder={@placeholder} />
+      </.select_trigger>
+      <.select_content>
+        <.select_group>
+          <.select_item
+            :for={item <- @options}
+            field={@field}
+            value={item}
+          >
+            <%= item %>
+          </.select_item>
+        </.select_group>
+      </.select_content>
+    </.select>
+    """
+  end
+
   attr(:id, :string, default: nil)
   attr(:name, :any)
   attr(:value, :any)
@@ -227,7 +260,7 @@ defmodule OrangeCmsWeb.Components.Select do
         disabled={@disabled}
         checked={@selected}
         class="select-item peer sr-only"
-        id={"#{@target}-#{String.replace(@value, " ", "-")}"}
+        id={"#{@target}-#{String.replace(to_string(@value), " ", "-")}"}
         value=""
         data-value={@value}
         phx-change={%JS{}}
