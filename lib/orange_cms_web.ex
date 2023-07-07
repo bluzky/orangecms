@@ -83,18 +83,19 @@ defmodule OrangeCmsWeb do
     quote do
       # HTML escaping functionality
       # Core UI components and translation
+      import OrangeCmsWeb.Components.Alert
       import OrangeCmsWeb.Components.Card
       import OrangeCmsWeb.Components.Dialog
       import OrangeCmsWeb.Components.Display
       import OrangeCmsWeb.Components.DropdownMenu
       import OrangeCmsWeb.Components.Form
+      import OrangeCmsWeb.Components.Icon
       import OrangeCmsWeb.Components.Input, except: [input: 1]
       import OrangeCmsWeb.Components.JS
+      import OrangeCmsWeb.Components.ScrollArea
       import OrangeCmsWeb.Components.Select
       import OrangeCmsWeb.Components.Table
       import OrangeCmsWeb.Components.Tooltip
-      import OrangeCmsWeb.Components.Alert
-      import OrangeCmsWeb.Components.Icon
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext
       import OrangeCmsWeb.ViewHelper
