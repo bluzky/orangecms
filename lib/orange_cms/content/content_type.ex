@@ -2,45 +2,57 @@ defmodule OrangeCms.Content.ContentType do
   @moduledoc false
   use OrangeCms, :schema
 
-  @primary_key {:id, :binary_id, autogenerate: true}
   schema "content_types" do
-    field :name, :string
-    field :key, :string
-    field :anchor_field, :string
-    embeds_many :field_defs, OrangeCms.Content.FieldDef, on_replace: :delete
-    field :github_config, :map, default: %{}
-    embeds_one :image_settings, OrangeCms.Content.ImageUploadSettings, on_replace: :update
+    field(:name, :string)
+    field(:key, :string)
+    field(:anchor_field, :string)
+    embeds_many(:frontmatter_schema, OrangeCms.Content.FieldDef, on_replace: :delete)
+    embeds_one(:github_config, OrangeCms.Content.GithubConfig, on_replace: :update)
 
-    belongs_to :project, OrangeCms.Projects.Project, type: :binary
+    belongs_to(:project, OrangeCms.Projects.Project)
     timestamps()
   end
 
   @doc false
   def changeset(content_type, attrs) do
     content_type
-    |> cast(attrs, [:name, :key, :anchor_field, :github_config, :project_id])
-    |> cast_embed(:image_settings, default: %{})
-    |> cast_embed(:field_defs, default: [])
+    |> cast(attrs, [:name, :key, :anchor_field, :project_id])
+    |> cast_embed(:github_config, default: %{})
+    |> cast_embed(:frontmatter_schema, default: [])
+    |> generate_key()
     |> validate_required([
       :name,
-      :key,
       :project_id
     ])
+    |> unsafe_validate_unique([:project_id, :key], OrangeCms.Repo, error_key: :name)
+    |> unique_constraint([:project_id, :key])
+  end
+
+  # build key from name
+  defp generate_key(changeset) do
+    with {:ok, name} <- fetch_change(changeset, :name),
+         {_, nil} <- fetch_field(changeset, :key) do
+      put_change(changeset, :key, name |> String.downcase() |> String.replace(" ", "_"))
+    else
+      _err ->
+        changeset
+    end
   end
 end
 
-defmodule OrangeCms.Content.ImageUploadSettings do
+defmodule OrangeCms.Content.GithubConfig do
   @moduledoc false
   use OrangeCms, :schema
 
   embedded_schema do
-    field :upload_dir, :string
-    field :serve_at, :string, default: "/"
-    field :use_raw_link, :boolean, default: false
+    field(:content_dir, :string)
+    field(:upload_dir, :string)
+    field(:serve_at, :string, default: "/")
+    field(:use_raw_link, :boolean, default: false)
   end
 
   def changeset(model, attrs) do
-    cast(model, attrs, [:upload_dir, :serve_at, :use_raw_link])
+    cast(model, attrs, [:content_dir, :upload_dir, :serve_at, :use_raw_link])
   end
 end
 
@@ -50,10 +62,10 @@ defmodule OrangeCms.Content.FieldDef do
 
   @primary_key false
   embedded_schema do
-    field :name, :string
-    field :key, :string
+    field(:name, :string)
+    field(:key, :string)
 
-    field :type, Ecto.Enum,
+    field(:type, Ecto.Enum,
       values: [
         :string,
         :text,
@@ -67,11 +79,12 @@ defmodule OrangeCms.Content.FieldDef do
         :upload
       ],
       default: :string
+    )
 
-    field :default_value, :string
-    field :options_str, :string, default: ""
-    field :options, {:array, :string}, default: [], virtual: true
-    field :is_required, :boolean, default: false
+    field(:default_value, :string)
+    field(:options_str, :string, default: "")
+    field(:options, {:array, :string}, default: [], virtual: true)
+    field(:is_required, :boolean, default: false)
   end
 
   def changeset(model, attrs) do

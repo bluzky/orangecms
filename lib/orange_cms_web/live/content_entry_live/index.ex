@@ -33,7 +33,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
 
     %{
       title: "My awesome title",
-      raw_body: "",
+      body: "",
       content_type_id: content_type.id,
       project_id: socket.assigns.current_project.id,
       integration_info: %{}

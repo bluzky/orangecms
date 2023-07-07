@@ -13,11 +13,13 @@ defmodule OrangeCmsWeb.ViewHelper do
   end
 
   def scoped_path(socket_or_conn, assigns, relative_path, params) do
-    if assigns[:current_project] do
+    project = assigns[:current_project] || assigns[:project]
+
+    if project do
       unverified_path(
         socket_or_conn,
         OrangeCmsWeb.Router,
-        "/p/#{assigns.current_project.id}#{relative_path}",
+        "/p/#{project.id}#{relative_path}",
         params
       )
     else

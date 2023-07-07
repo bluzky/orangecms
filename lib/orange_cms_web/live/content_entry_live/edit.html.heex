@@ -12,7 +12,7 @@
       <div class="col-span-3 p-8 pt-16 edit-sidebar max-h-screen overflow-y-auto">
         <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
         <div>
-          <div :for={field_def <- @content_type.field_defs} class="mb-4">
+          <div :for={field_def <- @content_type.frontmatter_schema} class="mb-4">
             <.schema_field
               field={field_def}
               value={frontmatter[field_def.key]}
@@ -44,7 +44,7 @@
           <div style="display: none;">
             <.input
               type="textarea"
-              field={f[:raw_body]}
+              field={f[:body]}
               class="hidden"
               rows="30"
               phx-hook="MdEditor"

@@ -9,13 +9,8 @@ defmodule OrangeCmsWeb.Components.Sidebar do
   Icons are provided by [heroicons](https://heroicons.com), using the
   [heroicons_elixir](https://github.com/mveytsman/heroicons_elixir) project.
   """
-  use Phoenix.Component
-  use OrangeCmsWeb, :verified_routes
 
-  import OrangeCmsWeb.Components.DropdownMenu
-  import OrangeCmsWeb.Components.Tooltip
-  import OrangeCmsWeb.CoreComponents
-  import OrangeCmsWeb.ViewHelper
+  use OrangeCmsWeb, :html
 
-  embed_templates "sidebar/*"
+  embed_templates("sidebar/*")
 end

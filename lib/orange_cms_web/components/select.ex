@@ -66,11 +66,13 @@ defmodule OrangeCmsWeb.Components.Select do
   attr(:placeholder, :string, default: nil)
   attr(:disabled, :boolean, default: false)
   attr(:options, :list, required: true)
+  attr(:default, :any, default: nil)
+  attr(:phx_change, :any, default: nil)
   attr(:rest, :global)
 
   def simple_select(assigns) do
     ~H"""
-    <.select field={@field} {@rest}>
+    <.select field={@field} {@rest} default={@default} phx-change={@phx_change}>
       <.select_trigger {%{disabled: @disabled}}>
         <.select_value placeholder={@placeholder} />
       </.select_trigger>
@@ -282,7 +284,7 @@ defmodule OrangeCmsWeb.Components.Select do
     """
   end
 
-  defp select_value(value, parent_id) do
+  defp select_value(_value, _parent_id) do
     # JS.set_attribute({"value", value}, to: "##{parent_id}>input")
     # |> JS.set_attribute({"data-content", value}, to: "##{parent_id} .select-value")
     JS.dispatch("dismiss")

@@ -55,8 +55,8 @@ defmodule OrangeCms.Content do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_content_type(attrs \\ %{}) do
-    %ContentType{}
+  def create_content_type(project, attrs \\ %{}) do
+    %ContentType{project_id: project.id}
     |> ContentType.changeset(attrs)
     |> Repo.insert()
   end

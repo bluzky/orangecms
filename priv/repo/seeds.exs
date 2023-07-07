@@ -18,17 +18,17 @@
 #   %{
 #     name: "Page",
 #     key: "page",
-#     image_settings: %{},
-#     field_defs: [],
+#     github_config: %{},
+#     frontmatter_schema: [],
 #     anchor_field: :title,
 #     project_id: project.id
 #   },
 #   %{
 #     name: "Post",
 #     key: "post",
-#     image_settings: %{},
+#     github_config: %{},
 #     project_id: project.id,
-#     field_defs: [
+#     frontmatter_schema: [
 #       %{
 #         name: "title",
 #         key: "title",

@@ -13,6 +13,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   use OrangeCmsWeb, :verified_routes
 
   import OrangeCmsWeb.Gettext
+  import OrangeCmsWeb.Components.Icon
 
   alias Phoenix.LiveView.JS
 
@@ -123,21 +124,6 @@ defmodule OrangeCmsWeb.CoreComponents do
       </div>
     </div>
     """
-  end
-
-  @doc """
-  Renders Heroicons
-  """
-
-  attr(:name, :string, required: true)
-  attr(:class, :string, default: "w-5 h-5")
-  attr(:solid, :boolean, default: false)
-  attr(:rest, :global)
-
-  def icon(assigns) do
-    apply(Heroicons, :"#{String.replace(assigns.name, "-", "_")}", [
-      %{__changed__: nil, __given__: nil, class: assigns.class, solid: assigns.solid}
-    ])
   end
 
   @doc """
@@ -612,104 +598,6 @@ defmodule OrangeCmsWeb.CoreComponents do
         <.icon name="arrow-left" solid class="w-3 h-3 stroke-current inline" />
         <%= render_slot(@inner_block) %>
       </.link>
-    </div>
-    """
-  end
-
-  @doc """
-  Render alert
-  """
-
-  attr(:kind, :any, default: nil)
-  attr(:icon, :string, default: nil)
-  attr(:class, :string, default: nil)
-  slot(:inner_block, required: true)
-  attr(:rest, :global, default: %{})
-
-  def alert(assigns) do
-    assigns = assign(assigns, kind: to_string(assigns.kind))
-
-    assigns =
-      if is_nil(assigns[:icon]) do
-        icon =
-          case to_string(assigns.kind) do
-            "success" -> "check-circle"
-            "info" -> "information_circle"
-            "error" -> "exclamation_triangle"
-            _ -> nil
-          end
-
-        assign(assigns, :icon, icon)
-      else
-        assigns
-      end
-
-    # We have to specify full class name for tailwind to extract class name
-    ~H"""
-    <div
-      class={[
-        "rounded-lg border px-4 py-3 text-sm bg-background text-foreground",
-        @class,
-        @kind == "error" && "border-destructive/50 text-destructive dark:border-destructive"
-      ]}
-      {@rest}
-    >
-      <div class="w-full flex gap-2">
-        <.icon :if={not is_nil(@icon)} name={@icon} />
-        <div>
-          <%= render_slot(@inner_block) %>
-        </div>
-      </div>
-    </div>
-    """
-  end
-
-  @doc """
-  Render avatar
-  """
-
-  attr(:class, :string, default: nil)
-  slot(:inner_block, required: true)
-
-  def avatar(assigns) do
-    ~H"""
-    <div class={["relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", @class]}>
-      <%= render_slot(@inner_block) %>
-    </div>
-    """
-  end
-
-  attr(:class, :string, default: nil)
-  attr(:src, :string, required: true)
-  attr(:rest, :global)
-
-  def avatar_image(assigns) do
-    ~H"""
-    <img class={["aspect-square h-full w-full", @class]} src={@src} {@rest} />
-    """
-  end
-
-  @doc """
-  Render badge
-
-  ## Examples
-
-      <.badge>Published</.badge>
-  """
-  attr(:class, :string, default: "bg-primary text-primary-foreground hover:bg-primary/80")
-  slot(:inner_block, required: true)
-  attr(:rest, :global)
-
-  def badge(assigns) do
-    ~H"""
-    <div
-      class={[
-        "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow border-transparent",
-        @class
-      ]}
-      {@rest}
-    >
-      <%= render_slot(@inner_block) %>
     </div>
     """
   end

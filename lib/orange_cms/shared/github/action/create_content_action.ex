@@ -32,7 +32,7 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
     ---
     #{frontmatter}
     ---
-    #{content_entry.raw_body}
+    #{content_entry.body}
     """
 
     body = %{

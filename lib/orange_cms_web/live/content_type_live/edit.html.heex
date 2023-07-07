@@ -59,7 +59,7 @@
       <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-6">
-            <.inputs_for :let={field} field={f[:image_settings]}>
+            <.inputs_for :let={field} field={f[:github_config]}>
               <.input
                 type="text"
                 field={field[:upload_dir]}
@@ -111,7 +111,7 @@
             phx-hook="InitSorting"
             id="schema-form"
           >
-            <.inputs_for :let={field} field={f[:field_defs]}>
+            <.inputs_for :let={field} field={f[:frontmatter_schema]}>
               <details open={true} id={"wrap-#{field[:key].value}"} class="group">
                 <summary class="flex gap-2 cursor-pointer font-bold text-sm">
                   <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
@@ -172,7 +172,7 @@
               <button
                 class="btn btn-outline btn-xs rounded-full px-5"
                 phx-click="add_field"
-                phx-value-path={f[:field_defs].name}
+                phx-value-path={f[:frontmatter_schema].name}
                 type="button"
               >
                 + Add field

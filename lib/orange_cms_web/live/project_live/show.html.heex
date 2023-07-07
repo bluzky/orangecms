@@ -18,8 +18,12 @@
   </div>
 </div>
 
-
-<.dialog :if={@live_action in [:github_setup]} id="github-setup" show on_cancel={JS.navigate(scoped_path(assigns, "/"))}>
+<.dialog
+  :if={@live_action in [:github_setup]}
+  id="github-setup"
+  show
+  on_cancel={JS.navigate(scoped_path(assigns, "/"))}
+>
   <.dialog_content>
     <.dialog_header>
       <.dialog_title>Connect Github Repo</.dialog_title>
@@ -34,19 +38,24 @@
   </.dialog_content>
 </.dialog>
 
-<.dialog :if={@live_action in [:github_import_content]} id="github-import-content" show on_cancel={JS.navigate(scoped_path(assigns, "/"))}>
+<.dialog
+  :if={@live_action in [:github_import_content]}
+  id="github-import-content"
+  show
+  on_cancel={JS.navigate(scoped_path(assigns, "/"))}
+>
   <.dialog_content>
     <.dialog_header>
       <.dialog_title>Import existing content</.dialog_title>
-      <.dialog_description>This will guide you to import content from github repo</.dialog_description>
+      <.dialog_description>
+        This will guide you to import content from github repo
+      </.dialog_description>
     </.dialog_header>
     <.live_component
-      module={OrangeCmsWeb.ProjectLive.SetupGithubForm}
+      module={OrangeCmsWeb.ProjectLive.GithubImportContentForm}
       id={@project.id}
       action={@live_action}
       project={@project}
-      patch={scoped_path(assigns, "/setup/github_import_content")}
     />
   </.dialog_content>
 </.dialog>
-

@@ -19,7 +19,7 @@ defmodule OrangeCms.Shared.Github.UpdateContentAction do
     ---
     #{frontmatter}
     ---
-    #{content_entry.raw_body}
+    #{content_entry.body}
     """
 
     body = %{
