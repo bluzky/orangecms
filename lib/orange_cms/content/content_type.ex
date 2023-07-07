@@ -9,7 +9,7 @@ defmodule OrangeCms.Content.ContentType do
     embeds_many(:frontmatter_schema, OrangeCms.Content.FieldDef, on_replace: :delete)
     embeds_one(:github_config, OrangeCms.Content.GithubConfig, on_replace: :update)
 
-    belongs_to(:project, OrangeCms.Projects.Project, type: :binary)
+    belongs_to(:project, OrangeCms.Projects.Project)
     timestamps()
   end
 
@@ -31,10 +31,11 @@ defmodule OrangeCms.Content.ContentType do
   # build key from name
   defp generate_key(changeset) do
     with {:ok, name} <- fetch_change(changeset, :name),
-         {:error, _} <- fetch_field(changeset, :key) do
-      put_change(changeset, :key, String.downcase(name) |> String.replace(" ", "_"))
+         {_, nil} <- fetch_field(changeset, :key) do
+      put_change(changeset, :key, name |> String.downcase() |> String.replace(" ", "_"))
     else
-      _ -> changeset
+      _err ->
+        changeset
     end
   end
 end

@@ -87,7 +87,7 @@ defmodule OrangeCms.ContentTest do
 
     alias OrangeCms.Content.ContentEntry
 
-    @invalid_attrs %{frontmatter: nil, integration_info: nil, json_body: nil, raw_body: nil, slug: nil, title: nil}
+    @invalid_attrs %{frontmatter: nil, integration_info: nil, json_body: nil, body: nil, slug: nil, title: nil}
 
     test "list_content_entries/0 returns all content_entries" do
       content_entry = content_entry_fixture()
@@ -104,7 +104,7 @@ defmodule OrangeCms.ContentTest do
         frontmatter: "some frontmatter",
         integration_info: "some integration_info",
         json_body: "some json_body",
-        raw_body: "some raw_body",
+        body: "some body",
         slug: "some slug",
         title: "some title"
       }
@@ -113,7 +113,7 @@ defmodule OrangeCms.ContentTest do
       assert content_entry.frontmatter == "some frontmatter"
       assert content_entry.integration_info == "some integration_info"
       assert content_entry.json_body == "some json_body"
-      assert content_entry.raw_body == "some raw_body"
+      assert content_entry.body == "some body"
       assert content_entry.slug == "some slug"
       assert content_entry.title == "some title"
     end
@@ -129,7 +129,7 @@ defmodule OrangeCms.ContentTest do
         frontmatter: "some updated frontmatter",
         integration_info: "some updated integration_info",
         json_body: "some updated json_body",
-        raw_body: "some updated raw_body",
+        body: "some updated body",
         slug: "some updated slug",
         title: "some updated title"
       }
@@ -138,7 +138,7 @@ defmodule OrangeCms.ContentTest do
       assert content_entry.frontmatter == "some updated frontmatter"
       assert content_entry.integration_info == "some updated integration_info"
       assert content_entry.json_body == "some updated json_body"
-      assert content_entry.raw_body == "some updated raw_body"
+      assert content_entry.body == "some updated body"
       assert content_entry.slug == "some updated slug"
       assert content_entry.title == "some updated title"
     end

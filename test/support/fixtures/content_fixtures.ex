@@ -33,7 +33,7 @@ defmodule OrangeCms.ContentFixtures do
         frontmatter: "some frontmatter",
         integration_info: "some integration_info",
         json_body: "some json_body",
-        raw_body: "some raw_body",
+        body: "some body",
         slug: "some slug",
         title: "some title"
       })

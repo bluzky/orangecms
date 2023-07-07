@@ -47,7 +47,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
         </.form>
       </div>
 
-      <div :if={@step == :import_content} class="space-y-6">
+      <div :if={@step == :import_content && @import_status == :pending} class="space-y-6">
         <% {kind, msg} = @message %>
         <.alert kind={kind}>
           <%= msg %>
@@ -73,11 +73,35 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
           </.button>
         </div>
       </div>
+
+      <div :if={@step == :import_content && @import_status == :processing} class="space-y-6">
+        <div class="flex justify-center">
+          <Heroicons.sun class="h-20 w-22 animate-spin" />
+        </div>
+        <p class="text-center text-lg text-muted-foreground">
+          Importing content...
+        </p>
+      </div>
+
+      <div :if={@step == :import_content && @import_status == :done} class="space-y-6">
+        <% {kind, msg} = @message %>
+        <.alert kind={kind}>
+          <%= msg %>
+        </.alert>
+        <div class="w-full flex justify-center">
+          <.link navigate={scoped_path(assigns, "/content/#{@content_type.key}")}>
+            <.button phx-click="back" phx-target={@myself}>
+              Close
+            </.button>
+          </.link>
+        </div>
+      </div>
     </div>
     """
   end
 
-  @steps [:select_content_dir, :import_content]
+  # @steps [:select_content_dir, :import_content]
+  # @import_statuses [:pending, :processing, :done]
 
   @impl true
   def update(%{project: project} = assigns, socket) do
@@ -85,8 +109,8 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
 
     {:ok,
      socket
+     |> assign(step: :select_content_dir, files: [], import_status: :pending)
      |> assign(assigns)
-     |> assign(processing: false, step: :select_content_dir, files: [])
      |> assign_form(changeset)}
   end
 
@@ -168,39 +192,45 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
   end
 
   @impl true
-  def handle_event("import_content", params, socket) do
-    # TODO handle update error
-    {:ok, current_project} =
-      Projects.update_project(socket.assigns.current_project, %{
-        github_config: %{
-          "access_token" => params["access_token"],
-          "repo_name" => socket.assigns.repository["full_name"]
-        }
-      })
+  def handle_event("import_content", _params, %{assigns: assigns} = socket) do
+    {:ok, content_type} = OrangeCms.Content.create_content_type(assigns.project, assigns.content_type_params)
 
-    # create content type
-    content_type_key = params["content_dir"] |> String.split("/") |> List.last()
+    socket = assign(socket, content_type: content_type, import_status: :processing)
 
-    {:ok, content_type} =
-      OrangeCms.Content.create_content_type(%{
-        project_id: current_project.id,
-        name: Phoenix.Naming.humanize(content_type_key),
-        key: content_type_key,
-        github_config: %{"content_dir" => params["content_dir"]}
-      })
+    pid = self()
 
-    # import content
-    OrangeCms.Shared.Github.import_content(current_project, content_type)
+    assigns = Map.take(socket.assigns, [:project, :content_type, :files, :step, :import_status])
 
-    {:noreply,
-     socket
-     |> assign(current_project: current_project, content_type: content_type)
-     |> push_navigate(to: scoped_path(socket, "/"))}
+    Task.start(fn ->
+      # import content
+      OrangeCms.Shared.Github.import_content(assigns.project, content_type)
+
+      send_update(
+        pid,
+        OrangeCmsWeb.ProjectLive.GithubImportContentForm,
+        Map.merge(assigns, %{
+          id: assigns.project.id,
+          import_status: :done,
+          message: {:success, "Content import completed"}
+        })
+      )
+
+      :ok
+    end)
+
+    {:noreply, socket}
+  end
+
+  @doc """
+  Show results of the content import
+  """
+  def handle_info(ref, socket) do
+    Process.demonitor(ref, [:flush])
+    # %{predictions: [%{label: label}]} = result
+    {:noreply, assign(socket, import_status: :done)}
   end
 
   defp assign_form(socket, params) do
     assign(socket, :form, to_form(params))
   end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

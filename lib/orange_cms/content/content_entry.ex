@@ -9,12 +9,12 @@ defmodule OrangeCms.Content.ContentEntry do
     field :title, :string
     field :frontmatter, :map
     field :json_body, :map
-    field :raw_body, :string, default: ""
+    field :body, :string, default: ""
 
     embeds_one :integration_info, OrangeCms.Content.GithubInfo, on_replace: :update
 
     belongs_to :content_type, OrangeCms.Content.ContentType
-    belongs_to :project, OrangeCms.Project, type: :binary
+    belongs_to :project, OrangeCms.Project
 
     timestamps()
   end
@@ -25,7 +25,7 @@ defmodule OrangeCms.Content.ContentEntry do
     |> cast(attrs, [
       :title,
       :slug,
-      :raw_body,
+      :body,
       :json_body,
       :frontmatter,
       :content_type_id,

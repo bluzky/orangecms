@@ -19,7 +19,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
   require Logger
 
   def perform(project, content_type) do
-    case import_directory(project, content_type, content_type.github_config["content_dir"]) do
+    case import_directory(project, content_type, content_type.github_config.content_dir) do
       {:ok, frontmatters} ->
         schema = construct_frontmatter_schema(frontmatters)
         # TODO: transaction
@@ -33,11 +33,11 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
 
   # Import all markdown files within a directory
   defp import_directory(project, content_type, directory) do
-    [owner, repo] = String.split(project.github_config["repo_name"], "/")
+    %{github_config: gh_config} = project
 
     case Client.api(
-           project.github_config["access_token"],
-           &Tentacat.Contents.find(&1, owner, repo, directory)
+           gh_config.access_token,
+           &Tentacat.Contents.find(&1, gh_config.repo_owner, gh_config.repo_name, directory)
          ) do
       {:ok, files} ->
         # import all markdown file only
@@ -56,11 +56,11 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
   # Parse file content
   # insert file to database
   defp import_file(project, content_type, file) do
-    [owner, repo] = String.split(project.github_config["repo_name"], "/")
+    %{github_config: gh_config} = project
 
     case Client.api(
-           project.github_config["access_token"],
-           &Tentacat.Contents.find(&1, owner, repo, file["path"])
+           gh_config.access_token,
+           &Tentacat.Contents.find(&1, gh_config.repo_owner, gh_config.repo_name, file["path"])
          ) do
       {:ok, %{"content" => content} = file} ->
         {frontmatter, content} = Helper.parse_markdown_content(content)
@@ -73,7 +73,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
         # insert content entry
         OrangeCms.Content.create_content_entry(%{
           title: title,
-          raw_body: content,
+          body: content,
           frontmatter: Map.new(frontmatter),
           content_type_id: content_type.id,
           project_id: project.id,
@@ -82,7 +82,7 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
             full_path: file["path"],
             relative_path:
               file["path"]
-              |> String.replace_prefix(content_type.github_config["content_dir"], "")
+              |> String.replace_prefix(content_type.github_config.content_dir, "")
               |> String.replace_prefix("/", ""),
             sha: file["sha"]
           }
