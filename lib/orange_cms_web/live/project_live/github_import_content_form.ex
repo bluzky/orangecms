@@ -52,6 +52,17 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
         <.alert kind={kind}>
           <%= msg %>
         </.alert>
+
+        <.scroll_area :if={not Enum.empty?(@files)} class="h-72 w-full rounded-md border">
+          <div class="p-4">
+            <%= for file <- @files do %>
+              <div class="text-sm">
+                <%= file %>
+              </div>
+              <.separator class="my-2" />
+            <% end %>
+          </div>
+        </.scroll_area>
         <div class="w-full flex justify-between">
           <.button icon="arrow-left" phx-click="back" phx-target={@myself} variant="secondary">
             Back
@@ -75,7 +86,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(processing: false, step: :select_content_dir)
+     |> assign(processing: false, step: :select_content_dir, files: [])
      |> assign_form(changeset)}
   end
 
@@ -108,12 +119,13 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
       md_files =
         files
         |> Enum.filter(&(String.ends_with?(&1["name"], ".md") and &1["type"] == "file"))
-        |> IO.inspect()
+        |> Enum.map(& &1["name"])
 
       if length(md_files) > 0 do
         {:noreply,
          socket
          |> assign(step: :import_content, can_continue: true, content_type_params: params)
+         |> assign(files: md_files)
          |> assign(message: {:success, "Found #{length(md_files)} markdown files"})
          |> assign_form(changeset)}
       else

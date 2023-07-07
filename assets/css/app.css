@@ -2,8 +2,30 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(222.2, 47.4%, 11.2%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222.2, 47.4%, 11.2%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222.2, 47.4%, 11.2%);
+  --muted: hsl(210, 40%, 96.1%);
+  --muted-foreground: hsl(215.4, 16.3%, 46.9%);
+  --primary: hsl(222.2, 47.4%, 11.2%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96.1%);
+  --secondary-foreground: hsl(222.2, 47.4%, 11.2%);
+  --accent: hsl(210, 40%, 96.1%);
+  --accent-foreground: hsl(222.2, 47.4%, 11.2%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(215, 20.2%, 65.1%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+}
+
 /* This file is for your main application CSS */
-/* @import "easymde/dist/easymde.min.css"; */
+/* @import easymde/dist/easymde.min.css"; */
 
 /* remove border for code mirror */
 
@@ -24,8 +46,8 @@
   @apply w-auto pl-2 opacity-100 transition-all duration-500;
 }
 
-.collapsible .collapsed-visible{
-    display: none;
+.collapsible .collapsed-visible {
+  display: none;
 }
 
 .collapsed.sidebar,
@@ -37,21 +59,21 @@
   @apply w-0 opacity-0 pl-0;
 }
 
-.collapsed .collapsed-visible{
-    display: block;
+.collapsed .collapsed-visible {
+  display: block;
 }
 
-.collapsed .collapsed-hidden{
-    @apply transition-all duration-500;
-    display: none;
+.collapsed .collapsed-hidden {
+  @apply transition-all duration-500;
+  display: none;
 }
 
-.collapsed.sidebar details{
-    @apply relative;
+.collapsed.sidebar details {
+  @apply relative;
 }
 
-.collapsed.sidebar details ul.menu{
-    @apply absolute top-0 left-full bg-white w-52 p-2 rounded-xl drop-shadow-lg;
+.collapsed.sidebar details ul.menu {
+  @apply absolute top-0 left-full bg-white w-52 p-2 rounded-xl drop-shadow-lg;
 }
 
 .EasyMDEContainer .CodeMirror {
@@ -65,7 +87,6 @@ ul.menu li {
 ul.menu li > :where(:not(ul)) {
   @apply rounded-xl;
 }
-
 
 .textarea {
   @apply leading-6;
