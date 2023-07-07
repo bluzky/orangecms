@@ -5,7 +5,6 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
   alias Ecto.Changeset
   alias OrangeCms.Content
   alias OrangeCms.Content.ContentType
-  alias OrangeCms.Projects
 
   @impl true
   def render(assigns) do
@@ -15,7 +14,6 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
         <.form
           class="space-y-6"
           for={@form}
-          id="setup_github"
           phx-change="validate"
           phx-submit="check_content"
           id="github-import-form"
@@ -104,12 +102,17 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
   # @import_statuses [:pending, :processing, :done]
 
   @impl true
-  def update(%{project: project} = assigns, socket) do
+  def mount(socket) do
+    {:ok, assign(socket, step: :select_content_dir, files: [], import_status: :pending)}
+  end
+
+  @impl true
+  def update(assigns, socket) do
+    project = assigns[:project] || socket.assigns[:project]
     changeset = Content.change_content_type(%ContentType{}, %{project_id: project.id})
 
     {:ok,
      socket
-     |> assign(step: :select_content_dir, files: [], import_status: :pending)
      |> assign(assigns)
      |> assign_form(changeset)}
   end
@@ -175,9 +178,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
     end
   end
 
-  @doc """
-  Move back to select content directory step
-  """
+  # Move back to select content directory step
   @impl true
   def handle_event("back", _params, socket) do
     project = socket.assigns.project
@@ -197,22 +198,17 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
 
     socket = assign(socket, content_type: content_type, import_status: :processing)
 
-    pid = self()
-
-    assigns = Map.take(socket.assigns, [:project, :content_type, :files, :step, :import_status])
-
     Task.start(fn ->
       # import content
       OrangeCms.Shared.Github.import_content(assigns.project, content_type)
 
       send_update(
-        pid,
         OrangeCmsWeb.ProjectLive.GithubImportContentForm,
-        Map.merge(assigns, %{
+        %{
           id: assigns.project.id,
           import_status: :done,
           message: {:success, "Content import completed"}
-        })
+        }
       )
 
       :ok

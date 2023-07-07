@@ -39,8 +39,6 @@ defmodule OrangeCmsWeb.Components.Form do
   """
   use Phoenix.Component
 
-  import OrangeCmsWeb.Gettext
-
   attr :label, :string, default: nil
   attr :description, :string, default: nil
   attr :class, :string, default: nil
@@ -48,7 +46,7 @@ defmodule OrangeCmsWeb.Components.Form do
   slot :inner_block, required: true
   attr :rest, :global
 
-  def form_item(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+  def form_item(%{field: %Phoenix.HTML.FormField{}} = assigns) do
     ~H"""
     <.form_item class={@class} {@rest} phx-feedback-for={@field.name}>
       <.form_label :if={@label}><%= @label %></.form_label>

@@ -69,7 +69,6 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
         id="setup_github"
         phx-change="form_changed"
         phx-submit="submit"
-        id="github-import-form"
         phx-target={@myself}
       >
         <.form_item
@@ -99,7 +98,7 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
   end
 
   @impl true
-  def update(%{project: project} = assigns, socket) do
+  def update(assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
@@ -123,9 +122,9 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
   @impl true
   def handle_event("submit", %{"github_info" => params}, socket) do
     changeset = GithubInfo.changeset(params)
+    github_config = Changeset.apply_changes(changeset)
 
     with {:changeset, %{valid?: true}} <- {:changeset, changeset},
-         github_config <- Changeset.apply_changes(changeset),
          {:load_repositories, {:ok, repositories}} <-
            {:load_repositories, OrangeCms.Shared.Github.list_repository(github_config.access_token)},
          {:validate_repo_name, %{}} <-
@@ -142,18 +141,15 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
       {:error, changeset} ->
         {:noreply, assign_form(socket, changeset)}
 
-      error ->
-        changeset =
-          case error do
-            {:changeset, changeset} ->
-              changeset
+      {:changeset, _} ->
+        {:noreply, assign_form(socket, %{changeset | action: :validate})}
 
-            {:load_repositories, _} ->
-              Changeset.add_error(changeset, :access_token, "Invalid access access_token")
+      {:load_repositories, _} ->
+        changeset = Changeset.add_error(changeset, :access_token, "Invalid access access_token")
+        {:noreply, assign_form(socket, %{changeset | action: :validate})}
 
-            {:validate_repo_name, _} ->
-              Changeset.add_error(changeset, :repo_full_name, "Repository does not exist")
-          end
+      {:validate_repo_name, _} ->
+        changeset = Changeset.add_error(changeset, :repo_full_name, "Repository does not exist")
 
         {:noreply, assign_form(socket, %{changeset | action: :validate})}
     end

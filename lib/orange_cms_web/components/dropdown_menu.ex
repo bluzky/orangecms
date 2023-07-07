@@ -6,8 +6,6 @@ defmodule OrangeCmsWeb.Components.DropdownMenu do
   """
   use Phoenix.Component
 
-  import OrangeCmsWeb.Components.JS
-
   alias Phoenix.LiveView.JS
 
   @doc """
@@ -56,7 +54,7 @@ defmodule OrangeCmsWeb.Components.DropdownMenu do
   slot :inner_block, required: true
 
   def dropdown_menu_trigger(assigns) do
-    assigns = assign(assigns, id: "dropdown-#{:random.uniform(999_999)}")
+    assigns = assign(assigns, id: "dropdown-#{:rand.uniform(999_999)}")
 
     ~H"""
     <div id={@id} phx-click={JS.toggle(to: "##{@id}+.dropdown-menu-content")}>
