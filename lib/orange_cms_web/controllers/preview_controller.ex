@@ -16,8 +16,8 @@ defmodule OrangeCmsWeb.PreviewController do
           path =
             String.replace_leading(
               path,
-              (content_type && content_type.image_settings.serve_at) || "",
-              content_type.image_settings.upload_dir || ""
+              (content_type && content_type.github_config.serve_at) || "",
+              content_type.github_config.upload_dir || ""
             )
 
           Path.join([

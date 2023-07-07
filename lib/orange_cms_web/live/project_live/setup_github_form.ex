@@ -3,19 +3,23 @@ defmodule OrangeCmsWeb.ProjectLive.GithubInfo do
   Module for validate github repo config params
   """
   use Ecto.Schema
+
   import Ecto.Changeset
 
   @primary_key false
   embedded_schema do
     field(:access_token, :string)
-    field(:repo_name, :string)
+    field(:repo_full_name, :string)
+    field :repo_name, :string
+    field :repo_owner, :string
   end
 
   def changeset(attrs \\ %{}) do
     %__MODULE__{}
-    |> cast(attrs, [:access_token, :repo_name])
+    |> cast(attrs, [:access_token, :repo_full_name])
     |> validate_required([:access_token])
     |> validate_token()
+    |> extract_detail()
   end
 
   defp validate_token(changeset) do
@@ -31,15 +35,29 @@ defmodule OrangeCmsWeb.ProjectLive.GithubInfo do
         changeset
     end
   end
+
+  # extract repo_name and repo owner from repo_full_name
+  defp extract_detail(changeset) do
+    with true <- changeset.valid?,
+         repo_full_name <- get_change(changeset, :repo_full_name) || "",
+         [repo_owner, repo_name] <- String.split(repo_full_name, "/") do
+      changeset
+      |> put_change(:repo_owner, repo_owner)
+      |> put_change(:repo_name, repo_name)
+    else
+      _ ->
+        changeset
+    end
+  end
 end
 
 defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
   @moduledoc false
   use OrangeCmsWeb, :live_component
 
+  alias Ecto.Changeset
   alias OrangeCms.Projects
   alias OrangeCmsWeb.ProjectLive.GithubInfo
-  alias Ecto.Changeset
 
   @impl true
   def render(assigns) do
@@ -59,29 +77,19 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
           label="Github access access token"
           description="You can obtain this access_token at Profile > Settings > Developer settings > Personal access tokens"
         >
-          <.textarea
-            field={@form[:access_token]}
-            phx-debounce="blur"
-          />
+          <.textarea field={@form[:access_token]} phx-debounce="blur" />
         </.form_item>
 
         <.form_item
-          field={@form[:repo_name]}
+          field={@form[:repo_full_name]}
           label="Repository"
           description="The repository where your content is stored"
         >
-          <Input.input
-            field={@form[:repo_name]}
-            phx-debounce="blur"
-            placeholder="owner/repo"
-          />
+          <Input.input field={@form[:repo_full_name]} phx-debounce="blur" placeholder="owner/repo" />
         </.form_item>
 
         <div class="w-full flex flex-row-reverse">
-          <.button
-            icon_right="arrow-right"
-            phx-disable-with="Checking..."
-          >
+          <.button icon_right="arrow-right" phx-disable-with="Checking...">
             Next
           </.button>
         </div>
@@ -103,17 +111,13 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
   end
 
   @impl true
-  def handle_event(
-        "form_changed",
-        %{"github_info" => params},
-        socket
-      ) do
+  def handle_event("form_changed", %{"github_info" => params}, socket) do
     changeset =
       params
       |> GithubInfo.changeset()
       |> Map.put(:action, :validate)
 
-    {:noreply, socket |> assign_form(changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   @impl true
@@ -121,16 +125,15 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
     changeset = GithubInfo.changeset(params)
 
     with {:changeset, %{valid?: true}} <- {:changeset, changeset},
-         access_token <- Changeset.get_field(changeset, :access_token),
+         github_config <- Changeset.apply_changes(changeset),
          {:load_repositories, {:ok, repositories}} <-
-           {:load_repositories, OrangeCms.Shared.Github.list_repository(access_token)},
-         repo_name <- Changeset.get_field(changeset, :repo_name) |> IO.inspect(),
+           {:load_repositories, OrangeCms.Shared.Github.list_repository(github_config.access_token)},
          {:validate_repo_name, %{}} <-
-           {:validate_repo_name, Enum.find(repositories, &(&1["full_name"] == repo_name))},
+           {:validate_repo_name, Enum.find(repositories, &(&1["full_name"] == github_config.repo_full_name))},
          {:ok, project} <-
            Projects.update_project(socket.assigns.project, %{
-             "github_config" => params,
-             "setup_completed" => true
+             github_config: github_config,
+             setup_completed: true
            }) do
       notify_parent({:saved, project})
 
@@ -149,90 +152,11 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
               Changeset.add_error(changeset, :access_token, "Invalid access access_token")
 
             {:validate_repo_name, _} ->
-              Changeset.add_error(changeset, :repo_name, "Repository does not exist")
+              Changeset.add_error(changeset, :repo_full_name, "Repository does not exist")
           end
 
-        {:noreply, socket |> assign_form(%{changeset | action: :validate})}
+        {:noreply, assign_form(socket, %{changeset | action: :validate})}
     end
-  end
-
-  @impl true
-  def handle_event(
-        "form_changed",
-        %{
-          "_target" => ["content_dir"],
-          "access_token" => access_token,
-          "content_dir" => content_dir
-        } = params,
-        socket
-      ) do
-    %{repository: repository} = socket.assigns
-
-    case OrangeCms.Shared.Github.Client.get_content(
-           access_token,
-           repository["owner"]["login"],
-           repository["name"],
-           content_dir
-         ) do
-      {:ok, files} ->
-        md_files =
-          Enum.filter(files, &(String.ends_with?(&1["name"], ".md") and &1["type"] == "file"))
-          |> IO.inspect()
-
-        if length(md_files) > 0 do
-          {:noreply,
-           assign(socket,
-             form: to_form(params),
-             message: {:success, "Found #{length(md_files)} markdown files"},
-             ready_next: true
-           )}
-        else
-          {:noreply,
-           assign(socket,
-             form: to_form(params),
-             message: {:error, "No markdown file found. Please select another directory"},
-             ready_next: false
-           )}
-        end
-
-      {:error, :not_found} ->
-        {:noreply,
-         assign(socket,
-           form: to_form(params, errors: [content_dir: {"directory does not exist", []}]),
-           ready_next: false
-         )}
-    end
-  end
-
-  @impl true
-  def handle_event("import_content", params, socket) do
-    # TODO handle update error
-    {:ok, current_project} =
-      Projects.update_project(socket.assigns.current_project, %{
-        github_config: %{
-          "access_token" => params["access_token"],
-          "repo_name" => socket.assigns.repository["full_name"]
-        }
-      })
-
-    # create content type
-    content_type_key = params["content_dir"] |> String.split("/") |> List.last()
-
-    {:ok, content_type} =
-      OrangeCms.Content.create_content_type(%{
-        project_id: current_project.id,
-        name: Phoenix.Naming.humanize(content_type_key),
-        key: content_type_key,
-        github_config: %{"content_dir" => params["content_dir"]}
-      })
-
-    # import content
-    OrangeCms.Shared.Github.import_content(current_project, content_type)
-
-    {:noreply,
-     socket
-     |> assign(current_project: current_project, content_type: content_type)
-     |> push_navigate(to: scoped_path(socket, "/"))}
   end
 
   defp assign_form(socket, params) do

@@ -9,7 +9,7 @@ defmodule OrangeCms.Shared.Github.UploadFileAction do
     "email" => "sys@orangecms.io"
   }
 
-  def perform(project, %{image_settings: settings}, upload) do
+  def perform(project, %{github_config: settings}, upload) do
     [owner, repo] = String.split(project.github_config["repo_name"], "/")
     {:ok, content} = File.read(upload.path)
 

@@ -59,7 +59,7 @@
       <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-6">
-            <.inputs_for :let={field} field={f[:image_settings]}>
+            <.inputs_for :let={field} field={f[:github_config]}>
               <.input
                 type="text"
                 field={field[:upload_dir]}

@@ -14,7 +14,7 @@ defmodule OrangeCms.ContentFixtures do
         anchor_field: "some anchor_field",
         frontmatter_schema: %{},
         github_config: %{},
-        image_settings: %{},
+        github_config: %{},
         key: "some key",
         name: "some name"
       })

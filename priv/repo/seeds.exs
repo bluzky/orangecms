@@ -18,7 +18,7 @@
 #   %{
 #     name: "Page",
 #     key: "page",
-#     image_settings: %{},
+#     github_config: %{},
 #     frontmatter_schema: [],
 #     anchor_field: :title,
 #     project_id: project.id
@@ -26,7 +26,7 @@
 #   %{
 #     name: "Post",
 #     key: "post",
-#     image_settings: %{},
+#     github_config: %{},
 #     project_id: project.id,
 #     frontmatter_schema: [
 #       %{

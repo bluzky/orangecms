@@ -8,7 +8,6 @@ defmodule OrangeCms.Repo.Migrations.AddContentTables do
       add :key, :text, null: false
       add :anchor_field, :text, null: false
       add :frontmatter_schema, :map, null: false, default: %{}
-      add :image_settings, :map, null: false, default: %{}
       add :github_config, :map, null: false, default: %{}
 
 

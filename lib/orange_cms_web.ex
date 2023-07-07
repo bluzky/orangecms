@@ -93,6 +93,8 @@ defmodule OrangeCmsWeb do
       import OrangeCmsWeb.Components.Select
       import OrangeCmsWeb.Components.Table
       import OrangeCmsWeb.Components.Tooltip
+      import OrangeCmsWeb.Components.Alert
+      import OrangeCmsWeb.Components.Icon
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext
       import OrangeCmsWeb.ViewHelper

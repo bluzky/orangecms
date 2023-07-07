@@ -22,8 +22,8 @@ defmodule OrangeCms.Shared.Github.Client do
     )
   end
 
-  def get_content(token, owner, repo, path) do
-    api(token, &Tentacat.Contents.find(&1, owner, repo, path))
+  def get_content(config, path) do
+    api(config.access_token, &Tentacat.Contents.find(&1, config.repo_owner, config.repo_name, path))
   end
 
   # convert Tentacat API response into new tuple of `{:ok, data}` and `{:error, error}`

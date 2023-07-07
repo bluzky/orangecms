@@ -8,7 +8,7 @@ defmodule OrangeCmsWeb.ContentTypeLiveTest do
     anchor_field: "some anchor_field",
     frontmatter_schema: %{},
     github_config: %{},
-    image_settings: %{},
+    github_config: %{},
     key: "some key",
     name: "some name"
   }
@@ -16,11 +16,11 @@ defmodule OrangeCmsWeb.ContentTypeLiveTest do
     anchor_field: "some updated anchor_field",
     frontmatter_schema: %{},
     github_config: %{},
-    image_settings: %{},
+    github_config: %{},
     key: "some updated key",
     name: "some updated name"
   }
-  @invalid_attrs %{anchor_field: nil, frontmatter_schema: nil, github_config: nil, image_settings: nil, key: nil, name: nil}
+  @invalid_attrs %{anchor_field: nil, frontmatter_schema: nil, github_config: nil, github_config: nil, key: nil, name: nil}
 
   defp create_content_type(_) do
     content_type = content_type_fixture()

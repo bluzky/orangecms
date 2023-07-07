@@ -7,8 +7,7 @@ defmodule OrangeCms.Content.ContentType do
     field(:key, :string)
     field(:anchor_field, :string)
     embeds_many(:frontmatter_schema, OrangeCms.Content.FieldDef, on_replace: :delete)
-    field(:github_config, :map, default: %{})
-    embeds_one(:image_settings, OrangeCms.Content.ImageUploadSettings, on_replace: :update)
+    embeds_one(:github_config, OrangeCms.Content.GithubConfig, on_replace: :update)
 
     belongs_to(:project, OrangeCms.Projects.Project, type: :binary)
     timestamps()
@@ -17,29 +16,42 @@ defmodule OrangeCms.Content.ContentType do
   @doc false
   def changeset(content_type, attrs) do
     content_type
-    |> cast(attrs, [:name, :key, :anchor_field, :github_config, :project_id])
-    |> cast_embed(:image_settings, default: %{})
+    |> cast(attrs, [:name, :key, :anchor_field, :project_id])
+    |> cast_embed(:github_config, default: %{})
     |> cast_embed(:frontmatter_schema, default: [])
+    |> generate_key()
     |> validate_required([
       :name,
-      :key,
       :project_id
     ])
+    |> unsafe_validate_unique([:project_id, :key], OrangeCms.Repo, error_key: :name)
+    |> unique_constraint([:project_id, :key])
+  end
+
+  # build key from name
+  defp generate_key(changeset) do
+    with {:ok, name} <- fetch_change(changeset, :name),
+         {:error, _} <- fetch_field(changeset, :key) do
+      put_change(changeset, :key, String.downcase(name) |> String.replace(" ", "_"))
+    else
+      _ -> changeset
+    end
   end
 end
 
-defmodule OrangeCms.Content.ImageUploadSettings do
+defmodule OrangeCms.Content.GithubConfig do
   @moduledoc false
   use OrangeCms, :schema
 
   embedded_schema do
+    field(:content_dir, :string)
     field(:upload_dir, :string)
     field(:serve_at, :string, default: "/")
     field(:use_raw_link, :boolean, default: false)
   end
 
   def changeset(model, attrs) do
-    cast(model, attrs, [:upload_dir, :serve_at, :use_raw_link])
+    cast(model, attrs, [:content_dir, :upload_dir, :serve_at, :use_raw_link])
   end
 end
 
