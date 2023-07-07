@@ -26,4 +26,8 @@ defmodule OrangeCmsWeb.ViewHelper do
       relative_path
     end
   end
+
+  def scoped_path_fn(socket_or_conn) do
+    fn relative_path -> scoped_path(socket_or_conn, relative_path) end
+  end
 end

@@ -3,19 +3,28 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Content
+  alias OrangeCms.ContentEntryLive.ContentTypeList
 
   @impl true
   def mount(_params, _session, socket) do
+    content_types = Content.list_content_types(socket.assigns.current_project.id)
+
     {:ok,
      assign(socket,
-       type: nil,
+       content_types: content_types,
+       content_type: nil,
        content_entries: []
      )}
   end
 
   @impl true
-  def handle_params(%{"type" => type}, _uri, socket) do
-    content_type = Content.find_content_type(socket.assigns.current_project.id, key: type)
+  def handle_params(params, _uri, socket) do
+    content_type =
+      if params["type"] do
+        Content.find_content_type(socket.assigns.current_project.id, key: params["type"])
+      else
+        hd(socket.assigns.content_types)
+      end
 
     content_entries =
       Content.list_content_entries(socket.assigns.current_project.id,

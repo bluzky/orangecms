@@ -1,44 +1,60 @@
-<div class="p-6">
-  <.header>
-    <%= @content_type.name %>
-    <:actions>
-      <.button icon="plus" phx-click="create_entry">
-        Add <%= @content_type.name %>
-      </.button>
-    </:actions>
-  </.header>
+<div class="w-full flex">
+  <div class="w-64 h-screen p-4 overflow-y-auto border-r border-border">
+    <.header class="mt-2">
+      Collections
+    </.header>
+    <ContentTypeList.component
+      content_types={@content_types}
+      current_type={@content_type}
+      route_fn={scoped_path_fn(assigns)}
+    />
+  </div>
+  <div class="grow h-screen overflow-y-auto">
+    <div class="p-6">
+      <.header>
+        <%= @content_type.name %>
+        <:actions>
+          <.button icon="document-plus" phx-click="create_entry">
+            New entry
+          </.button>
+        </:actions>
+      </.header>
 
-  <.stable>
-    <.table_header class="uppercase">
-      <.table_row>
-        <.table_head class="w-[10px]">id</.table_head>
-        <.table_head>Title</.table_head>
-        <.table_head class="w-[100px]">Project id</.table_head>
-        <.table_head class="text-right">Action</.table_head>
-      </.table_row>
-    </.table_header>
-    <.table_body>
-      <.table_row :for={{id, entry} <- @streams.content_entries} id={id}>
-        <.table_cell class="font-medium"><%= "1" %></.table_cell>
-        <.table_cell><%= entry.title %></.table_cell>
-        <.table_cell><%= entry.project_id %></.table_cell>
-        <.table_cell class="text-right">
-          <.link
-            navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")}
-            class="action-btn"
-          >
-            <Heroicons.pencil_square class="w-4 h-4" /> Edit
-          </.link>
+      <div class="mt-4">
+        <.stable>
+          <.table_header class="uppercase">
+            <.table_row>
+              <.table_head class="w-[10px]">id</.table_head>
+              <.table_head>Title</.table_head>
+              <.table_head class="w-[100px]">Project id</.table_head>
+              <.table_head class="text-right">Action</.table_head>
+            </.table_row>
+          </.table_header>
+          <.table_body>
+            <.table_row :for={{id, entry} <- @streams.content_entries} id={id}>
+              <.table_cell class="font-medium"><%= "1" %></.table_cell>
+              <.table_cell><%= entry.title %></.table_cell>
+              <.table_cell><%= entry.project_id %></.table_cell>
+              <.table_cell class="text-right">
+                <.link
+                  navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")}
+                  class="action-btn"
+                >
+                  <Heroicons.pencil_square class="w-4 h-4" /> Edit
+                </.link>
 
-          <.link
-            phx-click={JS.push("delete", value: %{id: entry.id})}
-            data-confirm="Are you sure?"
-            class="action-btn"
-          >
-            <Heroicons.x_mark class="w-4 h-4" /> Delete
-          </.link>
-        </.table_cell>
-      </.table_row>
-    </.table_body>
-  </.stable>
+                <.link
+                  phx-click={JS.push("delete", value: %{id: entry.id})}
+                  data-confirm="Are you sure?"
+                  class="action-btn"
+                >
+                  <Heroicons.x_mark class="w-4 h-4" /> Delete
+                </.link>
+              </.table_cell>
+            </.table_row>
+          </.table_body>
+        </.stable>
+      </div>
+    </div>
+  </div>
 </div>
