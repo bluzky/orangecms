@@ -49,7 +49,7 @@
               rows="30"
               phx-hook="MdEditor"
               phx-debounce="60000"
-              data-upload-path={~p"/api/upload_image/#{@current_project.id}/#{@current_type.id}"}
+              data-upload-path={~p"/api/upload_image/#{@current_project.id}/#{@content_type.id}"}
               data-preview-path={
                 ~p"/assets/preview/#{@content_entry.project_id}/#{@content_entry.content_type_id}"
               }

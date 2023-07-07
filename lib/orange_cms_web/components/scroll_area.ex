@@ -35,8 +35,7 @@ defmodule OrangeCmsWeb.Components.ScrollArea do
       </style>
       <div
         data-scroll-area=""
-        class="h-full w-full rounded-[inherit]"
-        style="overflow: hidden scroll;"
+        class="h-full w-full rounded-[inherit] overflow-y-auto overflow-x-hidden"
       >
         <div style="min-width: 100%; display: table;">
           <%= render_slot(@inner_block) %>

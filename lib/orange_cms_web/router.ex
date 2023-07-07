@@ -77,9 +77,10 @@ defmodule OrangeCmsWeb.Router do
         live("/setup/github", ProjectLive.Show, :github_setup)
         live("/setup/github_import_content", ProjectLive.Show, :github_import_content)
 
-        scope "/content/:type", ContentEntryLive do
+        scope "/content/", ContentEntryLive do
           live("/", Index)
-          live("/:id", Edit)
+          live("/:type", Index)
+          live("/:type/:id", Edit)
         end
 
         scope "/content_types" do
