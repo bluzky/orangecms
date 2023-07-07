@@ -20,7 +20,14 @@ defmodule OrangeCmsWeb.ContentTypeLiveTest do
     key: "some updated key",
     name: "some updated name"
   }
-  @invalid_attrs %{anchor_field: nil, frontmatter_schema: nil, github_config: nil, github_config: nil, key: nil, name: nil}
+  @invalid_attrs %{
+    anchor_field: nil,
+    frontmatter_schema: nil,
+    github_config: nil,
+    github_config: nil,
+    key: nil,
+    name: nil
+  }
 
   defp create_content_type(_) do
     content_type = content_type_fixture()

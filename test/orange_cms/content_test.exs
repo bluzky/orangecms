@@ -8,7 +8,14 @@ defmodule OrangeCms.ContentTest do
 
     alias OrangeCms.Content.ContentType
 
-    @invalid_attrs %{anchor_field: nil, frontmatter_schema: nil, github_config: nil, github_config: nil, key: nil, name: nil}
+    @invalid_attrs %{
+      anchor_field: nil,
+      frontmatter_schema: nil,
+      github_config: nil,
+      github_config: nil,
+      key: nil,
+      name: nil
+    }
 
     test "list_content_types/0 returns all content_types" do
       content_type = content_type_fixture()

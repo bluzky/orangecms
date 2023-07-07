@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.Components.ComponentHelpers do
+  @moduledoc false
   import Phoenix.Component
 
   @doc """

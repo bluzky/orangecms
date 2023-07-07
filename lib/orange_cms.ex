@@ -9,8 +9,9 @@ defmodule OrangeCms do
 
   def context do
     quote do
-      alias OrangeCms.Repo
       import Ecto.Query, warn: false
+
+      alias OrangeCms.Repo
     end
   end
 

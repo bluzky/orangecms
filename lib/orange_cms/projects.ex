@@ -61,8 +61,7 @@ defmodule OrangeCms.Projects do
     actor = OrangeCms.get_actor()
 
     # add default member
-    attrs =
-      Map.put(attrs, "project_members", [%{user_id: actor.id, role: :admin, is_owner: true}])
+    attrs = Map.put(attrs, "project_members", [%{user_id: actor.id, role: :admin, is_owner: true}])
 
     %Project{owner_id: actor.id}
     |> Project.changeset(attrs)

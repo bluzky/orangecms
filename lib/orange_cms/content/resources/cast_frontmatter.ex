@@ -11,7 +11,9 @@ defmodule OrangeCms.Content.CastFrontmatter do
 
     # get default values
     frontmatter_default =
-      Map.new(content_type.frontmatter_schema, fn field -> {field.key, OrangeCms.Content.FieldDef.default_value(field)} end)
+      Map.new(content_type.frontmatter_schema, fn field ->
+        {field.key, OrangeCms.Content.FieldDef.default_value(field)}
+      end)
 
     # cast value from params
     frontmatter_params =

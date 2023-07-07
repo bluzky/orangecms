@@ -3,6 +3,7 @@ defmodule OrangeCmsWeb.Components.Input do
   Implement of form component
   """
   use Phoenix.Component
+
   alias OrangeCmsWeb.Components.ComponentHelpers
 
   attr(:id, :any, default: nil)
@@ -15,9 +16,7 @@ defmodule OrangeCmsWeb.Components.Input do
       tel text time url week)
   )
 
-  attr(:field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
-  )
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]")
 
   attr(:class, :string, default: nil)
   attr(:rest, :global)

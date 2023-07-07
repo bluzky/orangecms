@@ -18,7 +18,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
         phx-submit="save"
       >
         <.form_item field={@form[:name]} label="What is your project's name?">
-            <Input.input field={@form[:name]} type="text" phx-debounce="500" />
+          <Input.input field={@form[:name]} type="text" phx-debounce="500" />
         </.form_item>
         <div class="w-full flex flex-row-reverse">
           <.button icon="inbox_arrow_down" phx-disable-with="Saving...">

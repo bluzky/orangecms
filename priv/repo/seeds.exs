@@ -90,7 +90,8 @@
 # create admin
 alias OrangeCms.Accounts.User
 
-OrangeCms.Accounts.change_user(%User{}, %{
+%User{}
+|> OrangeCms.Accounts.change_user(%{
   first_name: "Supper",
   last_name: "admin",
   email: "admin@example.com",

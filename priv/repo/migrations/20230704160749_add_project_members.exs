@@ -12,6 +12,5 @@ defmodule OrangeCms.Repo.Migrations.AddProjectMembers do
     end
 
     create unique_index(:project_members, [:project_id, :user_id])
-
   end
 end

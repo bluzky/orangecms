@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.Components.Alert do
+  @moduledoc false
   use Phoenix.Component
 
   import OrangeCmsWeb.Components.Icon

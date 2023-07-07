@@ -59,9 +59,7 @@ defmodule OrangeCmsWeb.Components.Select do
   @doc """
   Ready to use select component with all required parts.
   """
-  attr(:field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
-  )
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]")
 
   attr(:placeholder, :string, default: nil)
   attr(:disabled, :boolean, default: false)
@@ -78,11 +76,7 @@ defmodule OrangeCmsWeb.Components.Select do
       </.select_trigger>
       <.select_content>
         <.select_group>
-          <.select_item
-            :for={item <- @options}
-            field={@field}
-            value={item}
-          >
+          <.select_item :for={item <- @options} field={@field} value={item}>
             <%= item %>
           </.select_item>
         </.select_group>
@@ -95,9 +89,7 @@ defmodule OrangeCmsWeb.Components.Select do
   attr(:name, :any)
   attr(:value, :any)
 
-  attr(:field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
-  )
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]")
 
   attr(:default, :any, default: nil)
   attr(:class, :string, default: nil)
@@ -212,9 +204,7 @@ defmodule OrangeCmsWeb.Components.Select do
   attr(:name, :any)
   attr(:target, :string, default: nil, doc: "target is the id of parent select tag")
 
-  attr(:field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
-  )
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]")
 
   attr(:value, :any, required: true)
   attr(:selected, :boolean, default: false)

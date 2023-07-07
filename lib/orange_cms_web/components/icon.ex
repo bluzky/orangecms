@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.Components.Icon do
+  @moduledoc false
   use Phoenix.Component
 
   @doc """

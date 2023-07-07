@@ -12,8 +12,8 @@ defmodule OrangeCmsWeb.CoreComponents do
   use Phoenix.Component
   use OrangeCmsWeb, :verified_routes
 
-  import OrangeCmsWeb.Gettext
   import OrangeCmsWeb.Components.Icon
+  import OrangeCmsWeb.Gettext
 
   alias Phoenix.LiveView.JS
 
@@ -263,8 +263,7 @@ defmodule OrangeCmsWeb.CoreComponents do
     "primary" => "bg-primary text-primary-foreground hover:bg-primary/90",
     "secondary" => "bg-secondary text-secondary-foreground hover:bg-secondary/80",
     "destructive" => "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-    "outline" =>
-      "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+    "outline" => "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
     "ghost" => "hover:bg-accent hover:text-accent-foreground",
     "link" => "text-primary underline-offset-4 hover:underline"
   }
@@ -312,9 +311,7 @@ defmodule OrangeCmsWeb.CoreComponents do
                range radio search select tel text textarea time url week)
   )
 
-  attr(:field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
-  )
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]")
 
   attr(:errors, :list, default: [])
   attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
@@ -337,8 +334,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   end
 
   def input(%{type: "checkbox", value: value} = assigns) do
-    assigns =
-      assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
+    assigns = assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
 
     ~H"""
     <div phx-feedback-for={@name} class="form-control">
@@ -608,8 +604,7 @@ defmodule OrangeCmsWeb.CoreComponents do
     JS.show(js,
       to: selector,
       transition:
-        {"transition-all transform ease-out duration-300",
-         "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
+        {"transition-all transform ease-out duration-300", "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
          "opacity-100 translate-y-0 sm:scale-100"}
     )
   end
@@ -619,8 +614,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       to: selector,
       time: 200,
       transition:
-        {"transition-all transform ease-in duration-200",
-         "opacity-100 translate-y-0 sm:scale-100",
+        {"transition-all transform ease-in duration-200", "opacity-100 translate-y-0 sm:scale-100",
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
     )
   end
