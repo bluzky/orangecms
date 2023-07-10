@@ -1,78 +1,87 @@
 defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
+  @moduledoc false
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Content
-  alias OrangeCms.Content.ContentType
 
   @impl true
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage content_type records in your database.</:subtitle>
-      </.header>
-
-      <.simple_form
-        :let={f}
+      <.form
         for={@form}
         id="content_type-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
+        class="space-y-6"
       >
-        <.input field={f[:name]} type="text" label="Name" />
-        <.input field={f[:key]} type="text" label="Key" />
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Content type</.button>
-        </:actions>
-      </.simple_form>
+        <.form_item field={@form[:name]} label="Name">
+          <Input.input field={@form[:name]} placeholder="eg: Post" />
+        </.form_item>
+        <.form_item
+          field={@form[:key]}
+          label="Key"
+          description="A key used to query content collection via API. It must be unique within project"
+        >
+          <Input.input field={@form[:key]} placeholder="eg: blog-post" />
+        </.form_item>
+
+        <div class="w-full flex flex-row-reverse">
+          <.button icon_right="arrow-right" phx-disable-with="Checking...">
+            Next
+          </.button>
+        </div>
+      </.form>
     </div>
     """
   end
 
   @impl true
   def update(%{content_type: content_type} = assigns, socket) do
-    form =
-      if content_type.id do
-        AshPhoenix.Form.for_update(content_type, :update, api: Content)
-      else
-        AshPhoenix.Form.for_create(ContentType, :create, api: Content)
-      end
+    changeset = Content.change_content_type(content_type)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(form: form)}
+     |> assign_form(changeset)}
   end
 
   @impl true
-  def handle_event("validate", %{"form" => content_type_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        content_type_params
-      )
+  def handle_event("validate", %{"content_type" => params}, socket) do
+    changeset =
+      socket.assigns.content_type
+      |> Content.change_content_type(params)
+      |> Map.put(:action, :validate)
+      |> IO.inspect()
 
-    {:noreply, assign(socket, :form, form)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"form" => content_type_params}, socket) do
-    form =
-      AshPhoenix.Form.validate(
-        socket.assigns.form,
-        content_type_params
-      )
+  def handle_event("save", %{"content_type" => params}, socket) do
+    save(socket, socket.assigns.action, params)
+  end
 
-    case AshPhoenix.Form.submit(form) do
+  defp save(socket, :new, params) do
+    params = Map.put(params, "project_id", socket.assigns.current_project.id)
+
+    case Content.create_content_type(params) do
       {:ok, entry} ->
+        notify_parent({:saved, entry})
+
         {:noreply,
          socket
-         |> put_flash(:success, "Content type updated successfully")
-         |> push_navigate(to: scoped_path(socket, "/content_types/#{entry.id}"))}
+         |> put_flash(:info, "Content type created successfully")
+         |> push_patch(to: socket.assigns.patch)}
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
     end
   end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

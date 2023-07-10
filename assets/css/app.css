@@ -2,108 +2,147 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+
+/* ----- START SETTING ----- */
+:root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 215 20.2% 65.1%;
+    --input: 214.3 31.8% 91.4%;
+    --border: 214.3 31.8% 91.4%;
+    --sucess: #dcfce7;
+    --success-foreground: #22c55e;
+    --info: #dbeafe,
+        --info-foreground: #3b82f6,
+
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #c2c2c2 transparent;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #c2c2c2;
+    border-radius: 14px;
+    border: 2px solid var(--background);
+}
+
+/* ------- END SETTING ------ */
+
+
+
 /* This file is for your main application CSS */
-/* @import "easymde/dist/easymde.min.css"; */
+/* @import easymde/dist/easymde.min.css"; */
 
 /* remove border for code mirror */
 
 .collapsible.sidebar,
 .collapsible .sidebar {
-  @apply transition-all duration-500;
+    @apply transition-all duration-500;
 }
 
 .collapsible .collapsible-item {
-  @apply flex gap-0 items-center transition-all duration-500;
+    @apply flex gap-0 items-center transition-all duration-500;
 }
 
 .collapsible .collapsible-item .no-collapse {
-  @apply shrink-0;
+    @apply shrink-0;
 }
 
 .collapsible .collapsible-item .will-collapse {
-  @apply w-auto pl-2 opacity-100 transition-all duration-500;
+    @apply w-auto pl-2 opacity-100 transition-all duration-500;
 }
 
-.collapsible .collapsed-visible{
+.collapsible .collapsed-visible {
     display: none;
 }
 
 .collapsed.sidebar,
 .collapsed .sidebar {
-  @apply w-16;
+    @apply w-16;
 }
 
 .collapsed .collapsible-item .will-collapse {
-  @apply w-0 opacity-0 pl-0;
+    @apply w-0 opacity-0 pl-0;
 }
 
-.collapsed .collapsed-visible{
+.collapsed .collapsed-visible {
     display: block;
 }
 
-.collapsed .collapsed-hidden{
+.collapsed .collapsed-hidden {
     @apply transition-all duration-500;
     display: none;
 }
 
-.collapsed.sidebar details{
+.collapsed.sidebar details {
     @apply relative;
 }
 
-.collapsed.sidebar details ul.menu{
+.collapsed.sidebar details ul.menu {
     @apply absolute top-0 left-full bg-white w-52 p-2 rounded-xl drop-shadow-lg;
 }
 
 .EasyMDEContainer .CodeMirror {
-  border: transparent;
-  padding: 0;
+    border: transparent;
+    padding: 0;
 }
 
 ul.menu li {
-  @apply py-0.5;
-}
-ul.menu li > :where(:not(ul)) {
-  @apply rounded-xl;
+    @apply py-0.5;
 }
 
-.btn {
-  @apply normal-case;
-}
-
-.btn-md {
-  @apply h-10 min-h-min;
-}
-
-.form-control {
-  @apply mt-2.5;
-}
-
-.form-control .input,
-.form-control .select {
-  @apply h-10 min-h-min text-sm;
+ul.menu li> :where(:not(ul)) {
+    @apply rounded-xl;
 }
 
 .textarea {
-  @apply leading-6;
+    @apply leading-6;
 }
 
-.tabs > .tab.tab-active {
-  @apply font-bold border-b-2;
+.tabs>.tab.tab-active {
+    @apply font-bold border-b-2;
 }
 
 .tab-content {
-  @apply p-4;
+    @apply p-4;
 }
 
 .table tr td,
 .table tr th {
-  @apply text-sm;
+    @apply text-sm;
 }
 
-.action-btn {
-  @apply btn btn-ghost btn-xs flex gap-1;
+.btn-action {
+    @apply inline-flex gap-1 items-center rounded-lg hover:bg-secondary border border-transparent hover:border-border px-1;
 }
 
 .label {
-  @apply justify-start;
+    @apply justify-start;
 }

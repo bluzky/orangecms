@@ -91,8 +91,7 @@ defmodule OrangeCms.Shared.Yaml do
       iex> Ymlr.documents!(%{a: "a"})
       ** (ArgumentError) The given argument is not a list of documents. Use document/1, document/2, document!/1 or document!/2 for a single document.
   """
-  def documents!(documents) when is_list(documents),
-    do: Enum.map_join(documents, "\n", &document!/1)
+  def documents!(documents) when is_list(documents), do: Enum.map_join(documents, "\n", &document!/1)
 
   def documents!(_documents),
     do:

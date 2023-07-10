@@ -34,8 +34,7 @@ config :orange_cms, OrangeCms.Mailer, adapter: Swoosh.Adapters.Local
 config :esbuild,
   version: "0.14.41",
   default: [
-    args:
-      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+    args: ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
@@ -59,15 +58,6 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
-
-# For backwards compatibility, the following configuration is required.
-# see https://ash-hq.org/docs/guides/ash/latest/get-started#temporary-config for more details
-config :ash, :use_all_identities_in_manage_relationship?, false
-
-config :orange_cms,
-  ash_apis: [OrangeCms.Content, OrangeCms.Projects, OrangeCms.Accounts]
-
-config :ash_graphql, :json_type, :json
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

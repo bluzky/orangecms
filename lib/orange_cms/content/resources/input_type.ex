@@ -1,6 +1,7 @@
 defmodule OrangeCms.Content.InputType do
-  use Ash.Type.Enum,
-    values: [
+  @moduledoc false
+  def values do
+    [
       :string,
       :text,
       :number,
@@ -12,6 +13,7 @@ defmodule OrangeCms.Content.InputType do
       :checkbox,
       :upload
     ]
+  end
 
   @default_stored_type :string
   @stored_type_map [

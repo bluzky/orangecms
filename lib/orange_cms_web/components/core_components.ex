@@ -12,11 +12,10 @@ defmodule OrangeCmsWeb.CoreComponents do
   use Phoenix.Component
   use OrangeCmsWeb, :verified_routes
 
-  alias Phoenix.LiveView.JS
+  import OrangeCmsWeb.Components.Icon
   import OrangeCmsWeb.Gettext
-  import OrangeCmsWeb.ViewHelper
 
-  embed_templates "core_components/*"
+  alias Phoenix.LiveView.JS
 
   @doc """
   Renders a modal.
@@ -38,16 +37,16 @@ defmodule OrangeCmsWeb.CoreComponents do
         <:cancel>Cancel</:cancel>
       </.modal>
   """
-  attr :id, :string, required: true
-  attr :show, :boolean, default: false
-  attr :on_cancel, JS, default: %JS{}
-  attr :on_confirm, JS, default: %JS{}
+  attr(:id, :string, required: true)
+  attr(:show, :boolean, default: false)
+  attr(:on_cancel, JS, default: %JS{})
+  attr(:on_confirm, JS, default: %JS{})
 
-  slot :inner_block, required: true
-  slot :title
-  slot :subtitle
-  slot :confirm
-  slot :cancel
+  slot(:inner_block, required: true)
+  slot(:title)
+  slot(:subtitle)
+  slot(:confirm)
+  slot(:cancel)
 
   def modal(assigns) do
     ~H"""
@@ -128,21 +127,6 @@ defmodule OrangeCmsWeb.CoreComponents do
   end
 
   @doc """
-  Renders Heroicons
-  """
-
-  attr :name, :string, required: true
-  attr :class, :string, default: "w-5 h-5"
-  attr :solid, :boolean, default: false
-  attr :rest, :global
-
-  def icon(assigns) do
-    apply(Heroicons, :"#{String.replace(assigns.name, "-", "_")}", [
-      %{__changed__: nil, __given__: nil, class: assigns.class, solid: assigns.solid}
-    ])
-  end
-
-  @doc """
   Renders flash notices.
 
   ## Examples
@@ -150,15 +134,15 @@ defmodule OrangeCmsWeb.CoreComponents do
       <.flash kind={:info} flash={@flash} />
       <.flash kind={:info} phx-mounted={show("#flash")}>Welcome Back!</.flash>
   """
-  attr :id, :string, default: "flash", doc: "the optional id of flash container"
-  attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
-  attr :title, :string, default: nil
-  attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
-  attr :autoshow, :boolean, default: true, doc: "whether to auto show the flash on mount"
-  attr :close, :boolean, default: true, doc: "whether the flash can be closed"
-  attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
+  attr(:id, :string, default: "flash", doc: "the optional id of flash container")
+  attr(:flash, :map, default: %{}, doc: "the map of flash messages to display")
+  attr(:title, :string, default: nil)
+  attr(:kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup")
+  attr(:autoshow, :boolean, default: true, doc: "whether to auto show the flash on mount")
+  attr(:close, :boolean, default: true, doc: "whether the flash can be closed")
+  attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the flash container")
 
-  slot :inner_block, doc: "the optional inner block that renders the flash message"
+  slot(:inner_block, doc: "the optional inner block that renders the flash message")
 
   def flash(assigns) do
     ~H"""
@@ -168,35 +152,28 @@ defmodule OrangeCmsWeb.CoreComponents do
       phx-mounted={@autoshow && show("##{@id}")}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
-      class={[
-        "fixed hidden top-2 right-2 w-80 sm:w-96 z-50 alert shadow-lg",
-        @kind == :info && "alert-info",
-        @kind == :success && "alert-success",
-        @kind == :error && "alert-error"
-      ]}
+      class="fixed hidden top-2 right-2 w-80 sm:w-96 z-50"
+      style="user-select: none; touch-action: none;"
       {@rest}
     >
-      <div>
-        <%= if @title do %>
-          <.icon :if={@kind == :info} name="information-circle" class="h-5 w-5" />
-          <.icon :if={@kind == :success} name="check-circle" class="h-5 w-5" />
-          <.icon :if={@kind == :error} name="exclamation-circle" class="h-5 w-5" />
-        <% end %>
-        <div>
-          <p :if={@title} class="font-semibold">
-            <%= @title %>
-          </p>
-          <p class="text-sm"><%= msg %></p>
+      <div class={[
+        "group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden rounded-md border p-4 pr-6 shadow-lg transition-all group ",
+        (@kind == :error &&
+           "border-destructive bg-destructive text-destructive-foreground destructive") ||
+          "border bg-background"
+      ]}>
+        <div class="grid gap-1">
+          <div :if={@title} class="text-sm font-semibold [&+div]:text-xs"><%= @title %></div>
+          <div class="text-sm opacity-90"><%= msg %></div>
         </div>
+
+        <button
+          type="button"
+          class="absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600"
+        >
+          <.icon name="x-mark" />
+        </button>
       </div>
-      <button
-        :if={@close}
-        type="button"
-        class="group absolute top-2 right-1 p-2"
-        aria-label={gettext("close")}
-      >
-        <.icon name="x-mark" solid class="h-5 w-5 stroke-current opacity-40 group-hover:opacity-70" />
-      </button>
     </div>
     """
   end
@@ -208,7 +185,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
       <.flash_group flash={@flash} />
   """
-  attr :flash, :map, required: true, doc: "the map of flash messages"
+  attr(:flash, :map, required: true, doc: "the map of flash messages")
 
   def flash_group(assigns) do
     ~H"""
@@ -241,20 +218,21 @@ defmodule OrangeCmsWeb.CoreComponents do
         </:actions>
       </.simple_form>
   """
-  attr :for, :any, required: true, doc: "the datastructure for the form"
-  attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
+  attr(:for, :any, required: true, doc: "the datastructure for the form")
+  attr(:as, :any, default: nil, doc: "the server side parameter to collect all input under")
 
-  attr :rest, :global,
+  attr(:rest, :global,
     include: ~w(autocomplete name rel action enctype method novalidate target),
     doc: "the arbitrary HTML attributes to apply to the form tag"
+  )
 
-  slot :inner_block, required: true
-  slot :actions, doc: "the slot for form actions, such as a submit button"
+  slot(:inner_block, required: true)
+  slot(:actions, doc: "the slot for form actions, such as a submit button")
 
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="space-y-8 bg-white mt-10">
+      <div class="space-y-4">
         <%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           <%= render_slot(action, f) %>
@@ -272,20 +250,50 @@ defmodule OrangeCmsWeb.CoreComponents do
       <.button>Send!</.button>
       <.button phx-click="go" class="ml-2">Send!</.button>
   """
-  attr :type, :string, default: nil
-  attr :class, :string, default: nil
-  attr :icon, :string, default: nil
-  attr :icon_right, :string, default: nil
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr(:type, :string, default: nil)
+  attr(:class, :string, default: nil)
 
-  slot :inner_block, required: true
+  attr(:variant, :string,
+    values: ~w(primary secondary destructive outline ghost link),
+    default: "primary",
+    doc: "the button variant style"
+  )
 
-  def button(assigns) do
+  attr(:size, :string, values: ~w(default sm lg icon), default: "default")
+  attr(:icon, :string, default: nil)
+  attr(:icon_right, :string, default: nil)
+  attr(:rest, :global, include: ~w(disabled form name value))
+
+  slot(:inner_block, required: true)
+
+  @button_variants %{
+    "primary" => "bg-primary text-primary-foreground hover:bg-primary/90",
+    "secondary" => "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+    "destructive" => "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+    "outline" => "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+    "ghost" => "hover:bg-accent hover:text-accent-foreground",
+    "link" => "text-primary underline-offset-4 hover:underline"
+  }
+
+  @button_sizes %{
+    "default" => "h-10 px-4 py-2",
+    "sm" => "h-9 rounded-md px-3",
+    "lg" => "h-11 rounded-md px-8",
+    "icon" => "h-10 w-10"
+  }
+  def(button(assigns)) do
+    assigns =
+      assigns
+      |> assign(:variant_class, @button_variants[assigns.variant])
+      |> assign(:size_class, @button_sizes[assigns.size])
+
     ~H"""
     <button
       type={@type}
       class={[
-        "btn",
+        "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+        @variant_class,
+        @size_class,
         "gap-1",
         "phx-submit-loading:opacity-75 btn",
         @class
@@ -311,29 +319,29 @@ defmodule OrangeCmsWeb.CoreComponents do
       <.input field={@form[:email]} type="email" />
       <.input name="my-input" errors={["oh no!"]} />
   """
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :label, :string, default: nil
-  attr :value, :any
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:label, :string, default: nil)
+  attr(:value, :any)
 
-  attr :type, :string,
+  attr(:type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file hidden month number password
                range radio search select tel text textarea time url week)
+  )
 
-  attr :field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form, for example: @form[:email]")
 
-  attr :errors, :list, default: []
-  attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
-  attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
-  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
-  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
-  attr :rest, :global, include: ~w(autocomplete cols disabled form max maxlength min minlength
-                                   pattern placeholder readonly required rows size step)
+  attr(:errors, :list, default: [])
+  attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
+  attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
+  attr(:options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2")
+  attr(:multiple, :boolean, default: false, doc: "the multiple flag for select inputs")
+  attr(:rest, :global, include: ~w(autocomplete cols disabled form max maxlength min minlength
+                                   pattern placeholder readonly required rows size step))
 
-  slot :helper
-  slot :inner_block
+  slot(:helper)
+  slot(:inner_block)
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
@@ -345,8 +353,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   end
 
   def input(%{type: "checkbox", value: value} = assigns) do
-    assigns =
-      assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
+    assigns = assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
 
     ~H"""
     <div phx-feedback-for={@name} class="form-control">
@@ -354,28 +361,14 @@ defmodule OrangeCmsWeb.CoreComponents do
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
-          class="checkbox"
+          class="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary"
           id={@id || @name}
           name={@name}
           value="true"
           checked={@checked}
           {@rest}
         />
-        <label for={@id || @name} class="label-text font-bold"><%= @label %></label>
-
-        <div :if={@helper != []} class="dropdown">
-          <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
-            <.icon name="question-mark-circle" class="w-4 h-4" />
-          </label>
-          <div
-            tabindex="0"
-            class="card compact dropdown-content shadow-lg bg-base-300 rounded-box w-80"
-          >
-            <div class="card-body font-normal">
-              <%= render_slot(@helper) %>
-            </div>
-          </div>
-        </div>
+        <.label for={@id || @name} helper={@helper}><%= @label %></.label>
       </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
@@ -430,7 +423,7 @@ defmodule OrangeCmsWeb.CoreComponents do
         id={@id || @name}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "input input-bordered w-full",
+          "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5",
           @errors != [] && "input-error"
         ]}
@@ -444,13 +437,21 @@ defmodule OrangeCmsWeb.CoreComponents do
   @doc """
   Renders a label.
   """
-  attr :for, :string, default: nil
-  attr :helper, :any, default: []
-  slot :inner_block, required: true
+
+  attr(:for, :string, default: nil)
+  attr :class, :string, default: nil
+  attr(:helper, :any, default: [])
+  slot(:inner_block, required: true)
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="label font-bold text-sm p-0 mb-1">
+    <label
+      for={@for}
+      class={[
+        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        @class
+      ]}
+    >
       <%= render_slot(@inner_block) %>
 
       <div :if={@helper != []} class="dropdown">
@@ -470,7 +471,7 @@ defmodule OrangeCmsWeb.CoreComponents do
   @doc """
   Generates a generic error message.
   """
-  slot :inner_block, required: true
+  slot(:inner_block, required: true)
 
   def error(assigns) do
     ~H"""
@@ -484,11 +485,11 @@ defmodule OrangeCmsWeb.CoreComponents do
   @doc """
   Renders a header with title.
   """
-  attr :class, :string, default: nil
+  attr(:class, :string, default: nil)
 
-  slot :inner_block, required: true
-  slot :subtitle
-  slot :actions
+  slot(:inner_block, required: true)
+  slot(:subtitle)
+  slot(:actions)
 
   def header(assigns) do
     ~H"""
@@ -506,6 +507,21 @@ defmodule OrangeCmsWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders a page content wrapper
+  """
+  attr(:class, :string, default: nil)
+
+  slot(:inner_block, required: true)
+
+  def page(assigns) do
+    ~H"""
+    <div class={["p-8", @class]}>
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
+
   @doc ~S"""
   Renders a table with generic styling.
 
@@ -516,20 +532,21 @@ defmodule OrangeCmsWeb.CoreComponents do
         <:col :let={user} label="username"><%= user.username %></:col>
       </.table>
   """
-  attr :id, :string, required: true
-  attr :rows, :list, required: true
-  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
-  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
+  attr(:id, :string, required: true)
+  attr(:rows, :list, required: true)
+  attr(:row_id, :any, default: nil, doc: "the function for generating the row id")
+  attr(:row_click, :any, default: nil, doc: "the function for handling phx-click on each row")
 
-  attr :row_item, :any,
+  attr(:row_item, :any,
     default: &Function.identity/1,
     doc: "the function for mapping each row before calling the :col and :action slots"
+  )
 
   slot :col, required: true do
-    attr :label, :string
+    attr(:label, :string)
   end
 
-  slot :action, doc: "the slot for showing user actions in the last table column"
+  slot(:action, doc: "the slot for showing user actions in the last table column")
 
   def table(assigns) do
     assigns =
@@ -580,7 +597,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       </.list>
   """
   slot :item, required: true do
-    attr :title, :string, required: true
+    attr(:title, :string, required: true)
   end
 
   def list(assigns) do
@@ -603,8 +620,8 @@ defmodule OrangeCmsWeb.CoreComponents do
 
       <.back navigate={~p"/posts"}>Back to posts</.back>
   """
-  attr :navigate, :any, required: true
-  slot :inner_block, required: true
+  attr(:navigate, :any, required: true)
+  slot(:inner_block, required: true)
 
   def back(assigns) do
     ~H"""
@@ -620,56 +637,13 @@ defmodule OrangeCmsWeb.CoreComponents do
     """
   end
 
-  @doc """
-  Render alert
-  """
-
-  attr :kind, :any
-  attr :icon, :string
-  slot :inner_block, required: true
-
-  def alert(assigns) do
-    assigns = assign(assigns, kind: to_string(assigns.kind))
-
-    assigns =
-      if is_nil(assigns[:icon]) do
-        icon =
-          case to_string(assigns.kind) do
-            "success" -> "check-circle"
-            "warning" -> "exclamation_triangle"
-            "error" -> "x_circle"
-            _ -> "info"
-          end
-
-        assign(assigns, :icon, icon)
-      else
-        assigns
-      end
-
-    # We have to specify full class name for tailwind to extract class name
-    ~H"""
-    <div class={[
-      "alert shadow-lg",
-      @kind == "success" && "alert-success",
-      @kind == "warning" && "alert-warning",
-      @kind == "error" && "alert-error"
-    ]}>
-      <div class="w-full">
-        <.icon name={@icon} />
-        <%= render_slot(@inner_block) %>
-      </div>
-    </div>
-    """
-  end
-
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do
     JS.show(js,
       to: selector,
       transition:
-        {"transition-all transform ease-out duration-300",
-         "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
+        {"transition-all transform ease-out duration-300", "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
          "opacity-100 translate-y-0 sm:scale-100"}
     )
   end
@@ -679,8 +653,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       to: selector,
       time: 200,
       transition:
-        {"transition-all transform ease-in duration-200",
-         "opacity-100 translate-y-0 sm:scale-100",
+        {"transition-all transform ease-in duration-200", "opacity-100 translate-y-0 sm:scale-100",
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
     )
   end

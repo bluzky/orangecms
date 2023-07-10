@@ -24,9 +24,9 @@ defmodule OrangeCmsWeb do
       use Phoenix.Router, helpers: true
 
       # Import common connection and controller functions to use in pipelines
-      import Plug.Conn
       import Phoenix.Controller
       import Phoenix.LiveView.Router
+      import Plug.Conn
     end
   end
 
@@ -42,8 +42,8 @@ defmodule OrangeCmsWeb do
         formats: [:html, :json],
         layouts: [html: OrangeCmsWeb.Layouts]
 
-      import Plug.Conn
       import OrangeCmsWeb.Gettext
+      import Plug.Conn
 
       unquote(verified_routes())
     end
@@ -82,11 +82,28 @@ defmodule OrangeCmsWeb do
   defp html_helpers do
     quote do
       # HTML escaping functionality
-      import Phoenix.HTML
       # Core UI components and translation
+      import OrangeCmsWeb.Components.Alert
+      import OrangeCmsWeb.Components.Card
+      import OrangeCmsWeb.Components.Collapsible
+      import OrangeCmsWeb.Components.Dialog
+      import OrangeCmsWeb.Components.Display
+      import OrangeCmsWeb.Components.DropdownMenu
+      import OrangeCmsWeb.Components.Form
+      import OrangeCmsWeb.Components.Icon
+      import OrangeCmsWeb.Components.Input, except: [input: 1]
+      import OrangeCmsWeb.Components.ScrollArea
+      import OrangeCmsWeb.Components.Select
+      import OrangeCmsWeb.Components.Sheet
+      import OrangeCmsWeb.Components.Table
+      import OrangeCmsWeb.Components.Tabs
+      import OrangeCmsWeb.Components.Tooltip
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext
       import OrangeCmsWeb.ViewHelper
+      import Phoenix.HTML
+
+      alias OrangeCmsWeb.Components.Input
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

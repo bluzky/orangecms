@@ -1,4 +1,5 @@
 defmodule OrangeCms.Shared.Github.UpdateContentAction do
+  @moduledoc false
   alias OrangeCms.Shared.Github.Client
   alias OrangeCms.Shared.Github.Helper
 
@@ -18,7 +19,7 @@ defmodule OrangeCms.Shared.Github.UpdateContentAction do
     ---
     #{frontmatter}
     ---
-    #{content_entry.raw_body}
+    #{content_entry.body}
     """
 
     body = %{
@@ -29,20 +30,22 @@ defmodule OrangeCms.Shared.Github.UpdateContentAction do
     }
 
     # save new hash after commit
-    Client.api(
-      project.github_config["access_token"],
-      &Tentacat.Contents.update(&1, owner, repo, content_entry.integration_info.full_path, body)
-    )
+    project.github_config["access_token"]
+    |> Client.api(&Tentacat.Contents.update(&1, owner, repo, content_entry.integration_info.full_path, body))
     |> case do
       {:ok, file} ->
         integration_info =
-          Map.merge(content_entry.integration_info, %{
+          content_entry.integration_info
+          |> Map.from_struct()
+          |> Map.merge(%{
             full_path: get_in(file, ["content", "path"]),
             name: get_in(file, ["content", "name"]),
             sha: get_in(file, ["content", "sha"])
           })
 
-        OrangeCms.Content.ContentEntry.update(content_entry, %{integration_info: integration_info})
+        OrangeCms.Content.update_content_entry(content_entry, %{
+          integration_info: integration_info
+        })
 
       {:error, error} = err ->
         Logger.error(inspect(error))

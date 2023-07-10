@@ -1,8 +1,8 @@
 defmodule OrangeCmsWeb.UserLiveTest do
   use OrangeCmsWeb.ConnCase
 
-  import Phoenix.LiveViewTest
   import OrangeCms.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   @create_attrs %{age: 42, name: "some name"}
   @update_attrs %{age: 43, name: "some updated name"}

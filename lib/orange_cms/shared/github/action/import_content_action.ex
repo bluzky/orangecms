@@ -1,12 +1,8 @@
 defmodule OrangeCms.Shared.Github.ImportContentAction do
-  alias OrangeCms.Shared.Github.Client
-  alias OrangeCms.Shared.Github.Helper
-  require Logger
-
   @moduledoc """
   Import markdonw file from github directory as follow:
 
-  1. [TODO] Create content type if not exist
+  1. Create content type if not exist
   2. List all markdown file
   3. For each file
     3.1 Get file content, info
@@ -17,12 +13,18 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
   5. Update content type frontmatter schema
   """
 
+  alias OrangeCms.Shared.Github.Client
+  alias OrangeCms.Shared.Github.Helper
+
+  require Logger
+
   def perform(project, content_type) do
-    case import_directory(project, content_type, content_type.github_config["content_dir"]) do
+    case import_directory(project, content_type, content_type.github_config.content_dir) do
       {:ok, frontmatters} ->
         schema = construct_frontmatter_schema(frontmatters)
-        OrangeCms.Projects.Project.update!(project, %{set_up_completed: true})
-        OrangeCms.Content.ContentType.update!(content_type, %{field_defs: schema})
+        # TODO: transaction
+        OrangeCms.Projects.update_project(project, %{setup_completed: true})
+        OrangeCms.Content.update_content_type(content_type, %{frontmatter_schema: schema})
 
       {:error, error} ->
         Logger.error(inspect(error))
@@ -31,11 +33,11 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
 
   # Import all markdown files within a directory
   defp import_directory(project, content_type, directory) do
-    [owner, repo] = String.split(project.github_config["repo_name"], "/")
+    %{github_config: gh_config} = project
 
     case Client.api(
-           project.github_config["access_token"],
-           &Tentacat.Contents.find(&1, owner, repo, directory)
+           gh_config.access_token,
+           &Tentacat.Contents.find(&1, gh_config.repo_owner, gh_config.repo_name, directory)
          ) do
       {:ok, files} ->
         # import all markdown file only
@@ -54,11 +56,11 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
   # Parse file content
   # insert file to database
   defp import_file(project, content_type, file) do
-    [owner, repo] = String.split(project.github_config["repo_name"], "/")
+    %{github_config: gh_config} = project
 
     case Client.api(
-           project.github_config["access_token"],
-           &Tentacat.Contents.find(&1, owner, repo, file["path"])
+           gh_config.access_token,
+           &Tentacat.Contents.find(&1, gh_config.repo_owner, gh_config.repo_name, file["path"])
          ) do
       {:ok, %{"content" => content} = file} ->
         {frontmatter, content} = Helper.parse_markdown_content(content)
@@ -69,17 +71,18 @@ defmodule OrangeCms.Shared.Github.ImportContentAction do
           end)
 
         # insert content entry
-        OrangeCms.Content.ContentEntry.create!(%{
+        OrangeCms.Content.create_content_entry(%{
           title: title,
-          raw_body: content,
-          frontmatter: Enum.into(frontmatter, %{}),
+          body: content,
+          frontmatter: Map.new(frontmatter),
           content_type_id: content_type.id,
           project_id: project.id,
           integration_info: %{
             name: file["name"],
             full_path: file["path"],
             relative_path:
-              String.replace_prefix(file["path"], content_type.github_config["content_dir"], "")
+              file["path"]
+              |> String.replace_prefix(content_type.github_config.content_dir, "")
               |> String.replace_prefix("/", ""),
             sha: file["sha"]
           }

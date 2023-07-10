@@ -148,18 +148,14 @@ defmodule OrangeCms.Shared.YamlEncoder do
   defp encode_as_io_list(data, _) when is_number(data), do: "#{data}"
 
   defp encode_as_io_list(data, _),
-    do:
-      raise(ArgumentError, message: "The given data #{inspect(data)} cannot be converted to YAML.")
+    do: raise(ArgumentError, message: "The given data #{inspect(data)} cannot be converted to YAML.")
 
   defp encode_map_key(data) when is_atom(data), do: [Atom.to_string(data), ":"]
   defp encode_map_key(data) when is_binary(data), do: [encode_binary(data, nil), ":"]
   defp encode_map_key(data) when is_number(data), do: "#{data}:"
 
   defp encode_map_key(data),
-    do:
-      raise(ArgumentError,
-        message: "The given data #{inspect(data)} cannot be converted to YAML (map key)."
-      )
+    do: raise(ArgumentError, message: "The given data #{inspect(data)} cannot be converted to YAML (map key).")
 
   defp encode_binary(data, level) do
     cond do
@@ -219,8 +215,7 @@ defmodule OrangeCms.Shared.YamlEncoder do
   defp multiline(data, level) do
     indentation = indent(level)
 
-    block =
-      data |> String.trim_trailing("\n") |> String.replace("\n", IO.iodata_to_binary(indentation))
+    block = data |> String.trim_trailing("\n") |> String.replace("\n", IO.iodata_to_binary(indentation))
 
     [block_chomping_indicator(data) | [indentation | block]]
   end

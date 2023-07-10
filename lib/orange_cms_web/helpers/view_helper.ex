@@ -1,4 +1,5 @@
 defmodule OrangeCmsWeb.ViewHelper do
+  @moduledoc false
   use OrangeCmsWeb, :verified_routes
 
   def scoped_path(socket_or_conn_or_assigns, relative_path, params \\ %{})
@@ -12,11 +13,13 @@ defmodule OrangeCmsWeb.ViewHelper do
   end
 
   def scoped_path(socket_or_conn, assigns, relative_path, params) do
-    if assigns[:current_project] do
+    project = assigns[:current_project] || assigns[:project]
+
+    if project do
       unverified_path(
         socket_or_conn,
         OrangeCmsWeb.Router,
-        "/p/#{assigns.current_project.id}#{relative_path}",
+        "/p/#{project.id}#{relative_path}",
         params
       )
     else
@@ -24,27 +27,7 @@ defmodule OrangeCmsWeb.ViewHelper do
     end
   end
 
-  @doc """
-  Check if current action has permissiont to do action or not.
-
-  Naming convention for resource: `<API><Resource>`
-
-  Example: `MyApp.Blog.Post`
-  - API: `MyApp.Blog`
-  - Resource:  `Post`
-  """
-  def can?(resource, action) do
-    actor = Ash.get_actor()
-
-    if is_nil(actor) do
-      raise "Actor is not set"
-    else
-      api =
-        Module.split(resource)
-        |> List.delete_at(-1)
-        |> Module.safe_concat()
-
-      Ash.Api.can?(api, {resource, action}, actor)
-    end
+  def scoped_path_fn(socket_or_conn) do
+    fn relative_path -> scoped_path(socket_or_conn, relative_path) end
   end
 end

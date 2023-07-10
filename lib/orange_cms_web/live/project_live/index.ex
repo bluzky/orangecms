@@ -1,11 +1,12 @@
 defmodule OrangeCmsWeb.ProjectLive.Index do
+  @moduledoc false
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Projects.Project
 
   @impl true
   def mount(_params, _session, socket) do
-    projects = OrangeCms.Projects.Project.list_my_projects!()
+    projects = OrangeCms.Projects.list_my_projects()
     {:ok, stream(socket, :projects, projects)}
   end
 
@@ -29,13 +30,5 @@ defmodule OrangeCmsWeb.ProjectLive.Index do
   @impl true
   def handle_info({OrangeCmsWeb.ProjectLive.FormComponent, {:saved, project}}, socket) do
     {:noreply, stream_insert(socket, :projects, project)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    project = Project.get!(id)
-    :ok = Project.delete(project)
-
-    {:noreply, stream_delete(socket, :projects, project)}
   end
 end

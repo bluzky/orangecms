@@ -1,0 +1,42 @@
+<div class="flex h-screen w-16 flex-col justify-between border-r border-border bg-background">
+  <div>
+    <div class="inline-flex h-16 w-16 items-center justify-center">
+      <span class="grid h-10 w-10 place-content-center rounded-lg bg-yellow-500 text-yellow-50">
+        O
+      </span>
+    </div>
+
+    <div class="">
+      <%= render_slot(@inner_block) %>
+    </div>
+  </div>
+
+  <div class="sticky inset-x-0 bottom-0 border-t border-gray-100 bg-white p-2">
+    <.dropdown_menu>
+      <.dropdown_menu_trigger>
+        <div>
+          <.avatar>
+            <.avatar_image src="https://github.com/shadcn.png" alt="@shadcn" />
+          </.avatar>
+        </div>
+      </.dropdown_menu_trigger>
+      <.dropdown_menu_content hover_open={true} class="left-full bottom-1/3 ml-2">
+        <.dropdown_menu_label>Account</.dropdown_menu_label>
+        <.dropdown_menu_separator />
+        <.dropdown_menu_group>
+          <.dropdown_menu_item>
+            <.link href={~p"/users/settings"} class="flex gap-1.5 w-full">
+              <.icon name="user" class="w-5 h-5" /> Profile
+            </.link>
+          </.dropdown_menu_item>
+        </.dropdown_menu_group>
+        <.dropdown_menu_separator />
+        <.dropdown_menu_item>
+          <.link href={~p"/users/log_out"} method="delete" class="flex gap-1.5 w-full">
+            <.icon name="arrow_right_on_rectangle" class="w-5 h-5" /> Sign out
+          </.link>
+        </.dropdown_menu_item>
+      </.dropdown_menu_content>
+    </.dropdown_menu>
+  </div>
+</div>

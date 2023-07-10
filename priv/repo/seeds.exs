@@ -18,17 +18,17 @@
 #   %{
 #     name: "Page",
 #     key: "page",
-#     image_settings: %{},
-#     field_defs: [],
+#     github_config: %{},
+#     frontmatter_schema: [],
 #     anchor_field: :title,
 #     project_id: project.id
 #   },
 #   %{
 #     name: "Post",
 #     key: "post",
-#     image_settings: %{},
+#     github_config: %{},
 #     project_id: project.id,
-#     field_defs: [
+#     frontmatter_schema: [
 #       %{
 #         name: "title",
 #         key: "title",
@@ -88,24 +88,23 @@
 # end)
 
 # create admin
-OrangeCms.Accounts.User
-|> Ash.Changeset.for_create(:register_with_password, %{
-  # first_name: "Supper",
-  # last_name: "admin",
+alias OrangeCms.Accounts.User
+
+%User{}
+|> OrangeCms.Accounts.change_user(%{
+  first_name: "Supper",
+  last_name: "admin",
   email: "admin@example.com",
-  password: "123123123",
-  password_confirmation: "123123123"
+  password: "123123123"
 })
-|> Ash.Changeset.force_change_attribute(:is_admin, true)
-|> OrangeCms.Accounts.create!(authorize?: false)
+|> Ecto.Changeset.change(%{is_admin: true})
+|> OrangeCms.Repo.insert!()
 
 Enum.map(1..10, fn i ->
-  OrangeCms.Accounts.User
-  |> Ash.Changeset.for_create(:create, %{
+  OrangeCms.Accounts.register_user(%{
     first_name: "Demo #{i}",
     last_name: "User",
     email: "demo#{i}@example.com",
     password: "123123123"
   })
-  |> OrangeCms.Accounts.create!(authorize?: false)
 end)

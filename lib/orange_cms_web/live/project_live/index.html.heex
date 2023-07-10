@@ -1,31 +1,54 @@
 <.header>
-    Listing Projects
-    <:actions>
-        <.link patch={~p"/p/new"}>
-            <.button class="btn btn-md btn-secondary"> <Heroicons.plus class="w-5 h-5" /> New project</.button>
-        </.link>
-    </:actions>
+  All Projects
+  <:actions>
+    <.link patch={~p"/p/new"}>
+      <.button>
+        <Heroicons.plus class="w-5 h-5" /> New project
+      </.button>
+    </.link>
+  </:actions>
 </.header>
 
-<div class="grid grid-cols-4 gap-4 mt-5">
-    <div class="card bg-base-100 shadow-xl border hover:bg-base-200" :for={{_id, project} <- @streams.projects} >
-        <div class="card-body">
-          <.link navigate={~p"/p/#{project.id}"} class="flex flex-row">
-            <div class="avatar placeholder">
-                <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
-                    <span class="text-3xl"><%= String.at(project.name, 0) %></span>
-                </div>
-            </div>
-
-            <div class="flex-1 ml-3">
-                <div class="font-bold"><%= project.name %></div>
-                <span class="text-sm"><%= project.type %></span>
-            </div>
-            </.link>
-        </div>
-    </div>
+<div
+  :if={Enum.count(@streams.projects) == 0}
+  class="w-full max-w-2xl min-h-[275px] bg-accent mx-auto mt-24 flex flex-col items-center justify-center rounded-lg p-20"
+>
+  <Heroicons.fire class="h-20 w-20" />
+  <h3 class="text-xl">Welcome to OrangeCMS</h3>
+  <p class="text-muted-foreground">Let create your first project!</p>
+  <div>
+    <.link patch={~p"/p/new"}>
+      <.button icon="rocket-launch" class="mt-5">Create now</.button>
+    </.link>
+  </div>
 </div>
 
-<.modal :if={@live_action in [:new, :edit]} id="project-modal" show on_cancel={JS.navigate(~p"/p")}>
-    <.live_component module={OrangeCmsWeb.ProjectLive.FormComponent} id={@project.id || :new} title={@page_title} action={@live_action} project={@project} patch={~p"/p"} />
-</.modal>
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-10" phx-update="stream" id="project-list">
+  <.card :for={{id, project} <- @streams.projects} class="hover:bg-secondary" id={id}>
+    <.link navigate={~p"/p/#{project.id}"}>
+      <.card_header class="pb-2">
+        <.card_title class="text-2xl font-bold">
+          <%= project.name %>
+        </.card_title>
+      </.card_header>
+      <.card_content>
+        <div class="text-sm font-medium"><%= project.type %></div>
+      </.card_content>
+    </.link>
+  </.card>
+</div>
+
+<.dialog :if={@live_action in [:new, :edit]} id="pro-dialog" show on_cancel={JS.navigate(~p"/p")}>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title><%= @page_title %></.dialog_title>
+      <.dialog_description>Let create an awesome project</.dialog_description>
+    </.dialog_header>
+    <.live_component
+      module={OrangeCmsWeb.ProjectLive.FormComponent}
+      id={@project.id || :new}
+      action={@live_action}
+      project={@project}
+    />
+  </.dialog_content>
+</.dialog>

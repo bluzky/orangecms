@@ -26,6 +26,7 @@ import { initEditor } from "./editor";
 import { toMarkdown } from "./to_markdown";
 import { debounce } from "./utils";
 import { FileUpload } from "./fileUpload";
+import componentHooks from "./componentHooks";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -33,6 +34,7 @@ let csrfToken = document
 
 // phoenix hooks
 const Hooks = {
+  ...componentHooks,
   MdEditor: {
     mounted() {
       const autoSave = debounce((editor, textarea) => {

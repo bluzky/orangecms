@@ -1,57 +1,68 @@
-<div class="p-6 bg-white rounded-xl drop-shadow-lg">
-<.header>
-  Listing Users
-  <:actions>
-    <.link patch={~p"/users/new"}>
-      <.button>New User</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="p-6">
+  <.header>
+    Users
+    <:actions>
+      <.link patch={~p"/users/new"}>
+        <.button>
+          <Heroicons.user_plus class="w-5 h-5" /> Add User
+        </.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<.table
-  id="users"
-  rows={@streams.users}
-  row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}") end}
->
-  <:col :let={{_id, _user}} label="Avatar">
-      <div class="avatar placeholder">
-        <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
-          <span class="text-3xl">K</span>
-        </div>
-      </div>
-</:col>
-  <:col :let={{_id, user}} label="First name"><%= user.first_name %></:col>
-  <:col :let={{_id, user}} label="Last name"><%= user.last_name %></:col>
-  <:col :let={{_id, user}} label="Email"><%= user.email %></:col>
-  <:action :let={{_id, user}}>
-    <div class="sr-only">
-      <.link navigate={~p"/users/#{user}"}>Show</.link>
-    </div>
-    <.link :if={user.id != @current_user.id} patch={~p"/users/#{user}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, user}} >
-    <.link
-      :if={user.id != @current_user.id}
-      phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table>
+  <.stable class="mt-10">
+    <.table_header>
+      <.table_row>
+        <.table_head>First Name</.table_head>
+        <.table_head>Last Name</.table_head>
+        <.table_head>Email</.table_head>
+        <.table_head class="text-right">Action</.table_head>
+      </.table_row>
+    </.table_header>
+    <.table_body phx-update="stream" id="user-table">
+      <.table_row :for={{id, user} <- @streams.users} id={id}>
+        <.table_cell class="font-medium"><%= user.first_name %></.table_cell>
+        <.table_cell><%= user.last_name %></.table_cell>
+        <.table_cell><%= user.email %></.table_cell>
+        <.table_cell class="text-right">
+          <.link
+            :if={user.id != @current_user.id}
+            patch={~p"/users/#{user}/edit"}
+            class="btn-action"
+          >
+            <Heroicons.pencil_square class="w-4 h-4" /> Edit
+          </.link>
+
+          <.link
+            :if={user.id != @current_user.id}
+            phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
+            data-confirm="Are you sure?"
+            class="btn-action"
+          >
+            <Heroicons.x_mark class="w-4 h-4" /> Delete
+          </.link>
+        </.table_cell>
+      </.table_row>
+    </.table_body>
+  </.stable>
 </div>
-<.modal
+<.dialog
   :if={@live_action in [:new, :edit]}
   id="user-modal"
   show
   on_cancel={JS.navigate(~p"/users")}
 >
-  <.live_component
-    module={OrangeCmsWeb.UserLive.FormComponent}
-    id={@user.id || :new}
-    title={@page_title}
-    action={@live_action}
-    user={@user}
-    patch={~p"/users"}
-  />
-</.modal>
+  <.dialog_header>
+    <.dialog_title><%= @page_title %></.dialog_title>
+  </.dialog_header>
+
+  <.dialog_content>
+    <.live_component
+      module={OrangeCmsWeb.UserLive.FormComponent}
+      id={@user.id || :new}
+      action={@live_action}
+      user={@user}
+      patch={~p"/users"}
+    />
+  </.dialog_content>
+</.dialog>
