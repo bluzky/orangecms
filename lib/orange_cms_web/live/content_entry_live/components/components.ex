@@ -1,6 +1,6 @@
 defmodule OrangeCmsWeb.ContentEntryLive.Components do
   @moduledoc false
-  use Phoenix.Component
+  use OrangeCmsWeb, :html
 
   alias OrangeCms.Content.FieldDef
 
@@ -20,14 +20,19 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
   attr :rest, :global
 
   def schema_field(%{field: field} = assigns) do
-    assigns
-    |> assign(
-      id: field.key,
-      label: field.name || field.key,
-      type: field.type,
-      name: field_name(field, assigns.data.options)
-    )
-    |> render_input()
+    assigns =
+      assign(assigns,
+        id: field.key,
+        type: field.type,
+        name: field_name(field, assigns.data.options)
+      )
+
+    ~H"""
+    <.form_item>
+      <.form_label class="font-bold"><%= @field.name || @field.key %></.form_label>
+      <.render_input {assigns} />
+    </.form_item>
+    """
   end
 
   attr :field, FieldDef, required: false
@@ -68,20 +73,16 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     assigns = assign(assigns, value: value, options: field.options)
 
     ~H"""
-    <div class="form-control">
-      <OrangeCmsWeb.CoreComponents.label for={@id}><%= @label %></OrangeCmsWeb.CoreComponents.label>
-      <div class="flex flex-wrap gap-x-6 gap-y-3">
-        <label :for={item <- @options} {[for: item]} class="flex gap-2">
-          <input
-            type="checkbox"
-            class="checkbox"
-            {[ name: @name, id: item, value: item, checked: Enum.member?(@value, item)]}
-          />
-
-          <span class="text-sm">
-            <%= item %>
-          </span>
-        </label>
+    <div class="flex flex-wrap gap-x-6 gap-y-3">
+      <div :for={item <- @options} {[for: item]} class="flex gap-2">
+        <input
+          type="checkbox"
+          class="checkbox"
+          {[ name: @name, id: item, value: item, checked: Enum.member?(@value, item)]}
+        />
+        <.label for={item}>
+          <%= item %>
+        </.label>
       </div>
     </div>
     """
@@ -96,39 +97,32 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
     assigns = assign(assigns, :preview_url, preview_url)
 
     ~H"""
-    <div>
-      <label class="block text-xs font-medium text-gray-700">
-        <%= @label %>
-      </label>
-      <div class="form-control">
-        <div class="input-group input-group-sm" phx-update="ignore" {[id: "upload-wrapper-" <> @id ]}>
-          <input
-            type="text"
-            {[for: @id]}
-            {[id: @id, value: @value, name: @name]}
-            placeholder="paste image link or select image to upload"
-            class="input input-sm flex-1"
-          />
-          <input
-            type="file"
-            class="hidden"
-            accept="image/*"
-            {[id: @id <> "upload"]}
-            phx-hook="FileUpload"
-            {["data-target": @id, "data-preview": @id <> "-preview", "data-upload-path": "/api/upload_image/#{@data.entry.project_id}/#{@data.entry.content_type_id}",
+    <div class="input-group input-group-sm" phx-update="ignore" {[id: "upload-wrapper-" <> @id ]}>
+      <input
+        type="text"
+        {[for: @id]}
+        {[id: @id, value: @value, name: @name]}
+        placeholder="paste image link or select image to upload"
+        class="input input-sm flex-1"
+      />
+      <input
+        type="file"
+        class="hidden"
+        accept="image/*"
+        {[id: @id <> "upload"]}
+        phx-hook="FileUpload"
+        {["data-target": @id, "data-preview": @id <> "-preview", "data-upload-path": "/api/upload_image/#{@data.entry.project_id}/#{@data.entry.content_type_id}",
               "data-error-display": @id <> "-error"]}
-          />
-          <label class="btn btn-sm btn-square" {[for: @id <> "upload"]}>
-            <Heroicons.arrow_up_tray class="w-4 h-4" />
-          </label>
-        </div>
-        <label class="label">
-          <span class="label-text-alt text-red-500" {[id: @id <> "-error"]}></span>
-        </label>
-        <div class="w-full h-24 border border-dashed flex items-center justify-center text-gray-300 overflow-hidden">
-          <img {[id: @id <> "-preview", src: @preview_url]} alt="image preview" />
-        </div>
-      </div>
+      />
+      <label class="btn btn-sm btn-square" {[for: @id <> "upload"]}>
+        <Heroicons.arrow_up_tray class="w-4 h-4" />
+      </label>
+    </div>
+    <label class="label">
+      <span class="label-text-alt text-red-500" {[id: @id <> "-error"]}></span>
+    </label>
+    <div class="w-full h-24 border border-dashed flex items-center justify-center text-gray-300 overflow-hidden">
+      <img {[id: @id <> "-preview", src: @preview_url]} alt="image preview" />
     </div>
     """
   end

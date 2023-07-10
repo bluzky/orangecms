@@ -418,7 +418,9 @@ defmodule OrangeCmsWeb.CoreComponents do
   @doc """
   Renders a label.
   """
+
   attr(:for, :string, default: nil)
+  attr :class, :string, default: nil
   attr(:helper, :any, default: [])
   slot(:inner_block, required: true)
 
@@ -426,7 +428,10 @@ defmodule OrangeCmsWeb.CoreComponents do
     ~H"""
     <label
       for={@for}
-      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      class={[
+        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        @class
+      ]}
     >
       <%= render_slot(@inner_block) %>
 
