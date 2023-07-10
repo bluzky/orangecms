@@ -34,7 +34,7 @@
             <.table_row :for={{id, entry} <- @streams.content_entries} id={id}>
               <.table_cell class="font-medium"><%= "1" %></.table_cell>
               <.table_cell><%= entry.title %></.table_cell>
-              <.table_cell><%= entry.project_id %></.table_cell>
+              <.table_cell><%= 000 %></.table_cell>
               <.table_cell class="text-right">
                 <.link
                   navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")}

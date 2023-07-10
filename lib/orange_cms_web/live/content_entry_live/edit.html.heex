@@ -1,163 +1,168 @@
-<!--
-    This component uses @tailwindcss/forms
-
-    yarn add @tailwindcss/forms
-    npm install @tailwindcss/forms
-
-    plugins: [require('@tailwindcss/forms')]
-  -->
-<div class="-m-6 bg-stone-50">
+<div class="p-6">
   <.form :let={f} for={@form} phx-submit="save" phx-change="autosave" class="space-y-4">
-    <div class="grid grid-cols-12 gap-4 h-screen max-h-screen">
-      <div class="col-span-3 p-8 pt-16 edit-sidebar max-h-screen overflow-y-auto">
-        <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
-        <div>
-          <div :for={field_def <- @content_type.frontmatter_schema} class="mb-4">
-            <.schema_field
-              field={field_def}
-              value={frontmatter[field_def.key]}
-              data={%{options: [prefix: "frontmatter"], entry: @content_entry}}
-              phx-debounce="blur"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="col-span-8 edit-content grid grid-col-12 relative overflow-y-auto"
-        style="grid-template-rows: auto 1fr auto;"
-      >
-        <div class="px-4 pt-8">
-          <h2 class="text-3xl font-medium"><%= f[:title].value %></h2>
-          <div class="mt-2">
-            <span
-              class="p-1 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
-              phx-click={
-                toggle_class("hidden", to: ".edit-sidebar")
-                |> toggle_class("col-start-3", to: ".edit-content")
-              }
-            >
+    <div class="max-w-4xl mx-auto">
+      <div class="p-5">
+        <h2 class="text-6xl font-medium"><%= f[:title].value %></h2>
+        <.sheet class="mt-2">
+          <.sheet_trigger target="frontmatter">
+            <span class="p-1 px-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent hover:bg-accent cursor-pointer font-semibold text-sm">
               <Heroicons.adjustments_horizontal class="h-4 w-4" /> Edit frontmatter
             </span>
-          </div>
-        </div>
-        <div id="md-editor-container" class="min-h-full" phx-update="ignore">
-          <div style="display: none;">
-            <.input
-              type="textarea"
-              field={f[:body]}
-              class="hidden"
-              rows="30"
-              phx-hook="MdEditor"
-              phx-debounce="60000"
-              data-upload-path={~p"/api/upload_image/#{@current_project.id}/#{@content_type.id}"}
-              data-preview-path={
-                ~p"/assets/preview/#{@content_entry.project_id}/#{@content_entry.content_type_id}"
-              }
-            />
-          </div>
+          </.sheet_trigger>
+          <.sheet_content id="frontmatter" side="left">
+            <.sheet_header>
+              <.sheet_title>Edit frontmatter</.sheet_title>
+              <.sheet_description>
+                Make changes to your frontmatter here. Click save when you're done.
+              </.sheet_description>
+            </.sheet_header>
 
-          <div
-            class="editor-menu rounded-lg bg-base-content text-base-100 p-2"
-            style="visibility: visible;"
-          >
-            <div class="flex gap-0.5">
-              <span
-                class="btn btn-square btn-ghost btn-sm font-bold"
-                role="menu-item"
-                data-command="bold"
-              >
-                <Lucideicons.bold class="w-4 h-4" />
-              </span>
-              <span
-                class="btn btn-square btn-ghost btn-sm italic"
-                role="menu-item"
-                data-command="italic"
-              >
-                <Lucideicons.italic class="w-4 h-4" />
-              </span>
-              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="strike">
-                <Lucideicons.strikethrough class="w-4 h-4" />
-              </span>
-              <div class="divider divider-horizontal mx-0"></div>
-              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="link">
-                <Lucideicons.link class="w-4 h-4" />
-              </span>
-              <span
-                class="btn btn-square btn-ghost btn-sm hidden"
-                role="menu-item"
-                data-command="unlink"
-              >
-                <Lucideicons.unlink class="w-4 h-4" />
-              </span>
-              <span
-                class="btn btn-square btn-ghost btn-sm"
-                role="menu-item"
-                data-command="blockquote"
-              >
-                <Lucideicons.quote class="w-4 h-4" />
-              </span>
-              <span
-                class="btn btn-square btn-ghost btn-sm"
-                role="menu-item"
-                data-command="codeBlock"
-              >
-                <Lucideicons.code class="w-4 h-4" />
-              </span>
-              <div class="divider divider-horizontal mx-0"></div>
-              <span
-                class="btn btn-square btn-ghost btn-sm"
-                role="menu-item"
-                data-command="bulletList"
-              >
-                <Lucideicons.list class="w-5 h-5" />
-              </span>
-              <span
-                class="btn btn-square btn-ghost btn-sm"
-                role="menu-item"
-                data-command="orderedList"
-              >
-                <Lucideicons.list_ordered class="w-5 h-5" />
-              </span>
-
-              <div class="divider divider-horizontal mx-0"></div>
-              <span
-                class="btn btn-square btn-ghost btn-sm"
-                role="menu-item"
-                data-command="paragraph"
-              >
-                <Lucideicons.pilcrow class="w-4 h-4" />
-              </span>
-              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h1">
-                <Lucideicons.heading_1 class="w-5 h-5" />
-              </span>
-              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h2">
-                <Lucideicons.heading_2 class="w-5 h-5" />
-              </span>
-              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h3">
-                <Lucideicons.heading_3 class="w-5 h-5" />
-              </span>
-              <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h4">
-                <Lucideicons.heading_4 class="w-5 h-5" />
-              </span>
-            </div>
-            <div class="">
-              <div class="link-form flex gap-1 p-2 hidden">
-                <input type="text" placeholder="Past your link here" class="input input-sm" />
-                <!-- <span class="btn btn-ghost btn-sm gap-1 bg-white"><Heroicons.check class="w-5 h-5 text-success" /> Add</span> -->
-        <!-- <span class="btn btn-square btn-outline btn-sm"><Heroicons.x_mark class="w-4 h-4" /></span> -->
+            <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
+            <div class="mt-6">
+              <div :for={field_def <- @content_type.frontmatter_schema} class="mb-4">
+                <.schema_field
+                  field={field_def}
+                  value={frontmatter[field_def.key]}
+                  data={%{options: [prefix: "frontmatter"], entry: @content_entry}}
+                  phx-debounce="blur"
+                />
               </div>
             </div>
-          </div>
-          <div class="" id="editor"></div>
+
+            <.sheet_footer>
+              <.sheet_close target="frontmatter">
+                <.button type="button">Save changes</.button>
+              </.sheet_close>
+            </.sheet_footer>
+
+            <:custom_close_btn>
+              <.sheet_close target="frontmatter" class="absolute right-0 top-16">
+                <.button type="button" variant="secondary" class="rounded-r-full translate-x-full">
+                  <Heroicons.x_mark class="w-5 h-5" />
+                </.button>
+              </.sheet_close>
+            </:custom_close_btn>
+          </.sheet_content>
+        </.sheet>
+      </div>
+
+      <div id="md-editor-container" class="min-h-full" phx-update="ignore">
+        <div style="display: none;">
+          <.input
+            type="textarea"
+            field={f[:body]}
+            class="hidden"
+            rows="30"
+            phx-hook="MdEditor"
+            phx-debounce="60000"
+            data-upload-path={~p"/api/upload_image/#{@current_project.id}/#{@content_type.id}"}
+            data-preview-path={
+              ~p"/assets/preview/#{@content_entry.project_id}/#{@content_entry.content_type_id}"
+            }
+          />
         </div>
 
-        <div class="my-4 fixed bottom-0 left-0 right-0 grid grid-col-12 ">
-          <div class="col-start-3">
-            <.button type="submit" class="btn-secondary btn-md" icon="arrow-up-on-square">
-              Publish
-            </.button>
+        <div
+          class="editor-menu rounded-lg bg-base-content text-base-100 p-2"
+          style="visibility: visible;"
+        >
+          <div class="flex gap-0.5">
+            <span
+              class="btn btn-square btn-ghost btn-sm font-bold"
+              role="menu-item"
+              data-command="bold"
+            >
+              <Lucideicons.bold class="w-4 h-4" />
+            </span>
+            <span
+              class="btn btn-square btn-ghost btn-sm italic"
+              role="menu-item"
+              data-command="italic"
+            >
+              <Lucideicons.italic class="w-4 h-4" />
+            </span>
+            <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="strike">
+              <Lucideicons.strikethrough class="w-4 h-4" />
+            </span>
+            <div class="divider divider-horizontal mx-0"></div>
+            <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="link">
+              <Lucideicons.link class="w-4 h-4" />
+            </span>
+            <span
+              class="btn btn-square btn-ghost btn-sm hidden"
+              role="menu-item"
+              data-command="unlink"
+            >
+              <Lucideicons.unlink class="w-4 h-4" />
+            </span>
+            <span
+              class="btn btn-square btn-ghost btn-sm"
+              role="menu-item"
+              data-command="blockquote"
+            >
+              <Lucideicons.quote class="w-4 h-4" />
+            </span>
+            <span
+              class="btn btn-square btn-ghost btn-sm"
+              role="menu-item"
+              data-command="codeBlock"
+            >
+              <Lucideicons.code class="w-4 h-4" />
+            </span>
+            <div class="divider divider-horizontal mx-0"></div>
+            <span
+              class="btn btn-square btn-ghost btn-sm"
+              role="menu-item"
+              data-command="bulletList"
+            >
+              <Lucideicons.list class="w-5 h-5" />
+            </span>
+            <span
+              class="btn btn-square btn-ghost btn-sm"
+              role="menu-item"
+              data-command="orderedList"
+            >
+              <Lucideicons.list_ordered class="w-5 h-5" />
+            </span>
+
+            <div class="divider divider-horizontal mx-0"></div>
+            <span
+              class="btn btn-square btn-ghost btn-sm"
+              role="menu-item"
+              data-command="paragraph"
+            >
+              <Lucideicons.pilcrow class="w-4 h-4" />
+            </span>
+            <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h1">
+              <Lucideicons.heading_1 class="w-5 h-5" />
+            </span>
+            <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h2">
+              <Lucideicons.heading_2 class="w-5 h-5" />
+            </span>
+            <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h3">
+              <Lucideicons.heading_3 class="w-5 h-5" />
+            </span>
+            <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h4">
+              <Lucideicons.heading_4 class="w-5 h-5" />
+            </span>
+          </div>
+          <div class="">
+            <div class="link-form flex gap-1 p-2 hidden">
+              <input type="text" placeholder="Past your link here" class="input input-sm" />
+              <!-- <span class="btn btn-ghost btn-sm gap-1 bg-white"><Heroicons.check class="w-5 h-5 text-success" /> Add</span> -->
+        <!-- <span class="btn btn-square btn-outline btn-sm"><Heroicons.x_mark class="w-4 h-4" /></span> -->
+            </div>
           </div>
         </div>
+        <div class="" id="editor"></div>
+      </div>
+    </div>
+
+    <div class="my-4 fixed bottom-0 left-0 right-0 grid grid-col-12 ">
+      <div class="col-start-3">
+        <.button type="submit" class="btn-secondary btn-md" icon="arrow-up-on-square">
+          Publish
+        </.button>
       </div>
     </div>
   </.form>

@@ -19,4 +19,19 @@ defmodule OrangeCmsWeb.Components.ComponentHelpers do
   def prepare_assign(assigns) do
     assigns
   end
+
+  @doc """
+  Generate a unique id for a component with given prefix
+
+  Options:
+
+      * `:prefix` - prefix for the generated id
+  """
+  def generate_id(opts \\ []) do
+    999_999
+    |> :rand.uniform()
+    |> to_string()
+    |> Base.encode32(case: :lower, padding: false)
+    |> String.replace_prefix("", opts[:prefix] || "")
+  end
 end
