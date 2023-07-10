@@ -1,6 +1,6 @@
 defmodule OrangeCmsWeb.Components.Tabs do
   @moduledoc """
-  Implement of tabs components from https://ui.shadcn.com/docs/components/tabs
+  Implement of card components from https://ui.shadcn.com/docs/components/card
 
 
   ## Example:
