@@ -1,9 +1,19 @@
 <div class="p-6">
   <.form :let={f} for={@form} phx-submit="save" phx-change="autosave" class="space-y-4">
+    <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) || %{} %>
+
     <div class="max-w-4xl mx-auto">
       <div class="p-5">
-        <h2 class="text-6xl font-medium"><%= f[:title].value %></h2>
-        <.sheet class="mt-2">
+        <h2 class="text-6xl font-medium">
+          <Input.input
+            field={f[:title]}
+            phx-debounce="blur"
+            placeholder="Your post title"
+            class="w-full text-4xl px-8 py-6 border-0 bg-muted/80"
+          />
+        </h2>
+
+        <.sheet class="mt-4 inline-block">
           <.sheet_trigger target="frontmatter">
             <span class="p-1 px-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent hover:bg-accent cursor-pointer font-semibold text-sm">
               <Heroicons.adjustments_horizontal class="h-4 w-4" /> Edit frontmatter
@@ -17,8 +27,7 @@
               </.sheet_description>
             </.sheet_header>
 
-            <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) %>
-            <div class="mt-6">
+            <div class="mt-6 space-y-4">
               <div :for={field_def <- @content_type.frontmatter_schema} class="mb-4">
                 <.schema_field
                   field={field_def}
@@ -158,9 +167,9 @@
       </div>
     </div>
 
-    <div class="my-4 fixed bottom-0 left-0 right-0 grid grid-col-12 ">
+    <div class="my-4 fixed bottom-4 left-0 right-0 grid grid-col-12 ">
       <div class="col-start-3">
-        <.button type="submit" class="btn-secondary btn-md" icon="arrow-up-on-square">
+        <.button type="submit" icon="arrow-up-on-square">
           Publish
         </.button>
       </div>

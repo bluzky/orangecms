@@ -44,7 +44,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
   alias Phoenix.LiveView.JS
 
   attr :show, :boolean, default: false, doc: "Show the sheet on mount"
-  attr :class, :string, default: nil
+  attr :class, :string, default: "inline-block"
   slot :inner_block, required: true
 
   def sheet(assigns) do
