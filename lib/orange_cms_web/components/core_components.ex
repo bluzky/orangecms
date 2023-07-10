@@ -252,7 +252,14 @@ defmodule OrangeCmsWeb.CoreComponents do
   """
   attr(:type, :string, default: nil)
   attr(:class, :string, default: nil)
-  attr(:variant, :string, default: "primary")
+
+  attr(:variant, :string,
+    values: ~w(primary secondary destructive outline ghost link),
+    default: "primary",
+    doc: "the button variant style"
+  )
+
+  attr(:size, :string, values: ~w(default sm lg icon), default: "default")
   attr(:icon, :string, default: nil)
   attr(:icon_right, :string, default: nil)
   attr(:rest, :global, include: ~w(disabled form name value))
@@ -267,14 +274,26 @@ defmodule OrangeCmsWeb.CoreComponents do
     "ghost" => "hover:bg-accent hover:text-accent-foreground",
     "link" => "text-primary underline-offset-4 hover:underline"
   }
-  def button(assigns) do
-    assigns = assign(assigns, :variant_class, @button_variants[assigns.variant])
+
+  @button_sizes %{
+    "default" => "h-10 px-4 py-2",
+    "sm" => "h-9 rounded-md px-3",
+    "lg" => "h-11 rounded-md px-8",
+    "icon" => "h-10 w-10"
+  }
+  def(button(assigns)) do
+    assigns =
+      assigns
+      |> assign(:variant_class, @button_variants[assigns.variant])
+      |> assign(:size_class, @button_sizes[assigns.size])
 
     ~H"""
     <button
       type={@type}
       class={[
-        "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 shadow h-9 px-4 py-2 #{@variant_class}",
+        "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+        @variant_class,
+        @size_class,
         "gap-1",
         "phx-submit-loading:opacity-75 btn",
         @class
