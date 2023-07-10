@@ -7,7 +7,7 @@ defmodule OrangeCms.Projects.Project do
     field(:code, :string, autogenerate: {OrangeCms.Shared.Nanoid, :generate, []})
     field(:type, Ecto.Enum, values: [:github, :headless_cms], default: :github)
     field(:setup_completed, :boolean, default: false)
-    embeds_one(:github_config, OrangeCms.Projects.Project.GithubConfig, on_replace: :update)
+    embeds_one(:github_config, OrangeCms.Projects.Project.GithubConfig, on_replace: :delete)
     belongs_to(:owner, OrangeCms.Accounts.User)
     has_many(:project_members, OrangeCms.Projects.ProjectMember)
 
