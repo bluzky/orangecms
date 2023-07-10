@@ -488,6 +488,21 @@ defmodule OrangeCmsWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders a page content wrapper
+  """
+  attr(:class, :string, default: nil)
+
+  slot(:inner_block, required: true)
+
+  def page(assigns) do
+    ~H"""
+    <div class={["p-8", @class]}>
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
+
   @doc ~S"""
   Renders a table with generic styling.
 

@@ -1,7 +1,28 @@
-<div class="p-6 bg-white rounded-xl drop-shadow-lg">
+<.page>
   <.header>
     Content type: <%= @content_type.name %>
   </.header>
+
+  <.tabs default="account" id="settings" class="w-[400px]">
+    <.tabs_list class="grid w-full grid-cols-2">
+      <.tabs_trigger root="settings" value="account">account</.tabs_trigger>
+      <.tabs_trigger root="settings" value="password">password</.tabs_trigger>
+    </.tabs_list>
+    <.tabs_content value="account">
+      <.card>
+        <.card_content class="p-6">
+          Account
+        </.card_content>
+      </.card>
+    </.tabs_content>
+    <.tabs_content value="password">
+      <.card>
+        <.card_content class="p-6">
+          Password
+        </.card_content>
+      </.card>
+    </.tabs_content>
+  </.tabs>
 
   <div class="tabs mt-6" id="tab-header">
     <a href="#" class="tab tab-active" id="general-hd" phx-click={switch_tab("#general")}>
@@ -189,5 +210,5 @@
       </div>
     </div>
   </div>
-</div>
-<.back navigate={scoped_path(assigns, "/content_types")}>Back to content_types</.back>
+  <.back navigate={scoped_path(assigns, "/content_types")}>Back to content_types</.back>
+</.page>

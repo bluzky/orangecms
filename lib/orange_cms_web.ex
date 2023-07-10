@@ -95,6 +95,7 @@ defmodule OrangeCmsWeb do
       import OrangeCmsWeb.Components.Select
       import OrangeCmsWeb.Components.Sheet
       import OrangeCmsWeb.Components.Table
+      import OrangeCmsWeb.Components.Tabs
       import OrangeCmsWeb.Components.Tooltip
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext

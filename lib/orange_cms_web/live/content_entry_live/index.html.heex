@@ -28,7 +28,7 @@
               <.table_head class="text-right">Action</.table_head>
             </.table_row>
           </.table_header>
-          <.table_body>
+          <.table_body phx-update="stream">
             <.table_row :for={{id, entry} <- @streams.content_entries} id={id}>
               <.table_cell>
                 <.link navigate={

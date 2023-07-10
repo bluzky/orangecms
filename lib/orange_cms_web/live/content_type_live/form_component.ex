@@ -8,24 +8,31 @@ defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage content_type records in your database.</:subtitle>
-      </.header>
-
-      <.simple_form
+      <.form
         for={@form}
         id="content_type-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
+        class="space-y-6"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:key]} type="text" label="Key" />
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Content type</.button>
-        </:actions>
-      </.simple_form>
+        <.form_item field={@form[:name]} label="Name">
+          <Input.input field={@form[:name]} placeholder="eg: Post" />
+        </.form_item>
+        <.form_item
+          field={@form[:key]}
+          label="Key"
+          description="A key used to query content collection via API. It must be unique within project"
+        >
+          <Input.input field={@form[:key]} placeholder="eg: blog-post" />
+        </.form_item>
+
+        <div class="w-full flex flex-row-reverse">
+          <.button icon_right="arrow-right" phx-disable-with="Checking...">
+            Next
+          </.button>
+        </div>
+      </.form>
     </div>
     """
   end
@@ -46,6 +53,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
       socket.assigns.content_type
       |> Content.change_content_type(params)
       |> Map.put(:action, :validate)
+      |> IO.inspect()
 
     {:noreply, assign_form(socket, changeset)}
   end
