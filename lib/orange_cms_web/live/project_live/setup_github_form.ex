@@ -131,7 +131,7 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
            {:validate_repo_name, Enum.find(repositories, &(&1["full_name"] == github_config.repo_full_name))},
          {:ok, project} <-
            Projects.update_project(socket.assigns.project, %{
-             github_config: github_config,
+             github_config: Map.from_struct(github_config),
              setup_completed: true
            }) do
       notify_parent({:saved, project})
