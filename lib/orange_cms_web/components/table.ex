@@ -27,7 +27,7 @@ defmodule OrangeCmsWeb.Components.Table do
            <.table_cell class="text-right">
              <.link
                navigate={scoped_path(assigns, "/content/\#{@content_type.key}/\#{entry.id}")}
-               class="action-btn"
+               class="btn-action"
              >
                <Heroicons.pencil_square class="w-4 h-4" /> Edit
              </.link>
@@ -35,7 +35,7 @@ defmodule OrangeCmsWeb.Components.Table do
              <.link
                phx-click={JS.push("delete", value: %{id: entry.id})}
                data-confirm="Are you sure?"
-               class="action-btn"
+               class="btn-action"
              >
                <Heroicons.x_mark class="w-4 h-4 text-error" /> Delete
              </.link>

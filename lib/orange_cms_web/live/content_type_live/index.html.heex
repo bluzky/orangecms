@@ -1,4 +1,4 @@
-<div class="p-6 bg-white rounded-xl drop-shadow-lg">
+<.page>
   <.header>
     Content types
     <:actions>
@@ -8,59 +8,65 @@
     </:actions>
   </.header>
 
-  <.table
-    id="content_types"
-    rows={@streams.content_types}
-    row_click={
-      fn {_id, content_type} ->
-        JS.navigate(scoped_path(assigns, "/content_types/#{content_type.id}"))
-      end
-    }
-  >
-    <:col :let={{_id, content_type}} label="Name"><%= content_type.name %></:col>
-    <:col :let={{_id, content_type}} label="Key"><%= content_type.key %></:col>
-    <:col :let={{_id, content_type}} label="Anchor field"><%= content_type.anchor_field %></:col>
-    <:action :let={{_id, content_type}}>
-      <div class="sr-only">
-        <.link
-          navigate={scoped_path(assigns, "/content_types/#{content_type.id}")}
-          class="action-btn"
-        >
-          Show
-        </.link>
-      </div>
-      <.link
-        navigate={scoped_path(assigns, "/content_types/#{content_type.id}")}
-        class="action-btn"
+  <.stable id="content_types">
+    <.table_header>
+      <.table_row>
+        <.table_head>#</.table_head>
+        <.table_head>Name</.table_head>
+        <.table_head>Key</.table_head>
+        <.table_head class="text-right">Action</.table_head>
+      </.table_row>
+    </.table_header>
+    <.table_body phx-update="stream">
+      <.table_row
+        :for={{{id, entry}, idx} <- @streams.content_types |> Enum.with_index(1)}
+        id={id}
       >
-        <Heroicons.pencil_square class="w-4 h-4" />Edit
-      </.link>
-    </:action>
-    <:action :let={{id, content_type}}>
-      <.link
-        phx-click={JS.push("delete", value: %{id: content_type.id}) |> hide("##{id}")}
-        data-confirm="Are you sure?"
-        class="action-btn"
-      >
-        <Heroicons.x_mark class="w-4 h-4 text-error" /> Delete
-      </.link>
-    </:action>
-  </.table>
-</div>
+        <.table_cell><%= idx %></.table_cell>
+        <.table_cell class="font-bold">
+          <.link navigate={scoped_path(assigns, "/content_types/#{entry.id}")}>
+            <%= entry.name %>
+          </.link>
+        </.table_cell>
+        <.table_cell><%= entry.key %></.table_cell>
+        <.table_cell class="text-right">
+          <.link navigate={scoped_path(assigns, "/content_types/#{entry.id}")} class="btn-action">
+            <Heroicons.pencil_square class="w-4 h-4" /> Edit
+          </.link>
 
-<.modal
+          <.link
+            phx-click={JS.push("delete", value: %{id: entry.id})}
+            data-confirm="Are you sure?"
+            class="btn-action"
+          >
+            <Heroicons.x_mark class="w-4 h-4" /> Delete
+          </.link>
+        </.table_cell>
+      </.table_row>
+    </.table_body>
+  </.stable>
+</.page>
+
+<.dialog
   :if={@live_action in [:new]}
   id="content_type-modal"
   show
   on_cancel={JS.navigate(scoped_path(assigns, "/content_types"))}
 >
-  <.live_component
-    module={OrangeCmsWeb.ContentTypeLive.FormComponent}
-    id={@content_type.id || :new}
-    title={@page_title}
-    action={@live_action}
-    content_type={@content_type}
-    current_project={@current_project}
-    patch={scoped_path(assigns, "/content_types")}
-  />
-</.modal>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title><%= @page_title %></.dialog_title>
+      <.dialog_description></.dialog_description>
+    </.dialog_header>
+
+    <.live_component
+      module={OrangeCmsWeb.ContentTypeLive.FormComponent}
+      id={@content_type.id || :new}
+      title={@page_title}
+      action={@live_action}
+      content_type={@content_type}
+      current_project={@current_project}
+      patch={scoped_path(assigns, "/content_types")}
+    />
+  </.dialog_content>
+</.dialog>

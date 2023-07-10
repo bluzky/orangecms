@@ -85,6 +85,7 @@ defmodule OrangeCmsWeb do
       # Core UI components and translation
       import OrangeCmsWeb.Components.Alert
       import OrangeCmsWeb.Components.Card
+      import OrangeCmsWeb.Components.Collapsible
       import OrangeCmsWeb.Components.Dialog
       import OrangeCmsWeb.Components.Display
       import OrangeCmsWeb.Components.DropdownMenu
@@ -95,6 +96,7 @@ defmodule OrangeCmsWeb do
       import OrangeCmsWeb.Components.Select
       import OrangeCmsWeb.Components.Sheet
       import OrangeCmsWeb.Components.Table
+      import OrangeCmsWeb.Components.Tabs
       import OrangeCmsWeb.Components.Tooltip
       import OrangeCmsWeb.CoreComponents
       import OrangeCmsWeb.Gettext

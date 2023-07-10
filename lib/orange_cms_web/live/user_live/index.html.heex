@@ -28,7 +28,7 @@
           <.link
             :if={user.id != @current_user.id}
             patch={~p"/users/#{user}/edit"}
-            class="action-btn"
+            class="btn-action"
           >
             <Heroicons.pencil_square class="w-4 h-4" /> Edit
           </.link>
@@ -37,7 +37,7 @@
             :if={user.id != @current_user.id}
             phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
             data-confirm="Are you sure?"
-            class="action-btn"
+            class="btn-action"
           >
             <Heroicons.x_mark class="w-4 h-4" /> Delete
           </.link>

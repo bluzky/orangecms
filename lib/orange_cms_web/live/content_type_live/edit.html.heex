@@ -1,193 +1,172 @@
-<div class="p-6 bg-white rounded-xl drop-shadow-lg">
-  <.header>
-    Content type: <%= @content_type.name %>
-  </.header>
+<.page>
+  <div class="max-w-2xl w-full mx-auto">
+    <.header>
+      Content types / <%= @content_type.name %>
+    </.header>
+    <.tabs default="frontmatter" id="settings" class="mt-8">
+      <.tabs_list class="grid grid-cols-3 gap-2">
+        <.tabs_trigger root="settings" value="general" class="hover:bg-background/60">
+          General
+        </.tabs_trigger>
+        <.tabs_trigger root="settings" value="image-settings" class="hover:bg-background/60">
+          Image settings
+        </.tabs_trigger>
+        <.tabs_trigger root="settings" value="frontmatter" class="hover:bg-background/60">
+          Frontmatter
+        </.tabs_trigger>
+      </.tabs_list>
+      <.tabs_content value="general" class="p-6">
+        <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+          <.form_item field={f[:name]} label="Name">
+            <Input.input type="text" field={f[:name]} placeholder="Name" />
+          </.form_item>
 
-  <div class="tabs mt-6" id="tab-header">
-    <a href="#" class="tab tab-active" id="general-hd" phx-click={switch_tab("#general")}>
-      General
-    </a>
+          <.form_item field={f[:key]} label="Key">
+            <Input.input type="text" field={f[:key]} placeholder="Key" />
+          </.form_item>
 
-    <a href="#" class="tab" id="image-settings-hd" phx-click={switch_tab("#image-settings")}>
-      Image settings
-    </a>
-
-    <a href="#" class="tab" id="frontmatter-hd" phx-click={switch_tab("#frontmatter")}>
-      Frontmatter
-    </a>
-  </div>
-
-  <div class="tab-content border-t">
-    <div id="general">
-      <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-6">
-            <.input
-              type="text"
-              field={f[:name]}
-              label="Name"
-              class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-              placeholder="Name"
-            />
-            <.input
-              type="text"
-              field={f[:key]}
-              label="Key"
-              class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-              placeholder="Key"
-            />
-
-            <.input
-              type="text"
-              field={f[:anchor_field]}
-              label="Anchor field"
-              class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-              placeholder="Anchor field"
-            />
-
-            <div class="flex mt-4">
-              <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
-                Save
-              </.button>
-            </div>
+          <div class="flex mt-4">
+            <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
+              Save
+            </.button>
           </div>
-        </div>
-      </.form>
-    </div>
+        </.form>
+      </.tabs_content>
 
-    <div id="image-settings" class="hidden">
-      <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-6">
-            <.inputs_for :let={field} field={f[:github_config]}>
-              <.input
-                type="text"
-                field={field[:upload_dir]}
-                label="Upload directory"
-                placeholder="Ex: /public/assets"
-              >
-                <:helper>Where you want to store images</:helper>
-              </.input>
-              <.input
-                type="text"
-                field={field[:serve_at]}
-                label="Serve at"
-                placeholder="Ex: /static"
-              >
-                <:helper>path where you want to serve images</:helper>
-              </.input>
+      <.tabs_content value="image-settings" class="p-6">
+        <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+          <.inputs_for :let={field} field={f[:github_config]}>
+            <.form_item
+              field={field[:upload_dir]}
+              label="Upload directory"
+              description="Where you want to store images"
+            >
+              <Input.input field={field[:upload_dir]} placeholder="Ex: /public/assets" />
+            </.form_item>
 
-              <.input
-                type="checkbox"
-                field={field[:use_raw_link]}
-                label="Use raw link"
-                placeholder="Ex: /static"
-              >
-                <:helper>
-                  Using raw file url <code>https://raw.githubcontent.xxxxx</code>
-                  instead of relative path to uploaded files
-                </:helper>
-              </.input>
-            </.inputs_for>
-            <div class="flex mt-4">
-              <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
-                Save
-              </.button>
-            </div>
+            <.form_item
+              field={field[:serve_at]}
+              label="Serve at"
+              description="path where you want to serve images"
+            >
+              <Input.input field={field[:serve_at]} placeholder="Ex: /static" />
+            </.form_item>
+
+            <.form_item>
+              <div>
+                <.checkbox field={field[:use_raw_link]} id="raw-link" />
+                <.form_label for="raw-link">Use raw link</.form_label>
+              </div>
+              <.form_description>
+                Using raw file url eg:
+                <code class="italic text-primary">https://raw.githubcontent.xxxxx</code>
+                instead of relative path to uploaded files
+              </.form_description>
+            </.form_item>
+          </.inputs_for>
+          <div class="flex mt-4">
+            <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
+              Save
+            </.button>
           </div>
-        </div>
-      </.form>
-    </div>
-
-    <div id="frontmatter" class="hidden">
-      <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-6">
-          <.form
-            :let={f}
-            for={@form}
-            phx-submit="save"
-            phx-change="validate"
-            class="space-y-4"
-            phx-hook="InitSorting"
-            id="schema-form"
-          >
-            <.inputs_for :let={field} field={f[:frontmatter_schema]}>
-              <details open={true} id={"wrap-#{field[:key].value}"} class="group">
-                <summary class="flex gap-2 cursor-pointer font-bold text-sm">
+        </.form>
+      </.tabs_content>
+      <.tabs_content value="frontmatter">
+        <.form
+          :let={f}
+          for={@form}
+          phx-submit="save"
+          phx-change="validate"
+          class="space-y-6 mt-6"
+          phx-hook="InitSorting"
+          id="schema-form"
+        >
+          <.inputs_for :let={field} field={f[:frontmatter_schema]}>
+            <% id = "wrap-#{field[:key].value}" %>
+            <.collapsible id={id} class="group">
+              <div class="flex gap-2 cursor-pointer font-bold text-sm">
+                <.collapsible_trigger root={id} class="flex-1 flex gap-2">
                   <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
                   <Heroicons.minus class="w-5 h-5 text-gray-400 transition duration-300 hidden group-open:block" />
-                  <span class="flex-1"><%= field[:name].value || field[:key].value %></span>
-                  <span class="btn btn-ghost btn-sm">
-                    <Heroicons.bars_2 class="w-4 h-4" />
-                  </span>
-                </summary>
+                  <span><%= field[:name].value || field[:key].value %></span>
+                </.collapsible_trigger>
+                <span class="btn btn-ghost btn-sm">
+                  <Heroicons.bars_2 class="w-4 h-4" />
+                </span>
+              </div>
 
-                <div class="card card-compact card-bordered mt-2">
-                  <div class="card-body">
-                    <div class="grid grid-cols-12 gap-x-4 gap-y-2">
-                      <div class="col-span-6">
-                        <.input type="text" label="Key" field={field[:key]} />
-                      </div>
+              <.collapsible_content>
+                <.card class="mt-4 p-6">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-2">
+                    <div class="col-span-6">
+                      <.form_item label="Key" field={field[:key]}>
+                        <Input.input field={field[:key]} />
+                      </.form_item>
+                    </div>
 
-                      <div class="col-span-6">
+                    <div class="col-span-6">
+                      <.form_item label="Data type" field={field[:type]}>
                         <.input
                           type="select"
-                          label="Type"
                           field={field[:type]}
                           options={OrangeCms.Content.InputType.values()}
                         />
-                      </div>
+                      </.form_item>
+                    </div>
 
-                      <div class="col-span-12">
-                        <%= if field[:type].value  in [:checkbox, :select, :array] do %>
-                          <.input
-                            type="text"
-                            label="Options"
+                    <div class="col-span-12">
+                      <%= if field[:type].value  in [:checkbox, :select, :array] do %>
+                        <.form_item label="Options" field={field[:option_str]}>
+                          <Input.input
                             field={field[:options_str]}
                             placeholder="Separated by commas"
                           />
-                        <% else %>
-                          <.input type="text" label="Default" field={field[:default_value]} />
-                        <% end %>
-                      </div>
-                    </div>
-
-                    <div class="flex mt-2">
-                      <a
-                        href="#"
-                        class="btn btn-ghost btn-xs ml-auto flex gap-2"
-                        phx-click="remove_field"
-                        phx-value-index={field.index}
-                        data-confirm="Are you sure?"
-                      >
-                        <Heroicons.trash class="w-4 h-4" /> <span>Delete field</span>
-                      </a>
+                        </.form_item>
+                      <% else %>
+                        <.form_item label="Default value" field={field[:default_value]}>
+                          <Input.input field={field[:default_value]} />
+                        </.form_item>
+                      <% end %>
                     </div>
                   </div>
-                </div>
-              </details>
-            </.inputs_for>
 
-            <div class="mt-3">
-              <button
-                class="btn btn-outline btn-xs rounded-full px-5"
-                phx-click="add_field"
-                phx-value-path={f[:frontmatter_schema].name}
-                type="button"
-              >
-                + Add field
-              </button>
-            </div>
+                  <div class="flex mt-2">
+                    <a
+                      href="#"
+                      class="btn-action text-xs text-destructive ml-auto flex gap-2"
+                      phx-click="remove_field"
+                      phx-value-index={field.index}
+                      data-confirm="Are you sure?"
+                    >
+                      <Heroicons.trash class="w-4 h-4" /> Delete field
+                    </a>
+                  </div>
+                </.card>
+              </.collapsible_content>
+            </.collapsible>
+          </.inputs_for>
 
-            <div class="flex mt-4">
-              <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
-                Save
-              </.button>
-            </div>
-          </.form>
-        </div>
-      </div>
-    </div>
+          <div class="mt-3">
+            <.button
+              phx-click="add_field"
+              phx-value-path={f[:frontmatter_schema].name}
+              type="button"
+              variant="secondary"
+              size="sm"
+            >
+              + Add field
+            </.button>
+          </div>
+
+          <div class="flex mt-4">
+            <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
+              Save
+            </.button>
+          </div>
+        </.form>
+      </.tabs_content>
+    </.tabs>
+
+    <.back navigate={scoped_path(assigns, "/content_types")}>Back to content_types</.back>
   </div>
-</div>
-<.back navigate={scoped_path(assigns, "/content_types")}>Back to content_types</.back>
+</.page>

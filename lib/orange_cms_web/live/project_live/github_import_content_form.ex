@@ -35,6 +35,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
 
           <.form_item field={@form[:name]} label="Content collection name">
             <Input.input field={@form[:name]} placeholder="e.g. blog" />
+            <.form_message field={@form[:key]} />
           </.form_item>
 
           <div class="w-full flex flex-row-reverse">

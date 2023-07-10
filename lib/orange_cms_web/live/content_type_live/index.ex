@@ -19,7 +19,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Content type")
-    |> assign(:content_type, %ContentType{})
+    |> assign(:content_type, %ContentType{project_id: socket.assigns.current_project.id})
   end
 
   defp apply_action(socket, :index, _params) do

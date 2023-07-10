@@ -24,7 +24,7 @@ defmodule OrangeCms.Content.ContentType do
       :name,
       :project_id
     ])
-    |> unsafe_validate_unique([:project_id, :key], OrangeCms.Repo, error_key: :name)
+    |> unsafe_validate_unique([:project_id, :key], OrangeCms.Repo, error_key: :key)
     |> unique_constraint([:project_id, :key])
   end
 
