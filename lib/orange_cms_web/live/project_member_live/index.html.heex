@@ -1,51 +1,53 @@
-<div class="p-6 bg-white rounded-xl drop-shadow-lg">
-  <.header>
-    Team members
-    <:actions>
-      <.link patch={scoped_path(assigns, "/members/new")}>
-        <.button class="btn-md btn-secondary" icon="plus">Add Member</.button>
-      </.link>
-    </:actions>
-  </.header>
+<.page>
+  <div class="">
+    <.header>
+      Team members
+      <:actions>
+        <.link patch={scoped_path(assigns, "/members/new")}>
+          <.button class="btn-md btn-secondary" icon="plus">Add Member</.button>
+        </.link>
+      </:actions>
+    </.header>
 
-  <.stable>
-    <.table_header>
-      <.table_row>
-        <.table_head>Name</.table_head>
-        <.table_head>Email</.table_head>
-        <.table_head class="w-[100px]">Role</.table_head>
-        <.table_head class="text-right"></.table_head>
-      </.table_row>
-    </.table_header>
-    <.table_body phx-update="stream" id="member-list">
-      <.table_row :for={{id, member} <- @streams.project_members} id={id}>
-        <.table_cell class="font-medium">
-          <%= "#{member.user.first_name} #{member.user.last_name}" %>
-        </.table_cell>
-        <.table_cell><%= member.user.email %></.table_cell>
-        <.table_cell><%= member.role %></.table_cell>
-        <.table_cell class="text-right">
-          <.link
-            :if={member.user_id != @current_user.id}
-            patch={scoped_path(assigns, "/members/#{member.id}/edit")}
-            class="btn-action"
-          >
-            <Heroicons.pencil_square class="w-4 h-4" /> Edit
-          </.link>
+    <.stable>
+      <.table_header>
+        <.table_row>
+          <.table_head>Name</.table_head>
+          <.table_head>Email</.table_head>
+          <.table_head class="w-[100px]">Role</.table_head>
+          <.table_head class="text-right"></.table_head>
+        </.table_row>
+      </.table_header>
+      <.table_body phx-update="stream" id="member-list">
+        <.table_row :for={{id, member} <- @streams.project_members} id={id}>
+          <.table_cell class="font-medium">
+            <%= "#{member.user.first_name} #{member.user.last_name}" %>
+          </.table_cell>
+          <.table_cell><%= member.user.email %></.table_cell>
+          <.table_cell><%= member.role %></.table_cell>
+          <.table_cell class="text-right">
+            <.link
+              :if={member.user_id != @current_user.id}
+              patch={scoped_path(assigns, "/members/#{member.id}/edit")}
+              class="btn-action"
+            >
+              <Heroicons.pencil_square class="w-4 h-4" /> Edit
+            </.link>
 
-          <.link
-            :if={member.user_id != @current_user.id}
-            phx-click={JS.push("delete", value: %{id: member.id}) |> hide("##{id}")}
-            data-confirm="Are you sure?"
-            class="btn-action"
-          >
-            <Heroicons.x_mark class="w-4 h-4" /> Delete
-          </.link>
-        </.table_cell>
-      </.table_row>
-    </.table_body>
-  </.stable>
-</div>
+            <.link
+              :if={member.user_id != @current_user.id}
+              phx-click={JS.push("delete", value: %{id: member.id}) |> hide("##{id}")}
+              data-confirm="Are you sure?"
+              class="btn-action"
+            >
+              <Heroicons.x_mark class="w-4 h-4" /> Delete
+            </.link>
+          </.table_cell>
+        </.table_row>
+      </.table_body>
+    </.stable>
+  </div>
+</.page>
 <.dialog
   :if={@live_action in [:new, :edit]}
   id="user-modal"

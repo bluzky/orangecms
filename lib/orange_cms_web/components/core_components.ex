@@ -516,7 +516,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def page(assigns) do
     ~H"""
-    <div class={["p-8", @class]}>
+    <div class={["p-8 min-h-screen", @class]}>
       <%= render_slot(@inner_block) %>
     </div>
     """

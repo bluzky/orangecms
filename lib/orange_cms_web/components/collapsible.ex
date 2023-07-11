@@ -42,7 +42,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   def collapsible(assigns) do
     ~H"""
     <div class={["", @class]} id={@id} {@rest}>
-      <input type="checkbox" checked={@open} class="trigger hidden peer/trigger" />
+      <input type="checkbox" checked={@open} phx-change={%JS{}} class="trigger hidden peer/trigger" />
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -56,7 +56,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   def collapsible_trigger(assigns) do
     ~H"""
     <div
-      class={["", @class]}
+      class={["relative z-10", @class]}
       {@rest}
       phx-click={JS.dispatch("click", to: "##{@root} > input.trigger")}
     >
@@ -73,7 +73,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
     ~H"""
     <div
       class={[
-        "transition ease-out duration-3000 opacity-0 h-0 overflow-hidden peer-checked/trigger:opacity-100 peer-checked/trigger:h-auto",
+        "transition ease-out duration-3000 opacity-0 h-0 peer-checked/trigger:opacity-100 peer-checked/trigger:h-auto",
         @class
       ]}
       {@rest}
