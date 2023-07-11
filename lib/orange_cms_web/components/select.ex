@@ -64,6 +64,7 @@ defmodule OrangeCmsWeb.Components.Select do
   attr(:placeholder, :string, default: nil)
   attr(:disabled, :boolean, default: false)
   attr(:options, :list, required: true)
+  attr(:value, :any, default: nil)
   attr(:default, :any, default: nil)
   attr(:phx_change, :any, default: nil)
   attr(:rest, :global)
@@ -76,7 +77,12 @@ defmodule OrangeCmsWeb.Components.Select do
       </.select_trigger>
       <.select_content>
         <.select_group>
-          <.select_item :for={item <- @options} field={@field} value={item}>
+          <.select_item
+            :for={item <- @options}
+            field={@field}
+            value={item}
+            selected={item == (@value || @default)}
+          >
             <%= item %>
           </.select_item>
         </.select_group>
@@ -113,7 +119,7 @@ defmodule OrangeCmsWeb.Components.Select do
         type="hidden"
         id={"#{@id}-input"}
         name={assigns[:name]}
-        value={assigns[:value]}
+        value={assigns[:value] || @default}
         {%{"phx-change": @phx_change}}
       />
       <%= render_slot(@inner_block) %>
@@ -145,7 +151,10 @@ defmodule OrangeCmsWeb.Components.Select do
 
   def select_value(assigns) do
     ~H"""
-    <span id="__ignore_this_label__" phx-update="ignore">
+    <span
+      id={"#{OrangeCmsWeb.Components.ComponentHelpers.generate_id()}__ignore_this_label__"}
+      phx-update="ignore"
+    >
       <span
         class="select-value pointer-events-none before:content-[attr(data-content)]"
         data-placeholder={@placeholder}

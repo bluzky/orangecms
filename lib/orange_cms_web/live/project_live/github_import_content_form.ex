@@ -199,18 +199,17 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
 
     socket = assign(socket, content_type: content_type, import_status: :processing)
 
+    pid = self()
+
     Task.start(fn ->
       # import content
       OrangeCms.Shared.Github.import_content(assigns.project, content_type)
 
-      send_update(
-        OrangeCmsWeb.ProjectLive.GithubImportContentForm,
-        %{
-          id: assigns.project.id,
-          import_status: :done,
-          message: {:success, "Content import completed"}
-        }
-      )
+      send_update(pid, OrangeCmsWeb.ProjectLive.GithubImportContentForm, %{
+        id: assigns.project.id,
+        import_status: :done,
+        message: {:success, "Content import completed"}
+      })
 
       :ok
     end)

@@ -14,7 +14,7 @@ const select = {
 
       // wait for click event to populated to input control
       setTimeout(() => {
-        syncInputValue(true);
+        syncInputValue();
       }, 100);
     }
 
@@ -39,7 +39,6 @@ const select = {
         selectedValue ||
         el.querySelector(".select-value")?.getAttribute("data-placeholder") ||
         "";
-      console.log("sync input value", label);
       el.querySelector(".select-value")?.setAttribute("data-content", label);
     }
 
@@ -64,6 +63,8 @@ const select = {
         opening = false;
       }, 100);
     });
+
+    syncInputValue();
 
     // close if select is opened
     contentEl.addEventListener("dismiss", (e) => {

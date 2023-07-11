@@ -1,22 +1,28 @@
-<.header>
-  Dashboard
-</.header>
+<.page class="bg-muted">
+  <.header>
+    Dashboard
+  </.header>
 
-<div class="p-6 flex gap-8">
-  <div class="stats shadow bg-base-300">
-    <div class="stat">
-      <div class="stat-title">Total entries</div>
-      <div class="stat-value">89,400</div>
-    </div>
-  </div>
+  <div class="p-6 flex gap-8">
+    <.card>
+      <.card_header class="pb-2">
+        <.card_title>Total entries</.card_title>
+      </.card_header>
+      <.card_content class="pt-0">
+        <div class="text-2xl font-bold">84</div>
+      </.card_content>
+    </.card>
 
-  <div class="stats shadow bg-base-300">
-    <div class="stat">
-      <div class="stat-title">Content types</div>
-      <div class="stat-value">89,400</div>
-    </div>
+    <.card>
+      <.card_header class="pb-2">
+        <.card_title>Content type</.card_title>
+      </.card_header>
+      <.card_content class="pt-0">
+        <div class="text-2xl font-bold">2</div>
+      </.card_content>
+    </.card>
   </div>
-</div>
+</.page>
 
 <.dialog
   :if={@live_action in [:github_setup]}

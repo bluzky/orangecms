@@ -30,7 +30,7 @@ defmodule OrangeCmsWeb.ProjectLive.Show do
   end
 
   @impl true
-  def handle_info({OrangeCmsWeb.ProjectLive.ImportGithubForm, {:saved, project}}, socket) do
+  def handle_info({OrangeCmsWeb.ProjectLive.SetupGithubForm, {:saved, project}}, socket) do
     {:noreply, assign(socket, :project, project)}
   end
 end
