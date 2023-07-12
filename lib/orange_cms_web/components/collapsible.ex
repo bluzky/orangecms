@@ -32,9 +32,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   use Phoenix.Component
 
   alias OrangeCmsWeb.Components.LadJS
-  alias Phoenix.LiveView.JS
 
-  attr :id, :string, required: true, doc: "The id of the collapsible"
   attr :open, :boolean, default: false, doc: "Whether the collapsible is open or not"
   attr(:class, :string, default: nil)
   slot(:inner_block, required: true)
@@ -42,7 +40,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
 
   def collapsible(assigns) do
     ~H"""
-    <div class={["group", @class]} id={@id} {@rest} data-state={(@open && "open") || "closed"}>
+    <div class={["group collapsible-root", @class]} {@rest} data-state={(@open && "open") || "closed"}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -58,7 +56,9 @@ defmodule OrangeCmsWeb.Components.Collapsible do
     <div
       class={["relative", @class]}
       {@rest}
-      phx-click={LadJS.toggle_attribute("data-state", {"open", "closed"}, to: "##{@root}")}
+      phx-click={
+        LadJS.toggle_attribute("data-state", {"open", "closed"}, to: "closest(.collapsible-root)")
+      }
     >
       <%= render_slot(@inner_block) %>
     </div>

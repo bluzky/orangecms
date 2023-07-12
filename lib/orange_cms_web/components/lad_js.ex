@@ -4,6 +4,16 @@ defmodule OrangeCmsWeb.Components.LadJS do
   It implemented using `JS.dispatch` an event named `lad:exec`, all arguments are stored in `event.detail`.
 
   All LadJS operations are combined in a single `lad:exec` event
+
+  ## LadJS support extended selectors to query DOM elements relative to current element:
+
+  - closest(selector): query the closest parent matching the
+  - children(selector): query the children matching the selector
+
+  ## Example selectors:
+
+  - `toggle_class("hidden", to: "closest(.parent-class)")`
+  - `toggle_class("hidden", to: "children(.children-class)")`
   """
 
   alias Phoenix.LiveView.JS

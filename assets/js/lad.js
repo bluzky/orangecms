@@ -43,7 +43,7 @@ export default function initLad(liveSocket) {
   // - children: query the children matching the selector
   // - document: query the document for element matching selector
   function parseSelector(selector) {
-    const re = /(?<scope>closest|children)\((?<selector>.*) \)/;
+    const re = /(?<scope>closest|children)\((?<selector>.*)\)/;
     const result = re.exec(selector);
     if (result) {
       return [result.groups.scope, result.groups.selector];
