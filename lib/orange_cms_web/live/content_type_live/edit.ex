@@ -40,13 +40,14 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
   def handle_event("remove_field", %{"index" => index}, socket) do
     index = String.to_integer(index)
     # TODO: fix bugs "remove all field cannot save"
-    socket =
-      update(socket, :form, fn changeset ->
-        existing = Ecto.Changeset.get_field(changeset, :frontmatter_schema, [])
-        Ecto.Changeset.put_embed(changeset, :frontmatter_schema, List.delete_at(existing, index))
-      end)
+    fields =
+      socket.assigns.form
+      |> Ecto.Changeset.get_field(:frontmatter_schema, [])
+      |> List.delete_at(index)
 
-    {:noreply, socket}
+    changeset = Ecto.Changeset.put_embed(socket.assigns.form, :frontmatter_schema, fields)
+
+    {:noreply, assign(socket, :form, changeset)}
   end
 
   @impl true
@@ -70,13 +71,5 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, changeset)}
     end
-  end
-
-  def switch_tab(js \\ %JS{}, tab) do
-    js
-    |> JS.add_class("hidden", to: "#general, #image-settings, #frontmatter")
-    |> JS.remove_class("hidden", to: tab)
-    |> JS.remove_class("tab-active", to: "#tab-header a")
-    |> JS.add_class("tab-active", to: "#{tab}-hd")
   end
 end

@@ -31,6 +31,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   """
   use Phoenix.Component
 
+  alias OrangeCmsWeb.Components.LadJS
   alias Phoenix.LiveView.JS
 
   attr :id, :string, required: true, doc: "The id of the collapsible"
@@ -41,8 +42,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
 
   def collapsible(assigns) do
     ~H"""
-    <div class={["", @class]} id={@id} {@rest}>
-      <input type="checkbox" checked={@open} phx-change={%JS{}} class="trigger hidden peer/trigger" />
+    <div class={["group", @class]} id={@id} {@rest} data-state={(@open && "open") || "closed"}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -56,9 +56,9 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   def collapsible_trigger(assigns) do
     ~H"""
     <div
-      class={["relative z-10", @class]}
+      class={["relative", @class]}
       {@rest}
-      phx-click={JS.dispatch("click", to: "##{@root} > input.trigger")}
+      phx-click={LadJS.toggle_attribute("data-state", {"open", "closed"}, to: "##{@root}")}
     >
       <%= render_slot(@inner_block) %>
     </div>
@@ -73,7 +73,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
     ~H"""
     <div
       class={[
-        "transition ease-out duration-3000 opacity-0 h-0 peer-checked/trigger:opacity-100 peer-checked/trigger:h-auto",
+        "transition ease-in-out duration-3000 opacity-0 h-0 -translate-y-1/4 overflow-hidden group-data-[state=open]:opacity-100 group-data-[state=open]:h-auto group-data-[state=open]:overflow-visible group-data-[state=open]:-translate-y-0",
         @class
       ]}
       {@rest}
