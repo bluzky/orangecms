@@ -14,7 +14,7 @@ export default function initLad(liveSocket) {
   function queryDom(el, ladSelector, callback) {
     let elements = [];
     if (!ladSelector) {
-      elements = [el];
+      elements = el ? [el] : [];
     } else {
       const [scope, selector] = parseSelector(ladSelector);
       switch (scope) {
@@ -56,7 +56,7 @@ export default function initLad(liveSocket) {
     // toggle attribute value on assigned target
     // values must be an array of length 2
     // caveats: if the attribute is not present in values list, it will be set to the first value
-    toggle_attribute(target, { attr, values, to }) {
+    toggle_attr(target, { attr, values, to }) {
       if (!values || values.length != 2)
         throw "values must be an array of length 2";
 
@@ -77,6 +77,41 @@ export default function initLad(liveSocket) {
         }
         _liveSocket.execJS(node, encodedJS, "exec");
       });
+    },
+
+    // execute original Liveview.JS command with enhanced on query selector
+    enhance(target, ops) {
+      ops.forEach(([op, args]) => {
+        let { to, ...rest } = args;
+
+        switch (op) {
+          case "exec":
+            [rest, to] = args;
+            rest = [rest];
+
+          default:
+            // only enhance if command has option `to`
+            // the cons is that we have to re-encode the data before passing it to LiveView JS
+            // This will waste some CPU cycles
+            if (to) {
+              const encodedJS = JSON.stringify([[op, rest]]);
+              queryDom(target, to, (node) => {
+                _liveSocket.execJS(node, encodedJS, op);
+              });
+            } else {
+              _liveSocket.execJS(target, JSON.stringify([[op, args]]), op);
+            }
+        }
+      });
+    },
+
+    // execute Liveview.JS command store in given attribute on assigned target
+    // target selector is stored in currentTarget `cb-target` attribute
+    exec_cb(target, { cb: cbAttr }) {
+      const targetSelector = target.getAttribute("cb-target");
+      if (targetSelector) {
+        this.exec(null, { attr: cbAttr, to: targetSelector });
+      }
     },
 
     // toggle class

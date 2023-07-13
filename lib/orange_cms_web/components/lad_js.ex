@@ -18,56 +18,75 @@ defmodule OrangeCmsWeb.Components.LadJS do
 
   alias Phoenix.LiveView.JS
 
-  def toggle_attribute(attr, values) when is_binary(attr) do
-    toggle_attribute(%JS{}, attr, values, [])
+  @doc """
+  Enhance all current JS commands to support extended selectors.
+  All commands with `to` option will be enhanced.
+
+  Only use this when necessary, it makes your code a bit slower, because it has a longer trip to final execution: LiveView's JS -> Lad's JS -> LiveView's JS.
+
+  To reduce the effect of this, you can use `enhance` only for commands that need it.
+
+  ## Example:
+
+      JS.set_attribute("data-foo", "bar", to: "closest(.parent-class)")
+      |> LadJS.enhance()
+      |> JS.exec("on-confirm", to: "#some-id")
+
+  Or like this:
+
+      JS.show("#dialog")
+      |> LadJS.enhance(JS.hide("closest(.trigger)"))
+      |> JS.exec("on-confirm", to: "#some-id")
+
+  In this case it only applies enhancement to `JS.hide("closest(.trigger)")`
+  """
+  def enhance(%JS{ops: ops}) do
+    append_command(%JS{}, "enhance", ops)
   end
 
-  def toggle_attribute(attr, values, opts) when is_binary(attr) and is_list(opts) do
-    toggle_attribute(%JS{}, attr, values, opts)
+  @doc """
+  Executes JS commands located in `action` attribute of target element.
+  Target element is stored in attr "cb-target" of current element.
+  """
+  def exec_callback(js \\ %JS{}, action) when is_binary(action) do
+    append_command(js, "exec_cb", %{cb: action})
   end
 
-  def toggle_attribute(%JS{} = js, attr, values) when is_binary(attr) do
-    toggle_attribute(js, attr, values, [])
+  @doc """
+  Toggle attribute value on element. For example you want to toggle attribute `data-state` between `open` and `close`:
+
+      toggle_attribute({"data-state", {"open", "close"}})
+
+  If current value is `open`, it will be changed to `close`, and vice versa. If current value is not set, it will be set to first value in tupple, in this case `open`.
+
+  Value tuple only support 2 values, because it's designed to toggle between 2 states.
+
+  ### Options:
+
+  - `to`: query selector to find target element, default to current element
+
+  """
+  def toggle_attribute({attr, values}) when is_binary(attr) do
+    toggle_attribute(%JS{}, {attr, values}, [])
   end
 
-  def toggle_attribute(%JS{} = js, attr, {_, _} = values, opts) do
+  def toggle_attribute({attr, values}, opts) when is_binary(attr) and is_list(opts) do
+    toggle_attribute(%JS{}, {attr, values}, opts)
+  end
+
+  def toggle_attribute(%JS{} = js, {attr, values}) when is_binary(attr) do
+    toggle_attribute(js, {attr, values}, [])
+  end
+
+  def toggle_attribute(%JS{} = js, {attr, {_, _} = values}, opts) do
     opts = validate_keys(opts, "toggle_attribute", [:to])
 
     append_command(
       js,
-      "toggle_attribute",
+      "toggle_attr",
       %{
         attr: attr,
         values: Tuple.to_list(values),
-        to: opts[:to]
-      }
-    )
-  end
-
-  @doc """
-  Executes JS commands located in element attributes.
-
-  Similar to `JS.exec` but it support extended Lad's selector
-  """
-
-  def exec(attr, opts \\ [])
-
-  def exec(attr, opts) when is_binary(attr) and is_list(opts) do
-    exec(%JS{}, attr, opts)
-  end
-
-  def exec(%JS{} = js, attr) when is_binary(attr) do
-    exec(js, attr, [])
-  end
-
-  def exec(%JS{} = js, attr, opts) when is_binary(attr) and is_list(opts) do
-    opts = validate_keys(opts, "exec", [:to])
-
-    append_command(
-      js,
-      "exec",
-      %{
-        attr: attr,
         to: opts[:to]
       }
     )

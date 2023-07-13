@@ -84,6 +84,8 @@ defmodule OrangeCmsWeb do
       # HTML escaping functionality
       # Core UI components and translation
       import OrangeCmsWeb.Components.Alert
+      import OrangeCmsWeb.Components.AlertDialog
+      import OrangeCmsWeb.Components.Button
       import OrangeCmsWeb.Components.Card
       import OrangeCmsWeb.Components.Collapsible
       import OrangeCmsWeb.Components.Dialog
