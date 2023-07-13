@@ -40,15 +40,14 @@ defmodule OrangeCmsWeb.UserLoginLive do
                 </.button>
               </:actions>
             </.simple_form>
-
-            <div class="mt-4 text-sm">
+            <!--<div class="mt-4 text-sm">
               Don't have an account? <.link
                 navigate={~p"/register"}
                 class="font-semibold text-brand hover:underline"
               >
           Sign up now
         </.link>.
-            </div>
+            </div> -->
           </.card_content>
         </.card>
       </div>
