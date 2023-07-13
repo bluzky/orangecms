@@ -244,6 +244,9 @@ defmodule OrangeCmsWeb.Components.Select do
   # when input change by key navigation it trigger phx-click on label, this is so strange
   # so I created a absolute div and add phx-click event handler to make it work as expected
   def select_item(assigns) do
+    name = assigns.name |> String.replace("[", "") |> String.replace("]", "")
+    assigns = assign(assigns, :name, name)
+
     ~H"""
     <% content = render_slot(@inner_block) %>
     <label

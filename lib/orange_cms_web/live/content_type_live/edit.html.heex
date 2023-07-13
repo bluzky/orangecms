@@ -83,9 +83,9 @@
             id="schema-form"
           >
             <.inputs_for :let={field} field={f[:frontmatter_schema]}>
-              <% id = "wrap-#{field[:key].value}" %>
-              <.collapsible id={id} class="group">
-                <div class="flex gap-2 cursor-pointer font-bold text-sm">
+              <% id = OrangeCmsWeb.Components.ComponentHelpers.generate_id() %>
+              <.collapsible id={id} class="group" open={is_nil(field.data.key)}>
+                <div class="flex gap-2 cursor-pointer font-semibold text-sm">
                   <.collapsible_trigger root={id} class="flex-1 flex gap-2">
                     <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
                     <Heroicons.minus class="w-5 h-5 text-gray-400 transition duration-300 hidden group-open:block" />

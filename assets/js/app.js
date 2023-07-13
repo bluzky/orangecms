@@ -27,6 +27,7 @@ import { toMarkdown } from "./to_markdown";
 import { debounce } from "./utils";
 import { FileUpload } from "./fileUpload";
 import componentHooks from "./componentHooks";
+import initLad from "./lad";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -74,7 +75,7 @@ const Hooks = {
       new FileUpload(this.el, { csrf_token: csrfToken });
     },
   },
-  InitSorting: {
+  Sortable: {
     mounted() {
       new Sortable(this.el, {
         animation: 150,
@@ -99,6 +100,8 @@ const socketOptions = {
 };
 
 let liveSocket = new LiveSocket("/live", Socket, socketOptions);
+// init Lad's functionalities
+initLad(liveSocket);
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });

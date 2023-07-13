@@ -88,7 +88,9 @@ defmodule OrangeCms.Content.FieldDef do
   end
 
   def changeset(model, attrs) do
-    cast(model, attrs, [:name, :key, :type, :default_value, :options_str, :is_required])
+    model
+    |> cast(attrs, [:name, :key, :type, :default_value, :options_str, :is_required])
+    |> validate_required([:key, :type])
   end
 
   def load(record, :options) do
