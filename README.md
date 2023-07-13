@@ -4,7 +4,7 @@
 
 ## DEMO
 
-- [Admin page](http://demo-orangecms.pawtools.org/) username: demo@example.com, password: 123123
+- [Admin page](http://demo-orangecms.pawtools.org/) username: demo1@example.com, password: 123123123
 - [Content page](http://orange-demo-site.pawtools.org/)
 - [Github repo](https://github.com/bluzky/orange-demo-site)
 
