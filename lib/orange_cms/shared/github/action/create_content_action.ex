@@ -10,9 +10,7 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
     "email" => "sys@orangecms.io"
   }
 
-  def perform(project, content_type, content_entry) do
-    [owner, repo] = String.split(project.github_config.repo_name, "/")
-
+  def perform(%{github_config: gh_config} = _project, content_type, content_entry) do
     # TODO remove hard-coded
     file_name =
       Calendar.strftime(DateTime.utc_now(), "%Y-%m-%d-") <>
@@ -20,11 +18,12 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
 
     # TODO build from relative file name, subdir and contentdir
     path =
-      Path.join(
-        content_entry.content_type.github_config.content_dir,
+      content_type.github_config.content_dir
+      |> Path.join(
         file_name
         # content_entry.integration_info["relative_path"]
       )
+      |> String.trim_leading("/")
 
     frontmatter = Helper.build_frontmatter_yaml(content_type, content_entry)
 
@@ -41,8 +40,8 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
       "content" => Base.encode64(content)
     }
 
-    project.github_config.access_token
-    |> Client.api(&Tentacat.Contents.create(&1, owner, repo, path, body))
+    gh_config.access_token
+    |> Client.api(&Tentacat.Contents.create(&1, gh_config.repo_owner, gh_config.repo_name, path, body))
     |> case do
       {:ok, file} ->
         integration_info =
