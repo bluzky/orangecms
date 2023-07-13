@@ -33,16 +33,15 @@ defmodule OrangeCmsWeb.Components.LadJS do
   def toggle_attribute(%JS{} = js, attr, {_, _} = values, opts) do
     opts = validate_keys(opts, "toggle_attribute", [:to])
 
-    command = [
+    append_command(
+      js,
       "toggle_attribute",
       %{
         attr: attr,
         values: Tuple.to_list(values),
         to: opts[:to]
       }
-    ]
-
-    append_command(js, command)
+    )
   end
 
   @doc """
@@ -64,15 +63,14 @@ defmodule OrangeCmsWeb.Components.LadJS do
   def exec(%JS{} = js, attr, opts) when is_binary(attr) and is_list(opts) do
     opts = validate_keys(opts, "exec", [:to])
 
-    command = [
+    append_command(
+      js,
       "exec",
       %{
         attr: attr,
         to: opts[:to]
       }
-    ]
-
-    append_command(js, command)
+    )
   end
 
   @doc """
@@ -91,39 +89,16 @@ defmodule OrangeCmsWeb.Components.LadJS do
   def toggle_class(%JS{} = js, class, opts) when is_binary(class) and is_list(opts) do
     opts = validate_keys(opts, "toggle_class", [:to])
 
-    command = [
-      "toggle_class",
-      %{
-        class: class,
-        to: opts[:to]
-      }
-    ]
-
-    append_command(js, command)
+    append_command(js, "toggle_class", %{
+      class: class,
+      to: opts[:to]
+    })
   end
 
   # Append command to existing `lad:exec` event
   # If command doesn't exist, it will register new `lad:exec` event
-  defp append_command(%JS{ops: ops} = js, command) do
-    # find and update existing lad:exec event
-    {ops, appended} =
-      Enum.reduce(ops, {[], false}, fn op, {acc, appended} ->
-        with false <- appended,
-             ["dispatch", %{event: "lad:exec", detail: commands} = args] <- op do
-          op = ["dispatch", %{args | detail: commands ++ [command]}]
-          {[op | acc], true}
-        else
-          _ ->
-            {[op | acc], appended}
-        end
-      end)
-
-    # if command is not appended, it means `lad:exec` event has not been registered, then register new dispatch event
-    if not appended do
-      JS.dispatch(%{js | ops: ops}, "lad:exec", detail: [command])
-    else
-      %{js | ops: ops}
-    end
+  defp append_command(%JS{} = js, command, args) do
+    JS.dispatch(js, "lad:exec", detail: [command, args])
   end
 
   # borrow from https://github.com/phoenixframework/phoenix_live_view/blob/main/lib/phoenix_live_view/js.ex#L815

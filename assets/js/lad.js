@@ -93,11 +93,9 @@ export default function initLad(liveSocket) {
 
   window.addEventListener("lad:exec", (event) => {
     if (Array.isArray(event.detail)) {
-      event.detail.map((command) => {
-        execCommand(command, event.target);
-      });
+      execCommand(event.detail, event.target);
     } else {
-      throw "lad:exec expects an array of commands";
+      throw "lad:exec event detail must be an array of [command, args]";
     }
   });
 }
