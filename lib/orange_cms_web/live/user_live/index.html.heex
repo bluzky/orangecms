@@ -10,45 +10,61 @@
     </:actions>
   </.header>
 
-  <.stable class="mt-10">
-    <.table_header>
-      <.table_row>
-        <.table_head>First Name</.table_head>
-        <.table_head>Last Name</.table_head>
-        <.table_head>Email</.table_head>
-        <.table_head class="text-right">Action</.table_head>
-      </.table_row>
-    </.table_header>
-    <.table_body phx-update="stream" id="user-table">
-      <.table_row :for={{id, user} <- @streams.users} id={id}>
-        <.table_cell class="font-medium"><%= user.first_name %></.table_cell>
-        <.table_cell><%= user.last_name %></.table_cell>
-        <.table_cell><%= user.email %></.table_cell>
-        <.table_cell class="text-right">
-          <.link
-            :if={user.id != @current_user.id}
-            patch={~p"/users/#{user}/edit"}
-            class="btn-action"
-          >
-            <Heroicons.pencil_square class="w-4 h-4" /> Edit
-          </.link>
+  <.alert_dialog id="confirm-dialog">
+    <.stable class="mt-10">
+      <.table_header>
+        <.table_row>
+          <.table_head>First Name</.table_head>
+          <.table_head>Last Name</.table_head>
+          <.table_head>Email</.table_head>
+          <.table_head class="text-right">Action</.table_head>
+        </.table_row>
+      </.table_header>
+      <.table_body phx-update="stream" id="user-table">
+        <.table_row :for={{id, user} <- @streams.users} id={id}>
+          <.table_cell class="font-medium"><%= user.first_name %></.table_cell>
+          <.table_cell><%= user.last_name %></.table_cell>
+          <.table_cell><%= user.email %></.table_cell>
+          <.table_cell class="text-right">
+            <.link
+              :if={user.id != @current_user.id}
+              patch={~p"/users/#{user}/edit"}
+              class="btn-action"
+            >
+              <Heroicons.pencil_square class="w-4 h-4" /> Edit
+            </.link>
 
-          <.alert_dialog_trigger
-            :if={user.id != @current_user.id}
-            id={"#{id}-destroy"}
-            on_confirm={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
-            target="#confirm-dialog"
-            class="inline-block"
-          >
-            <span class="btn-action">
-              <Heroicons.x_mark class="w-4 h-4" /> Delete
-            </span>
-          </.alert_dialog_trigger>
-        </.table_cell>
-      </.table_row>
-    </.table_body>
-  </.stable>
+            <.alert_dialog_trigger
+              :if={user.id != @current_user.id}
+              id={"#{id}-destroy"}
+              on_confirm={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
+              class="inline-block"
+            >
+              <span class="btn-action">
+                <Heroicons.x_mark class="w-4 h-4" /> Delete
+              </span>
+            </.alert_dialog_trigger>
+          </.table_cell>
+        </.table_row>
+      </.table_body>
+    </.stable>
+
+    <.alert_dialog_content>
+      <.alert_dialog_header>
+        <.alert_dialog_title>Are you sure?</.alert_dialog_title>
+        <.alert_dialog_description>
+          This action cannot be undone. This will permanently delete user
+          account and remove user data from servers.
+        </.alert_dialog_description>
+      </.alert_dialog_header>
+      <.alert_dialog_footer>
+        <.alert_dialog_cancel>Cancel</.alert_dialog_cancel>
+        <.alert_dialog_action>Continue</.alert_dialog_action>
+      </.alert_dialog_footer>
+    </.alert_dialog_content>
+  </.alert_dialog>
 </div>
+
 <.dialog
   :if={@live_action in [:new, :edit]}
   id="user-modal"
@@ -69,19 +85,3 @@
     />
   </.dialog_content>
 </.dialog>
-
-<.alert_dialog id="confirm-dialog">
-  <.alert_dialog_content>
-    <.alert_dialog_header>
-      <.alert_dialog_title>Are you sure?</.alert_dialog_title>
-      <.alert_dialog_description>
-        This action cannot be undone. This will permanently delete user
-        account and remove user data from servers.
-      </.alert_dialog_description>
-    </.alert_dialog_header>
-    <.alert_dialog_footer>
-      <.alert_dialog_cancel>Cancel</.alert_dialog_cancel>
-      <.alert_dialog_action>Continue</.alert_dialog_action>
-    </.alert_dialog_footer>
-  </.alert_dialog_content>
-</.alert_dialog>

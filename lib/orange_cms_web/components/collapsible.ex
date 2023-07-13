@@ -57,7 +57,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
       class={["relative", @class]}
       {@rest}
       phx-click={
-        LadJS.toggle_attribute("data-state", {"open", "closed"}, to: "closest(.collapsible-root)")
+        LadJS.toggle_attribute({"data-state", {"open", "closed"}}, to: "closest(.collapsible-root)")
       }
     >
       <%= render_slot(@inner_block) %>

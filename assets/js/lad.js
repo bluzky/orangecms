@@ -68,12 +68,6 @@ export default function initLad(liveSocket) {
       });
     },
 
-    set_attr(target, { to, attr: [name, value] }) {
-      queryDom(target, to, (node) => {
-        const current = node.setAttribute(name, value);
-      });
-    },
-
     // execute Liveview.JS command store in given attribute on assigned target
     exec(target, { attr, to }) {
       queryDom(target, to, (node) => {
@@ -82,6 +76,32 @@ export default function initLad(liveSocket) {
           throw new Error(`expected ${attr} to contain JS command on "${to}"`);
         }
         _liveSocket.execJS(node, encodedJS, "exec");
+      });
+    },
+
+    // execute original Liveview.JS command with enhanced on query selector
+    enhance(target, ops) {
+      ops.forEach(([op, args]) => {
+        let { to, ...rest } = args;
+
+        switch (op) {
+          case "exec":
+            [rest, to] = args;
+            rest = [rest];
+
+          default:
+            // only enhance if command has option `to`
+            // the cons is that we have to re-encode the data before passing it to LiveView JS
+            // This will waste some CPU cycles
+            if (to) {
+              const encodedJS = JSON.stringify([[op, rest]]);
+              queryDom(target, to, (node) => {
+                _liveSocket.execJS(node, encodedJS, op);
+              });
+            } else {
+              _liveSocket.execJS(target, JSON.stringify([[op, args]]), op);
+            }
+        }
       });
     },
 

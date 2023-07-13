@@ -19,21 +19,23 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
       class={["alert-dialog-root", @class]}
       id={@id}
       hide-alert={
-        LadJS.set_attribute({"data-state", "closed"}, to: "##{@id} .alert-content")
+        JS.set_attribute({"data-state", "closed"}, to: "##{@id} .alert-content")
         |> JS.hide(
           transition: {"transition", "opacity-100", "opacity-0"},
-          to: "##{@id} .alert-content-wrapper"
+          to: "children(.alert-content-wrapper)"
         )
+        |> LadJS.enhance()
       }
       show-alert={
-        LadJS.set_attribute({"data-state", "open"}, to: "##{@id} .alert-content")
+        JS.set_attribute({"data-state", "open"}, to: "##{@id} .alert-content")
         |> JS.show(
           transition: {"transition", "opacity-0", "opacity-100"},
-          to: "##{@id} .alert-content-wrapper"
+          to: "children(.alert-content-wrapper)"
         )
+        |> LadJS.enhance()
       }
-      on-cancel={LadJS.exec("hide-alert")}
-      on-confirm={LadJS.exec("hide-alert") |> LadJS.exec_callback("on-confirm")}
+      on-cancel={JS.exec("hide-alert")}
+      on-confirm={JS.exec("hide-alert") |> LadJS.exec_callback("on-confirm")}
     >
       <%= render_slot(@inner_block) %>
     </div>
@@ -52,10 +54,13 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
     action =
       if assigns.on_confirm && assigns.id do
         "show-alert"
-        |> LadJS.exec(to: target)
-        |> LadJS.set_attribute({"cb-target", "##{assigns.id}"}, to: target)
+        |> JS.exec(to: target)
+        |> JS.set_attribute({"cb-target", "##{assigns.id}"}, to: target)
+        |> LadJS.enhance()
       else
-        LadJS.exec("show-alert", to: target)
+        "show-alert"
+        |> JS.exec(to: target)
+        |> LadJS.enhance()
       end
 
     assigns = assign(assigns, target: target, action: action)
@@ -145,8 +150,8 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
   def alert_dialog_action(assigns) do
     ~H"""
     <.button
-      class={["mt-2 sm:mt-0", @class]}
-      phx-click={LadJS.exec("on-confirm", to: "closest(.alert-dialog-root)")}
+      class={Enum.join(["mt-2 sm:mt-0", @class], " ")}
+      phx-click={JS.exec("on-confirm", to: "closest(.alert-dialog-root)") |> LadJS.enhance()}
     >
       <%= render_slot(@inner_block) %>
     </.button>
@@ -159,9 +164,9 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
   def alert_dialog_cancel(assigns) do
     ~H"""
     <.button
-      class={["mt-2 sm:mt-0", @class]}
+      class={Enum.join(["mt-2 sm:mt-0", @class])}
       variant="outline"
-      phx-click={LadJS.exec("on-cancel", to: "closest(.alert-dialog-root)")}
+      phx-click={JS.exec("on-cancel", to: "closest(.alert-dialog-root)") |> LadJS.enhance()}
     >
       <%= render_slot(@inner_block) %>
     </.button>
