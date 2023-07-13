@@ -11,7 +11,7 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
   }
 
   def perform(project, content_type, content_entry) do
-    [owner, repo] = String.split(project.github_config["repo_name"], "/")
+    [owner, repo] = String.split(project.github_config.repo_name, "/")
 
     # TODO remove hard-coded
     file_name =
@@ -21,7 +21,7 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
     # TODO build from relative file name, subdir and contentdir
     path =
       Path.join(
-        content_entry.content_type.github_config["content_dir"],
+        content_entry.content_type.github_config.content_dir,
         file_name
         # content_entry.integration_info["relative_path"]
       )
@@ -41,7 +41,7 @@ defmodule OrangeCms.Shared.Github.CreateContentAction do
       "content" => Base.encode64(content)
     }
 
-    project.github_config["access_token"]
+    project.github_config.access_token
     |> Client.api(&Tentacat.Contents.create(&1, owner, repo, path, body))
     |> case do
       {:ok, file} ->
