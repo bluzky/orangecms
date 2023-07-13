@@ -14,7 +14,7 @@ export default function initLad(liveSocket) {
   function queryDom(el, ladSelector, callback) {
     let elements = [];
     if (!ladSelector) {
-      elements = [el];
+      elements = el ? [el] : [];
     } else {
       const [scope, selector] = parseSelector(ladSelector);
       switch (scope) {
@@ -56,7 +56,7 @@ export default function initLad(liveSocket) {
     // toggle attribute value on assigned target
     // values must be an array of length 2
     // caveats: if the attribute is not present in values list, it will be set to the first value
-    toggle_attribute(target, { attr, values, to }) {
+    toggle_attr(target, { attr, values, to }) {
       if (!values || values.length != 2)
         throw "values must be an array of length 2";
 
@@ -65,6 +65,12 @@ export default function initLad(liveSocket) {
 
         const nextValue = values.find((v) => v != current);
         node.setAttribute(attr, nextValue);
+      });
+    },
+
+    set_attr(target, { to, attr: [name, value] }) {
+      queryDom(target, to, (node) => {
+        const current = node.setAttribute(name, value);
       });
     },
 
@@ -77,6 +83,15 @@ export default function initLad(liveSocket) {
         }
         _liveSocket.execJS(node, encodedJS, "exec");
       });
+    },
+
+    // execute Liveview.JS command store in given attribute on assigned target
+    // target selector is stored in currentTarget `cb-target` attribute
+    exec_cb(target, { cb: cbAttr }) {
+      const targetSelector = target.getAttribute("cb-target");
+      if (targetSelector) {
+        this.exec(null, { attr: cbAttr, to: targetSelector });
+      }
     },
 
     // toggle class

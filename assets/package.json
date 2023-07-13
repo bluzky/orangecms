@@ -4,10 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "build": "node build.js --deploy",
-      "watch": "node build.js --watch",
-      "dev": "npm run watch"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js --deploy",
+    "watch": "node build.js --watch",
+    "dev": "npm run watch"
   },
   "author": "",
   "license": "ISC",
@@ -31,5 +31,8 @@
     "punycode": "^2.3.0",
     "sortablejs": "^1.15.0",
     "svelte": "^3.58.0"
+  },
+  "devDependencies": {
+    "tailwindcss-animate": "^1.0.6"
   }
 }

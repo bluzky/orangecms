@@ -33,14 +33,17 @@
             <Heroicons.pencil_square class="w-4 h-4" /> Edit
           </.link>
 
-          <.link
+          <.alert_dialog_trigger
             :if={user.id != @current_user.id}
-            phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
-            data-confirm="Are you sure?"
-            class="btn-action"
+            id={"#{id}-destroy"}
+            on_confirm={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
+            target="#confirm-dialog"
+            class="inline-block"
           >
-            <Heroicons.x_mark class="w-4 h-4" /> Delete
-          </.link>
+            <span class="btn-action">
+              <Heroicons.x_mark class="w-4 h-4" /> Delete
+            </span>
+          </.alert_dialog_trigger>
         </.table_cell>
       </.table_row>
     </.table_body>
@@ -66,3 +69,19 @@
     />
   </.dialog_content>
 </.dialog>
+
+<.alert_dialog id="confirm-dialog">
+  <.alert_dialog_content>
+    <.alert_dialog_header>
+      <.alert_dialog_title>Are you sure?</.alert_dialog_title>
+      <.alert_dialog_description>
+        This action cannot be undone. This will permanently delete user
+        account and remove user data from servers.
+      </.alert_dialog_description>
+    </.alert_dialog_header>
+    <.alert_dialog_footer>
+      <.alert_dialog_cancel>Cancel</.alert_dialog_cancel>
+      <.alert_dialog_action>Continue</.alert_dialog_action>
+    </.alert_dialog_footer>
+  </.alert_dialog_content>
+</.alert_dialog>

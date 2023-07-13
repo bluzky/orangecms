@@ -18,30 +18,43 @@ defmodule OrangeCmsWeb.Components.LadJS do
 
   alias Phoenix.LiveView.JS
 
-  def toggle_attribute(attr, values) when is_binary(attr) do
-    toggle_attribute(%JS{}, attr, values, [])
+  def toggle_attribute({attr, values}) when is_binary(attr) do
+    toggle_attribute(%JS{}, {attr, values}, [])
   end
 
-  def toggle_attribute(attr, values, opts) when is_binary(attr) and is_list(opts) do
-    toggle_attribute(%JS{}, attr, values, opts)
+  def toggle_attribute({attr, values}, opts) when is_binary(attr) and is_list(opts) do
+    toggle_attribute(%JS{}, {attr, values}, opts)
   end
 
-  def toggle_attribute(%JS{} = js, attr, values) when is_binary(attr) do
-    toggle_attribute(js, attr, values, [])
+  def toggle_attribute(%JS{} = js, {attr, values}) when is_binary(attr) do
+    toggle_attribute(js, {attr, values}, [])
   end
 
-  def toggle_attribute(%JS{} = js, attr, {_, _} = values, opts) do
+  def toggle_attribute(%JS{} = js, {attr, {_, _} = values}, opts) do
     opts = validate_keys(opts, "toggle_attribute", [:to])
 
     append_command(
       js,
-      "toggle_attribute",
+      "toggle_attr",
       %{
         attr: attr,
         values: Tuple.to_list(values),
         to: opts[:to]
       }
     )
+  end
+
+  def set_attribute({attr, val}), do: set_attribute(%JS{}, {attr, val}, [])
+
+  @doc "See `set_attribute/1`."
+  def set_attribute({attr, val}, opts) when is_list(opts), do: set_attribute(%JS{}, {attr, val}, opts)
+
+  def set_attribute(%JS{} = js, {attr, val}), do: set_attribute(js, {attr, val}, [])
+
+  @doc "See `set_attribute/1`."
+  def set_attribute(%JS{} = js, {attr, val}, opts) when is_list(opts) do
+    opts = validate_keys(opts, :set_attribute, [:to])
+    append_command(js, "set_attr", %{to: opts[:to], attr: [attr, val]})
   end
 
   @doc """
@@ -71,6 +84,14 @@ defmodule OrangeCmsWeb.Components.LadJS do
         to: opts[:to]
       }
     )
+  end
+
+  @doc """
+  Executes JS commands located in `action` attribute of target element.
+  Target element is stored in attr "cb-target" of current element.
+  """
+  def exec_callback(js \\ %JS{}, action) when is_binary(action) do
+    append_command(js, "exec_cb", %{cb: action})
   end
 
   @doc """
