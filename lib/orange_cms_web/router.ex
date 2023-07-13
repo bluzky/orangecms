@@ -131,7 +131,7 @@ defmodule OrangeCmsWeb.Router do
     live_session :redirect_if_user_is_authenticated,
       layout: false,
       on_mount: [{OrangeCmsWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live("/register", UserRegistrationLive, :new)
+      # live("/register", UserRegistrationLive, :new)
       live("/log_in", UserLoginLive, :new)
       live("/users/reset_password", UserForgotPasswordLive, :new)
       live("/users/reset_password/:token", UserResetPasswordLive, :edit)
