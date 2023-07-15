@@ -7,7 +7,8 @@ defmodule OrangeCmsWeb.Components.ComponentHelpers do
   """
   def prepare_assign(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
-    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(field: nil)
+    |> assign_new(:id, fn -> field.id end)
     |> assign_new(:name, fn ->
       if assigns[:multiple] == true,
         do: field.name <> "[]",

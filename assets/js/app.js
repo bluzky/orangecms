@@ -81,12 +81,15 @@ const Hooks = {
         animation: 150,
         ghostClass: "bg-yellow-100",
         dragClass: "shadow-2xl",
-        // onEnd: (evt) => {
-        //   // const el = this.el.querySelector("input,select");
-        //   // if (el) {
-        //   //   el.form.submit();
-        //   // }
-        // },
+        onEnd: (evt) => {
+          // each sortable item must have a data-id attribute which is used to identify the item
+          const elements = Array.from(this.el.children);
+          const ids = elements.map((elm) => elm.getAttribute("data-id"));
+          this.pushEvent(
+            this.el.getAttribute("phx-event") || "update-sorting",
+            { ids: ids }
+          );
+        },
       });
     },
   },

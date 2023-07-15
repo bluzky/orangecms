@@ -58,6 +58,32 @@ defmodule OrangeCmsWeb.ContentTypeLive.Edit do
   end
 
   @impl true
+  def handle_event("save_field_order", %{"ids" => keys}, socket) do
+    fields = Ecto.Changeset.get_field(socket.assigns.form, :frontmatter_schema, [])
+
+    # pick the fields in the order of the keys
+    fields =
+      Enum.map(keys, fn key ->
+        Enum.find(fields, fn field -> field.key == key end)
+      end)
+
+    changeset = Ecto.Changeset.put_embed(socket.assigns.form, :frontmatter_schema, fields)
+
+    case OrangeCms.Repo.update(changeset) do
+      {:ok, entry} ->
+        changeset = Content.change_content_type(entry, %{})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Content type updated successfully")
+         |> assign(form: changeset, content_type: entry)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :form, changeset)}
+    end
+  end
+
+  @impl true
   def handle_event("save", %{"content_type" => params}, socket) do
     case Content.update_content_type(socket.assigns.content_type, params) do
       {:ok, entry} ->
