@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Sheet do
+defmodule OrangeCmsWeb.Components.LadUI.Sheet do
   @moduledoc """
   Implement Sheet componet https://ui.shadcn.com/docs/components/sheet
 
@@ -37,11 +37,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
         </.sheet_content>
       </.sheet>
   """
-  use Phoenix.Component
-
-  import OrangeCmsWeb.Components.ComponentHelpers
-
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :show, :boolean, default: false, doc: "Show the sheet on mount"
   attr :class, :string, default: "inline-block"
@@ -53,7 +49,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
 
     ~H"""
     <div
-      class={[@class]}
+      class={classes([@class])}
       phx-mounted={
         (@show && JS.exec("phx-show-sheet", to: "[data-key=#{@key}] .sheet-content")) || %JS{}
       }
@@ -70,7 +66,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
 
   def sheet_trigger(assigns) do
     ~H"""
-    <div class={[@class]} phx-click={JS.exec("phx-show-sheet", to: "#" <> @target)}>
+    <div class={classes([@class])} phx-click={JS.exec("phx-show-sheet", to: "#" <> @target)}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -81,10 +77,10 @@ defmodule OrangeCmsWeb.Components.Sheet do
   defp sheet_overlay(assigns) do
     ~H"""
     <div
-      class={[
+      class={classes([
         "sheet-overlay fixed hidden inset-0 z-50 bg-background/80 backdrop-blur-sm",
         @class
-      ]}
+      ])}
       aria-hidden="true"
     >
     </div>
@@ -127,14 +123,14 @@ defmodule OrangeCmsWeb.Components.Sheet do
         phx-key="escape"
         phx-click-away={JS.exec("phx-hide-sheet", to: "#" <> @id)}
         role="sheet"
-        class={[
+        class={classes([
           "sheet-content-wrap hidden fixed z-50 bg-background shadow-lg transition",
           @variant_class,
           @class
-        ]}
+        ])}
       >
-        <div class={["relative h-full"]}>
-          <div class={["p-6 overflow-y-auto h-full", @class]}>
+        <div class={classes(["relative h-full"])}>
+          <div class={classes(["p-6 overflow-y-auto h-full", @class])}>
             <%= render_slot(@inner_block) %>
           </div>
 
@@ -143,10 +139,10 @@ defmodule OrangeCmsWeb.Components.Sheet do
           <% else %>
             <button
               type="button"
-              class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+              class="ring-offset-background absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-ring focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
               phx-click={hide_sheet(@id, @side)}
             >
-              <Heroicons.x_mark class="w-4 h-4 no-collapse" />
+              <Heroicons.x_mark class="no-collapse h-4 w-4" />
               <span class="sr-only">Close</span>
             </button>
           <% end %>
@@ -161,7 +157,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
 
   def sheet_header(assigns) do
     ~H"""
-    <div class={["flex flex-col space-y-2 text-center sm:text-left", @class]}>
+    <div class={classes(["flex flex-col space-y-2 text-center sm:text-left", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -172,7 +168,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
 
   def sheet_title(assigns) do
     ~H"""
-    <h3 class={["text-lg font-semibold text-foreground", @class]}>
+    <h3 class={classes(["text-lg font-semibold text-foreground", @class])}>
       <%= render_slot(@inner_block) %>
     </h3>
     """
@@ -183,7 +179,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
 
   def sheet_description(assigns) do
     ~H"""
-    <p class={["text-sm text-muted-foreground", @class]}>
+    <p class={classes(["text-sm text-muted-foreground", @class])}>
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -194,7 +190,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
 
   def sheet_footer(assigns) do
     ~H"""
-    <div class={["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class]}>
+    <div class={classes(["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -206,7 +202,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
 
   def sheet_close(assigns) do
     ~H"""
-    <div class={["", @class]} phx-click={JS.exec("phx-hide-sheet", to: "#" <> @target)}>
+    <div class={classes(["", @class])} phx-click={JS.exec("phx-hide-sheet", to: "#" <> @target)}>
       <%= render_slot(@inner_block) %>
     </div>
     """

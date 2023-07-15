@@ -1,13 +1,10 @@
-defmodule OrangeCmsWeb.Components.AlertDialog do
+defmodule OrangeCmsWeb.Components.LadUI.AlertDialog do
   @moduledoc """
   Implement of card components from https://ui.shadcn.com/docs/components/card
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
-  import OrangeCmsWeb.Components.Button
-
-  alias OrangeCmsWeb.Components.LadJS
-  alias Phoenix.LiveView.JS
+  import OrangeCmsWeb.Components.LadUI.Button
 
   attr :id, :string, required: true
   attr :class, :string, default: nil
@@ -16,7 +13,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
   def alert_dialog(assigns) do
     ~H"""
     <div
-      class={["alert-dialog-root", @class]}
+      class={classes(["alert-dialog-root", @class])}
       id={@id}
       hide-alert={
         JS.set_attribute({"data-state", "closed"}, to: "##{@id} .alert-content")
@@ -66,7 +63,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
     assigns = assign(assigns, target: target, action: action)
 
     ~H"""
-    <div class={["", @class]} id={@id} phx-click={@action} on-confirm={@on_confirm}>
+    <div class={classes(["", @class])} id={@id} phx-click={@action} on-confirm={@on_confirm}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -77,20 +74,20 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_content(assigns) do
     ~H"""
-    <div class="alert-content-wrapper hidden relative">
+    <div class="alert-content-wrapper relative hidden">
       <.alert_dialog_overlay />
       <div
-        class="fixed min-w-screen min-h-screen z-50 inset-0 overflow-y-auto flex items-center justify-center"
+        class="min-w-screen fixed inset-0 z-50 flex min-h-screen items-center justify-center overflow-y-auto"
         role="dialog"
         aria-modal="true"
         tabindex="0"
       >
         <.focus_wrap
-          id={OrangeCmsWeb.Components.ComponentHelpers.generate_id(prefix: "alert-")}
-          class={[
+          id={generate_id(prefix: "alert-")}
+          class={classes([
             "alert-content fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
             @class
-          ]}
+          ])}
           data-state="closed"
         >
           <%= render_slot(@inner_block) %>
@@ -105,7 +102,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_header(assigns) do
     ~H"""
-    <div class={["flex flex-col space-y-2 text-center sm:text-left", @class]}>
+    <div class={classes(["flex flex-col space-y-2 text-center sm:text-left", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -116,7 +113,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_footer(assigns) do
     ~H"""
-    <div class={["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class]}>
+    <div class={classes(["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -127,7 +124,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_title(assigns) do
     ~H"""
-    <h2 class={["text-lg font-semibold", @class]}>
+    <h2 class={classes(["text-lg font-semibold", @class])}>
       <%= render_slot(@inner_block) %>
     </h2>
     """
@@ -138,7 +135,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_description(assigns) do
     ~H"""
-    <p class={["text-sm text-muted-foreground", @class]}>
+    <p class={classes(["text-sm text-muted-foreground", @class])}>
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -175,7 +172,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_overlay(assigns) do
     ~H"""
-    <div class="sheet-overlay fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" aria-hidden="true">
+    <div class="sheet-overlay bg-background/80 fixed inset-0 z-50 backdrop-blur-sm" aria-hidden="true">
     </div>
     """
   end

@@ -1,8 +1,8 @@
-defmodule OrangeCmsWeb.Components.Card do
+defmodule OrangeCmsWeb.Components.LadUI.Card do
   @moduledoc """
   Implement of card components from https://ui.shadcn.com/docs/components/card
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Card component
@@ -29,7 +29,7 @@ defmodule OrangeCmsWeb.Components.Card do
 
   def card(assigns) do
     ~H"""
-    <div class={["rounded-xl border bg-card text-card-foreground shadow", @class]} {@rest}>
+    <div class={classes(["rounded-xl border bg-card text-card-foreground shadow", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -41,7 +41,7 @@ defmodule OrangeCmsWeb.Components.Card do
 
   def card_header(assigns) do
     ~H"""
-    <div class={["flex flex-col space-y-1.5 p-6", @class]} {@rest}>
+    <div class={classes(["flex flex-col space-y-1.5 p-6", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -53,7 +53,7 @@ defmodule OrangeCmsWeb.Components.Card do
 
   def card_title(assigns) do
     ~H"""
-    <h3 class={["font-semibold leading-none tracking-tight", @class]} {@rest}>
+    <h3 class={classes(["font-semibold leading-none tracking-tight", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </h3>
     """
@@ -65,7 +65,7 @@ defmodule OrangeCmsWeb.Components.Card do
 
   def card_description(assigns) do
     ~H"""
-    <p class={["text-sm text-muted-foreground", @class]} {@rest}>
+    <p class={classes(["text-sm text-muted-foreground", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -77,7 +77,7 @@ defmodule OrangeCmsWeb.Components.Card do
 
   def card_content(assigns) do
     ~H"""
-    <div class={["p-6 pt-0", @class]} {@rest}>
+    <div class={classes(["p-6 pt-0", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -89,7 +89,7 @@ defmodule OrangeCmsWeb.Components.Card do
 
   def card_footer(assigns) do
     ~H"""
-    <div class={["flex items-center justify-between p-6 pt-0 ", @class]} {@rest}>
+    <div class={classes(["flex items-center justify-between p-6 pt-0 ", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """

@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Form do
+defmodule OrangeCmsWeb.Components.LadUI.Form do
   @moduledoc """
   Implement of form component
 
@@ -37,7 +37,7 @@ defmodule OrangeCmsWeb.Components.Form do
             </.form>
       </div>
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :label, :string, default: nil
   attr :description, :string, default: nil
@@ -61,7 +61,7 @@ defmodule OrangeCmsWeb.Components.Form do
 
   def form_item(assigns) do
     ~H"""
-    <div class={["space-y-2", @class]} {@rest}>
+    <div class={classes(["space-y-2", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -74,10 +74,10 @@ defmodule OrangeCmsWeb.Components.Form do
   def form_label(assigns) do
     ~H"""
     <label
-      class={[
+      class={classes([
         "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         @class
-      ]}
+      ])}
       {@rest}
     >
       <%= render_slot(@inner_block) %>
@@ -101,7 +101,7 @@ defmodule OrangeCmsWeb.Components.Form do
 
   def form_description(assigns) do
     ~H"""
-    <p class={["text-sm text-muted-foreground", @class]} {@rest}>
+    <p class={classes(["text-sm text-muted-foreground", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -124,7 +124,7 @@ defmodule OrangeCmsWeb.Components.Form do
     ~H"""
     <p
       :if={msg = render_slot(@inner_block) || not Enum.empty?(@errors)}
-      class={["text-sm font-medium text-destructive", @class]}
+      class={classes(["text-sm font-medium text-destructive", @class])}
       {@rest}
     >
       <span :for={msg <- @errors} class="block"><%= msg %></span>

@@ -115,13 +115,13 @@ defmodule OrangeCmsWeb.ContentEntryLive.Components do
               "data-error-display": @id <> "-error"]}
       />
       <label class="btn btn-sm btn-square" {[for: @id <> "upload"]}>
-        <Heroicons.arrow_up_tray class="w-4 h-4" />
+        <Heroicons.arrow_up_tray class="h-4 w-4" />
       </label>
     </div>
     <label class="label">
       <span class="label-text-alt text-red-500" {[id: @id <> "-error"]}></span>
     </label>
-    <div class="w-full h-24 border border-dashed flex items-center justify-center text-gray-300 overflow-hidden">
+    <div class="flex h-24 w-full items-center justify-center overflow-hidden border border-dashed text-gray-300">
       <img {[id: @id <> "-preview", src: @preview_url]} alt="image preview" />
     </div>
     """

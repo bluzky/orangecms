@@ -1,10 +1,8 @@
-defmodule OrangeCmsWeb.Components.Input do
+defmodule OrangeCmsWeb.Components.LadUI.Input do
   @moduledoc """
   Implement of form component
   """
-  use Phoenix.Component
-
-  alias OrangeCmsWeb.Components.ComponentHelpers
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr(:id, :any, default: nil)
   attr(:name, :any)
@@ -22,14 +20,14 @@ defmodule OrangeCmsWeb.Components.Input do
   attr(:rest, :global)
 
   def input(assigns) do
-    assigns = ComponentHelpers.prepare_assign(assigns)
+    assigns = prepare_assign(assigns)
 
     ~H"""
     <input
-      class={[
+      class={classes([
         "flex h-10 w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         @class
-      ]}
+      ])}
       id={@id}
       type={@type}
       name={@name}
@@ -56,14 +54,14 @@ defmodule OrangeCmsWeb.Components.Input do
   attr(:rest, :global)
 
   def textarea(assigns) do
-    assigns = ComponentHelpers.prepare_assign(assigns)
+    assigns = prepare_assign(assigns)
 
     ~H"""
     <textarea
-      class={[
+      class={classes([
         "flex min-h-[80px] w-full px-3 py-2 rounded-md border border-input bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         @class
-      ]}
+      ])}
       id={@id}
       name={@name}
       {@rest}
@@ -89,7 +87,7 @@ defmodule OrangeCmsWeb.Components.Input do
   def checkbox(assigns) do
     assigns =
       assigns
-      |> ComponentHelpers.prepare_assign()
+      |> prepare_assign()
       |> assign_new(:checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns.value)
       end)
@@ -98,10 +96,10 @@ defmodule OrangeCmsWeb.Components.Input do
     <input type="hidden" name={@name} value="false" />
     <input
       type="checkbox"
-      class={[
+      class={classes([
         "peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary",
         @class
-      ]}
+      ])}
       id={@id || @name}
       name={@name}
       value="true"
@@ -133,13 +131,13 @@ defmodule OrangeCmsWeb.Components.Input do
   def switch(assigns) do
     assigns =
       assigns
-      |> ComponentHelpers.prepare_assign()
+      |> prepare_assign()
       |> assign_new(:checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns.value)
       end)
 
     ~H"""
-    <label class={["relative inline-flex items-center p-0.5 h-[24px] w-[44px]", @class]} {@rest}>
+    <label class={classes(["relative inline-flex items-center p-0.5 h-[24px] w-[44px]", @class])} {@rest}>
       <input type="hidden" name={@name} value="false" />
       <input
         type="checkbox"
@@ -147,11 +145,11 @@ defmodule OrangeCmsWeb.Components.Input do
         name={@name}
         value="true"
         checked={@checked}
-        class="sr-only peer"
+        class="peer sr-only"
       />
-      <span class="absolute inset-0 shrink-0 cursor-pointer rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 peer-checked:bg-primary bg-input">
+      <span class="bg-input absolute inset-0 shrink-0 cursor-pointer rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 peer-checked:bg-primary">
       </span>
-      <span class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform peer-checked:translate-x-5 translate-x-0">
+      <span class="bg-background pointer-events-none block h-5 w-5 translate-x-0 rounded-full shadow-lg ring-0 transition-transform peer-checked:translate-x-5">
       </span>
     </label>
     """

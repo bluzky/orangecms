@@ -28,12 +28,12 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
           >
             <label
               tabindex="0"
-              class="flex gap-2 items-center w-full h-12 p-2 px-4 rounded-lg border border-base-300"
+              class="border-base-300 flex h-12 w-full items-center gap-2 rounded-lg border p-2 px-4"
               phx-click="toggle-search-box"
               phx-target={@myself}
             >
               <%= if @selected_item, do: @selected_item.label, else: "select a user" %>
-              <.icon name="chevron-down" class="w-5 h-5 ml-auto group-focus-within:rotate-180" />
+              <.icon name="chevron-down" class="ml-auto h-5 w-5 group-focus-within:rotate-180" />
             </label>
             <ul
               tabindex="0"
@@ -68,7 +68,7 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
               <% end %>
             </ul>
           </div>
-          <label :if={@error} class="text-error text-sm flex gap-1 py-2">
+          <label :if={@error} class="text-error flex gap-1 py-2 text-sm">
             <.icon name="exclamation-circle" /> <%= @error %>
           </label>
         </div>
@@ -83,7 +83,7 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
           />
         </.form_item>
 
-        <div class="w-full flex flex-row-reverse">
+        <div class="flex w-full flex-row-reverse">
           <.button icon="inbox_arrow_down" phx-disable-with="Saving...">
             Save
           </.button>

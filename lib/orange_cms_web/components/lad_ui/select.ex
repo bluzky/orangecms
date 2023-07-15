@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Select do
+defmodule OrangeCmsWeb.Components.LadUI.Select do
   @moduledoc """
   Implement of select components from https://ui.shadcn.com/docs/components/select
   This component require javascript to work properly.
@@ -51,10 +51,7 @@ defmodule OrangeCmsWeb.Components.Select do
           </.select>
         </.form_item>
   """
-  use Phoenix.Component
-
-  alias OrangeCmsWeb.Components.ComponentHelpers
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Ready to use select component with all required parts.
@@ -64,11 +61,14 @@ defmodule OrangeCmsWeb.Components.Select do
   attr(:placeholder, :string, default: nil)
   attr(:disabled, :boolean, default: false)
   attr(:options, :list, required: true)
+  attr(:name, :string)
   attr(:value, :any)
+  attr(:default, :any, default: nil)
   attr(:rest, :global)
 
   def simple_select(assigns) do
-    assigns = ComponentHelpers.prepare_assign(assigns)
+    assigns = prepare_assign(assigns)
+    assigns = assign(assigns, :value, assigns[:value] || assigns[:default])
 
     ~H"""
     <.select {@rest} {Map.drop(assigns, [ :rest, :field, :options])}>
@@ -79,9 +79,7 @@ defmodule OrangeCmsWeb.Components.Select do
         <.select_group>
           <.select_item
             :for={item <- @options}
-            field={@field}
             value={item}
-            name={@name}
             selected={item == @value}
           >
             <%= item %>
@@ -104,7 +102,7 @@ defmodule OrangeCmsWeb.Components.Select do
     ~H"""
     <div
       id={@id}
-      class={["select-root group/select relative inline-block", @class]}
+      class={classes(["select-root group/select relative inline-block", @class])}
       data-state="closed"
       close-select={JS.set_attribute({"data-state", "closed"})}
       select-change={JS.dispatch("select-change")}
@@ -114,7 +112,7 @@ defmodule OrangeCmsWeb.Components.Select do
     >
       <input
         type="text"
-        class="hidden select-input"
+        class="select-input hidden"
         name={@name}
         value={@value}
         phx-change={assigns[:"phx-change"]}
@@ -132,15 +130,15 @@ defmodule OrangeCmsWeb.Components.Select do
     ~H"""
     <button
       type="button"
-      class={[
+      class={classes([
         "select-trigger flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         @class
-      ]}
+      ])}
       phx-click={JS.dispatch("select-toggle")}
       {@rest}
     >
       <%= render_slot(@inner_block) %>
-      <Heroicons.chevron_down class="w-4 h-4 opacity-50" />
+      <Heroicons.chevron_down class="h-4 w-4 opacity-50" />
     </button>
     """
   end
@@ -166,13 +164,13 @@ defmodule OrangeCmsWeb.Components.Select do
   def select_content(assigns) do
     ~H"""
     <div
-      class={[
+      class={classes([
         "select-content hidden group-data-[state=open]/select:block transition-all duration-150 ease-in-out absolute top-full mt-2 left-0 w-full z-50 min-w-[8rem] max-h-[285px] overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md",
         @class
-      ]}
+      ])}
       {@rest}
     >
-      <div class="p-1 w-full relative">
+      <div class="relative w-full p-1">
         <%= render_slot(@inner_block) %>
       </div>
     </div>
@@ -185,7 +183,7 @@ defmodule OrangeCmsWeb.Components.Select do
 
   def select_group(assigns) do
     ~H"""
-    <div role="group" class={[@class]} {@rest}>
+    <div role="group" class={classes([@class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -197,7 +195,7 @@ defmodule OrangeCmsWeb.Components.Select do
 
   def select_label(assigns) do
     ~H"""
-    <div class={["py-1.5 pl-8 pr-2 text-sm font-semibold", @class]} {@rest}>
+    <div class={classes(["py-1.5 pl-8 pr-2 text-sm font-semibold", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -224,10 +222,10 @@ defmodule OrangeCmsWeb.Components.Select do
     <% content = render_slot(@inner_block) %>
     <label
       role="option"
-      class={[
+      class={classes([
         "select-item group/item relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         @class
-      ]}
+      ])}
       {%{"data-disabled": @disabled}}
       phx-click={JS.dispatch("select-change")}
       data-selected={@selected && "true"}
@@ -246,7 +244,7 @@ defmodule OrangeCmsWeb.Components.Select do
 
   def select_separator(assigns) do
     ~H"""
-    <div class={["-mx-1 my-1 h-px bg-muted"]}></div>
+    <div class={classes(["-mx-1 my-1 h-px bg-muted"])}></div>
     """
   end
 end

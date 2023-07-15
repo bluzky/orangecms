@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Tooltip do
+defmodule OrangeCmsWeb.Components.LadUI.Tooltip do
   @moduledoc """
   Tooltip component
 
@@ -14,7 +14,7 @@ defmodule OrangeCmsWeb.Components.Tooltip do
         </.tooltip_content>
       </.tooltip>
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :class, :string, default: nil
   slot :inner_block, required: true
@@ -22,7 +22,7 @@ defmodule OrangeCmsWeb.Components.Tooltip do
 
   def tooltip(assigns) do
     ~H"""
-    <div class={["group relative", @class]} {@rest}>
+    <div class={classes(["group relative", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -43,10 +43,10 @@ defmodule OrangeCmsWeb.Components.Tooltip do
 
     ~H"""
     <span
-      class={[
+      class={classes([
         "absolute rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block",
         @class
-      ]}
+      ])}
       {@rest}
     >
       <%= render_slot(@inner_block) %>

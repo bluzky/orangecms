@@ -1,6 +1,6 @@
-defmodule OrangeCmsWeb.Components.ScrollArea do
+defmodule OrangeCmsWeb.Components.LadUI.ScrollArea do
   @moduledoc false
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :class, :string, default: nil
   attr(:rest, :global)
@@ -8,7 +8,7 @@ defmodule OrangeCmsWeb.Components.ScrollArea do
 
   def scroll_area(assigns) do
     ~H"""
-    <div class={["relative overflow-hidden", @class]} {@rest}>
+    <div class={classes(["relative overflow-hidden", @class])} {@rest}>
       <style>
             /* Firefox */
         [data-scroll-area] {
@@ -35,7 +35,7 @@ defmodule OrangeCmsWeb.Components.ScrollArea do
       </style>
       <div
         data-scroll-area=""
-        class="h-full w-full rounded-[inherit] overflow-y-auto overflow-x-hidden"
+        class="rounded-[inherit] h-full w-full overflow-y-auto overflow-x-hidden"
       >
         <div style="min-width: 100%; display: table;">
           <%= render_slot(@inner_block) %>

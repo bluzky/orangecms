@@ -1,8 +1,8 @@
-defmodule OrangeCmsWeb.Components.Alert do
+defmodule OrangeCmsWeb.Components.LadUI.Alert do
   @moduledoc false
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
-  import OrangeCmsWeb.Components.Icon
+  import OrangeCmsWeb.Components.LadUI.Icon
 
   @doc """
   Render alert
@@ -35,14 +35,14 @@ defmodule OrangeCmsWeb.Components.Alert do
     # We have to specify full class name for tailwind to extract class name
     ~H"""
     <div
-      class={[
+      class={classes([
         "rounded-lg border px-4 py-3 text-sm bg-background text-foreground",
         @class,
         @kind == "error" && "border-destructive/50 text-destructive dark:border-destructive"
-      ]}
+      ])}
       {@rest}
     >
-      <div class="w-full flex gap-2">
+      <div class="flex w-full gap-2">
         <.icon :if={not is_nil(@icon)} name={@icon} />
         <div>
           <%= render_slot(@inner_block) %>

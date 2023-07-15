@@ -1,10 +1,8 @@
-defmodule OrangeCmsWeb.Components.Dialog do
+defmodule OrangeCmsWeb.Components.LadUI.Dialog do
   @moduledoc """
   Implement of card components from https://ui.shadcn.com/docs/components/card
   """
-  use Phoenix.Component
-
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Card component
@@ -55,11 +53,11 @@ defmodule OrangeCmsWeb.Components.Dialog do
     >
       <div
         id={"#{@id}-bg"}
-        class="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
+        class="bg-background/80 fixed inset-0 backdrop-blur-sm transition-opacity"
         aria-hidden="true"
       />
       <div
-        class="fixed inset-0 overflow-y-auto flex items-center justify-center"
+        class="fixed inset-0 flex items-center justify-center overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
         aria-describedby={"#{@id}-description"}
         role="dialog"
@@ -75,19 +73,19 @@ defmodule OrangeCmsWeb.Components.Dialog do
         >
           <div
             role="dialog"
-            class={[
+            class={classes([
               "relative z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg",
               @class
-            ]}
+            ])}
           >
             <%= render_slot(@inner_block) %>
 
             <button
               type="button"
-              class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+              class="ring-offset-background absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-ring focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
               phx-click={hide_modal(@on_cancel, @id)}
             >
-              <Heroicons.x_mark class="w-4 h-4 no-collapse" />
+              <Heroicons.x_mark class="no-collapse h-4 w-4" />
               <span class="sr-only">Close</span>
             </button>
           </div>
@@ -111,7 +109,7 @@ defmodule OrangeCmsWeb.Components.Dialog do
 
   def dialog_header(assigns) do
     ~H"""
-    <div class={["flex flex-col space-y-1.5 text-center sm:text-left", @class]}>
+    <div class={classes(["flex flex-col space-y-1.5 text-center sm:text-left", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -122,7 +120,7 @@ defmodule OrangeCmsWeb.Components.Dialog do
 
   def dialog_title(assigns) do
     ~H"""
-    <h3 class={["text-lg font-semibold leading-none tracking-tight", @class]}>
+    <h3 class={classes(["text-lg font-semibold leading-none tracking-tight", @class])}>
       <%= render_slot(@inner_block) %>
     </h3>
     """
@@ -133,7 +131,7 @@ defmodule OrangeCmsWeb.Components.Dialog do
 
   def dialog_description(assigns) do
     ~H"""
-    <p class={["text-sm text-muted-foreground", @class]}>
+    <p class={classes(["text-sm text-muted-foreground", @class])}>
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -144,7 +142,7 @@ defmodule OrangeCmsWeb.Components.Dialog do
 
   def dialog_footer(assigns) do
     ~H"""
-    <div class={["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class]}>
+    <div class={classes(["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """

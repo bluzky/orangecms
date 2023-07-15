@@ -1,8 +1,8 @@
-defmodule OrangeCmsWeb.Components.Table do
+defmodule OrangeCmsWeb.Components.LadUI.Table do
   @moduledoc """
   Implement of table components from https://ui.shadcn.com/docs/components/table
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Card component
@@ -50,7 +50,7 @@ defmodule OrangeCmsWeb.Components.Table do
 
   def stable(assigns) do
     ~H"""
-    <table class={["w-full text-sm", @class]} {@rest}>
+    <table class={classes(["w-full text-sm", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </table>
     """
@@ -62,7 +62,7 @@ defmodule OrangeCmsWeb.Components.Table do
 
   def table_header(assigns) do
     ~H"""
-    <thead class={["[&_tr]:border-b", @class]} {@rest}>
+    <thead class={classes(["[&_tr]:border-b", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </thead>
     """
@@ -74,7 +74,7 @@ defmodule OrangeCmsWeb.Components.Table do
 
   def table_caption(assigns) do
     ~H"""
-    <caption class={["mt-4 text-sm text-muted-foreground caption-bottom", @class]} {@rest}>
+    <caption class={classes(["mt-4 text-sm text-muted-foreground caption-bottom", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </caption>
     """
@@ -87,7 +87,7 @@ defmodule OrangeCmsWeb.Components.Table do
   def table_row(assigns) do
     ~H"""
     <tr
-      class={["border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", @class]}
+      class={classes(["border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", @class])}
       {@rest}
     >
       <%= render_slot(@inner_block) %>
@@ -102,10 +102,10 @@ defmodule OrangeCmsWeb.Components.Table do
   def table_head(assigns) do
     ~H"""
     <th
-      class={[
+      class={classes([
         "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         @class
-      ]}
+      ])}
       {@rest}
     >
       <%= render_slot(@inner_block) %>
@@ -119,7 +119,7 @@ defmodule OrangeCmsWeb.Components.Table do
 
   def table_body(assigns) do
     ~H"""
-    <tbody class={["[&_tr:last-child]:border-0", @class]} {@rest}>
+    <tbody class={classes(["[&_tr:last-child]:border-0", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </tbody>
     """
@@ -131,7 +131,7 @@ defmodule OrangeCmsWeb.Components.Table do
 
   def table_cell(assigns) do
     ~H"""
-    <td class={["p-4 align-middle [&:has([role=checkbox])]:pr-0", @class]} {@rest}>
+    <td class={classes(["p-4 align-middle [&:has([role=checkbox])]:pr-0", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </td>
     """

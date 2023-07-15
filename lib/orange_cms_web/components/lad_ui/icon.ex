@@ -1,6 +1,6 @@
-defmodule OrangeCmsWeb.Components.Icon do
+defmodule OrangeCmsWeb.Components.LadUI.Icon do
   @moduledoc false
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Renders Heroicons

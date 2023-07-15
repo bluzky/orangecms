@@ -31,7 +31,7 @@ defmodule OrangeCmsWeb.UserResetPasswordLive do
         </:actions>
       </.simple_form>
 
-      <p class="text-center text-sm mt-4">
+      <p class="mt-4 text-center text-sm">
         <!--<.link href={~p"/register"}>Register</.link> |-->
         <.link href={~p"/log_in"}>Log in</.link>
       </p>

@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Collapsible do
+defmodule OrangeCmsWeb.Components.LadUI.Collapsible do
   @moduledoc """
   Collapsible component https://ui.shadcn.com/docs/components/collapsible
 
@@ -29,9 +29,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
           </.collapsible_content>
         </.collapsible>
   """
-  use Phoenix.Component
-
-  alias OrangeCmsWeb.Components.LadJS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :open, :boolean, default: false, doc: "Whether the collapsible is open or not"
   attr(:class, :string, default: nil)
@@ -40,7 +38,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
 
   def collapsible(assigns) do
     ~H"""
-    <div class={["group collapsible-root", @class]} {@rest} data-state={(@open && "open") || "closed"}>
+    <div class={classes(["group collapsible-root", @class])} {@rest} data-state={(@open && "open") || "closed"}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -54,7 +52,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   def collapsible_trigger(assigns) do
     ~H"""
     <div
-      class={["", @class]}
+      class={classes(["", @class])}
       {@rest}
       phx-click={
         LadJS.toggle_attribute({"data-state", {"open", "closed"}}, to: "closest(.collapsible-root)")
@@ -72,10 +70,10 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   def collapsible_content(assigns) do
     ~H"""
     <div
-      class={[
+      class={classes([
         "transition ease-in-out duration-3000 opacity-0 h-0  overflow-hidden group-data-[state=open]:opacity-100 group-data-[state=open]:h-auto group-data-[state=open]:overflow-visible",
         @class
-      ]}
+      ])}
       {@rest}
     >
       <%= render_slot(@inner_block) %>

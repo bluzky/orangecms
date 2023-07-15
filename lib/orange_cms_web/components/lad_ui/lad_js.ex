@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.LadJS do
+defmodule OrangeCmsWeb.Components.LadUI.LadJS do
   @moduledoc """
   LadJS provide extra functionality to exsiting LiveView JS.
   It implemented using `JS.dispatch` an event named `lad:exec`, all arguments are stored in `event.detail`.
