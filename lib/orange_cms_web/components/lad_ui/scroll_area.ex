@@ -8,7 +8,7 @@ defmodule OrangeCmsWeb.Components.LadUI.ScrollArea do
 
   def scroll_area(assigns) do
     ~H"""
-    <div class={["relative overflow-hidden", @class]} {@rest}>
+    <div class={classes(["relative overflow-hidden", @class])} {@rest}>
       <style>
             /* Firefox */
         [data-scroll-area] {

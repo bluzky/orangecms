@@ -34,13 +34,13 @@ defmodule OrangeCmsWeb.Components.LadUI.Button do
     ~H"""
     <button
       type={@type}
-      class={[
+      class={classes([
         "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
         @variant_class,
         "gap-1",
         "phx-submit-loading:opacity-75 btn",
         @class
-      ]}
+      ])}
       {@rest}
     >
       <.icon :if={not is_nil(@icon)} name={@icon} class="h-5 w-5" />

@@ -5,7 +5,7 @@ defmodule OrangeCmsWeb.Components.LadUI do
       use Phoenix.Component
 
       import OrangeCmsWeb.Components.LadUI.Helpers
-      import Twix
+      import Tails, only: [classes: 1]
 
       alias OrangeCmsWeb.Components.LadUI.LadJS
       alias Phoenix.LiveView.JS

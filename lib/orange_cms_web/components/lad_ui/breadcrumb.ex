@@ -8,7 +8,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Breadcrumb do
 
   def breadcrumb(assigns) do
     ~H"""
-    <div class={[@class]}>
+    <div class={classes([@class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """

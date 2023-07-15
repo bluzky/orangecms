@@ -21,7 +21,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Display do
     assigns = Map.put(assigns, :orientation_class, class)
 
     ~H"""
-    <div role="none" class={["shrink-0 bg-border", @orientation_class, @class]}></div>
+    <div role="none" class={classes(["shrink-0 bg-border", @orientation_class, @class])}></div>
     """
   end
 
@@ -34,7 +34,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Display do
 
   def avatar(assigns) do
     ~H"""
-    <div class={["relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", @class]}>
+    <div class={classes(["relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -46,7 +46,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Display do
 
   def avatar_image(assigns) do
     ~H"""
-    <img class={["aspect-square h-full w-full", @class]} src={@src} {@rest} />
+    <img class={classes(["aspect-square h-full w-full", @class])} src={@src} {@rest} />
     """
   end
 
@@ -64,10 +64,10 @@ defmodule OrangeCmsWeb.Components.LadUI.Display do
   def badge(assigns) do
     ~H"""
     <div
-      class={[
+      class={classes([
         "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow border-transparent",
         @class
-      ]}
+      ])}
       {@rest}
     >
       <%= render_slot(@inner_block) %>

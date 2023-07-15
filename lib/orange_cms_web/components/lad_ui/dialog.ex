@@ -73,10 +73,10 @@ defmodule OrangeCmsWeb.Components.LadUI.Dialog do
         >
           <div
             role="dialog"
-            class={[
+            class={classes([
               "relative z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg",
               @class
-            ]}
+            ])}
           >
             <%= render_slot(@inner_block) %>
 
@@ -109,7 +109,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Dialog do
 
   def dialog_header(assigns) do
     ~H"""
-    <div class={["flex flex-col space-y-1.5 text-center sm:text-left", @class]}>
+    <div class={classes(["flex flex-col space-y-1.5 text-center sm:text-left", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -120,7 +120,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Dialog do
 
   def dialog_title(assigns) do
     ~H"""
-    <h3 class={["text-lg font-semibold leading-none tracking-tight", @class]}>
+    <h3 class={classes(["text-lg font-semibold leading-none tracking-tight", @class])}>
       <%= render_slot(@inner_block) %>
     </h3>
     """
@@ -131,7 +131,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Dialog do
 
   def dialog_description(assigns) do
     ~H"""
-    <p class={["text-sm text-muted-foreground", @class]}>
+    <p class={classes(["text-sm text-muted-foreground", @class])}>
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -142,7 +142,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Dialog do
 
   def dialog_footer(assigns) do
     ~H"""
-    <div class={["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class]}>
+    <div class={classes(["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """

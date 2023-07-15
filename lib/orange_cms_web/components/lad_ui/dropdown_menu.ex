@@ -42,7 +42,7 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
 
   def dropdown_menu(assigns) do
     ~H"""
-    <div class={["relative group inline-block", @class]} {@rest}>
+    <div class={classes(["relative group inline-block", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -90,7 +90,7 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
 
   def dropdown_menu_label(assigns) do
     ~H"""
-    <div class={["px-2 py-1.5 text-sm font-semibold", @class]} {@rest}>
+    <div class={classes(["px-2 py-1.5 text-sm font-semibold", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -100,7 +100,7 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
 
   def dropdown_menu_separator(assigns) do
     ~H"""
-    <div role="separator" aria-orientation="horizontal" class={["-mx-1 my-1 h-px bg-muted", @class]}>
+    <div role="separator" aria-orientation="horizontal" class={classes(["-mx-1 my-1 h-px bg-muted", @class])}>
     </div>
     """
   end
@@ -111,7 +111,7 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
 
   def dropdown_menu_group(assigns) do
     ~H"""
-    <div class={[@class]} role="group" {@rest}><%= render_slot(@inner_block) %></div>
+    <div class={classes([@class])} role="group" {@rest}><%= render_slot(@inner_block) %></div>
     """
   end
 
@@ -123,11 +123,11 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
   def dropdown_menu_item(assigns) do
     ~H"""
     <div
-      class={[
+      class={classes([
         "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
         @disabled && "pointer-events-none opacity-50",
         @class
-      ]}
+      ])}
       {@rest}
     >
       <%= render_slot(@inner_block) %>
@@ -141,7 +141,7 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
 
   def dropdown_menu_shortcut(assigns) do
     ~H"""
-    <span class={["ml-auto text-xs tracking-widest opacity-60", @class]} {@rest}>
+    <span class={classes(["ml-auto text-xs tracking-widest opacity-60", @class])} {@rest}>
       <%= render_slot(@inner_block) %>
     </span>
     """

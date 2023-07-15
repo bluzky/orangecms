@@ -49,7 +49,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
 
     ~H"""
     <div
-      class={[@class]}
+      class={classes([@class])}
       phx-mounted={
         (@show && JS.exec("phx-show-sheet", to: "[data-key=#{@key}] .sheet-content")) || %JS{}
       }
@@ -66,7 +66,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
 
   def sheet_trigger(assigns) do
     ~H"""
-    <div class={[@class]} phx-click={JS.exec("phx-show-sheet", to: "#" <> @target)}>
+    <div class={classes([@class])} phx-click={JS.exec("phx-show-sheet", to: "#" <> @target)}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -77,10 +77,10 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
   defp sheet_overlay(assigns) do
     ~H"""
     <div
-      class={[
+      class={classes([
         "sheet-overlay fixed hidden inset-0 z-50 bg-background/80 backdrop-blur-sm",
         @class
-      ]}
+      ])}
       aria-hidden="true"
     >
     </div>
@@ -123,14 +123,14 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
         phx-key="escape"
         phx-click-away={JS.exec("phx-hide-sheet", to: "#" <> @id)}
         role="sheet"
-        class={[
+        class={classes([
           "sheet-content-wrap hidden fixed z-50 bg-background shadow-lg transition",
           @variant_class,
           @class
-        ]}
+        ])}
       >
-        <div class={["relative h-full"]}>
-          <div class={["p-6 overflow-y-auto h-full", @class]}>
+        <div class={classes(["relative h-full"])}>
+          <div class={classes(["p-6 overflow-y-auto h-full", @class])}>
             <%= render_slot(@inner_block) %>
           </div>
 
@@ -157,7 +157,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
 
   def sheet_header(assigns) do
     ~H"""
-    <div class={["flex flex-col space-y-2 text-center sm:text-left", @class]}>
+    <div class={classes(["flex flex-col space-y-2 text-center sm:text-left", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -168,7 +168,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
 
   def sheet_title(assigns) do
     ~H"""
-    <h3 class={["text-lg font-semibold text-foreground", @class]}>
+    <h3 class={classes(["text-lg font-semibold text-foreground", @class])}>
       <%= render_slot(@inner_block) %>
     </h3>
     """
@@ -179,7 +179,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
 
   def sheet_description(assigns) do
     ~H"""
-    <p class={["text-sm text-muted-foreground", @class]}>
+    <p class={classes(["text-sm text-muted-foreground", @class])}>
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -190,7 +190,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
 
   def sheet_footer(assigns) do
     ~H"""
-    <div class={["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class]}>
+    <div class={classes(["flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", @class])}>
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -202,7 +202,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
 
   def sheet_close(assigns) do
     ~H"""
-    <div class={["", @class]} phx-click={JS.exec("phx-hide-sheet", to: "#" <> @target)}>
+    <div class={classes(["", @class])} phx-click={JS.exec("phx-hide-sheet", to: "#" <> @target)}>
       <%= render_slot(@inner_block) %>
     </div>
     """
