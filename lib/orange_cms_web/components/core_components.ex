@@ -12,8 +12,8 @@ defmodule OrangeCmsWeb.CoreComponents do
   use Phoenix.Component
   use OrangeCmsWeb, :verified_routes
 
-  import OrangeCmsWeb.Components.Button
-  import OrangeCmsWeb.Components.Icon
+  import OrangeCmsWeb.Components.LadUI.Button
+  import OrangeCmsWeb.Components.LadUI.Icon
   import OrangeCmsWeb.Gettext
 
   alias Phoenix.LiveView.JS
@@ -57,7 +57,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       phx-remove={hide_modal(@id)}
       class="relative z-50 hidden"
     >
-      <div id={"#{@id}-bg"} class="fixed inset-0 bg-zinc-50/90 transition-opacity" aria-hidden="true" />
+      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
       <div
         class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
@@ -74,7 +74,7 @@ defmodule OrangeCmsWeb.CoreComponents do
               phx-window-keydown={hide_modal(@on_cancel, @id)}
               phx-key="escape"
               phx-click-away={hide_modal(@on_cancel, @id)}
-              class="hidden relative rounded-2xl bg-white p-14 shadow-lg shadow-zinc-700/10 ring-1 ring-zinc-700/10 transition"
+              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-14 shadow-lg ring-1 transition"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -100,13 +100,13 @@ defmodule OrangeCmsWeb.CoreComponents do
                   </p>
                 </header>
                 <%= render_slot(@inner_block) %>
-                <div :if={@confirm != [] or @cancel != []} class="ml-6 mb-4 flex items-center gap-5">
+                <div :if={@confirm != [] or @cancel != []} class="mb-4 ml-6 flex items-center gap-5">
                   <.button
                     :for={confirm <- @confirm}
                     id={"#{@id}-confirm"}
                     phx-click={@on_confirm}
                     phx-disable-with
-                    class="py-2 px-3"
+                    class="px-3 py-2"
                   >
                     <%= render_slot(confirm) %>
                   </.button>
@@ -153,7 +153,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       phx-mounted={@autoshow && show("##{@id}")}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
-      class="fixed hidden top-2 right-2 w-80 sm:w-96 z-50"
+      class="fixed top-2 right-2 z-50 hidden w-80 sm:w-96"
       style="user-select: none; touch-action: none;"
       {@rest}
     >
@@ -170,7 +170,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
         <button
           type="button"
-          class="absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600"
+          class="text-foreground/50 absolute top-1 right-1 rounded-md p-1 opacity-0 transition-opacity group-[.destructive]:text-red-300 hover:text-foreground hover:group-[.destructive]:text-red-50 focus:opacity-100 focus:outline-none focus:ring-1 focus:group-[.destructive]:ring-red-400 focus:group-[.destructive]:ring-offset-red-600 group-hover:opacity-100"
         >
           <.icon name="x-mark" />
         </button>
@@ -201,7 +201,7 @@ defmodule OrangeCmsWeb.CoreComponents do
       phx-disconnected={show("#disconnected")}
       phx-connected={hide("#disconnected")}
     >
-      Attempting to reconnect <.icon name="arrow-path" class="ml-1 w-3 h-3 inline animate-spin" />
+      Attempting to reconnect <.icon name="arrow-path" class="ml-1 inline h-3 w-3 animate-spin" />
     </.flash>
     """
   end
@@ -293,11 +293,11 @@ defmodule OrangeCmsWeb.CoreComponents do
 
     ~H"""
     <div phx-feedback-for={@name} class="form-control">
-      <div class="flex gap-2 items-center">
+      <div class="flex items-center gap-2">
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
-          class="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary"
+          class="peer border-primary text-primary h-4 w-4 shrink-0 rounded-sm border shadow focus:ring-0 focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
           id={@id || @name}
           name={@name}
           value="true"
@@ -392,9 +392,9 @@ defmodule OrangeCmsWeb.CoreComponents do
 
       <div :if={@helper != []} class="dropdown">
         <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
-          <.icon name="question-mark-circle" class="w-4 h-4" />
+          <.icon name="question-mark-circle" class="h-4 w-4" />
         </label>
-        <div tabindex="0" class="card compact dropdown-content shadow-lg bg-base-300 rounded-box w-80">
+        <div tabindex="0" class="card compact dropdown-content bg-base-300 rounded-box w-80 shadow-lg">
           <div class="card-body font-normal">
             <%= render_slot(@helper) %>
           </div>
@@ -411,8 +411,8 @@ defmodule OrangeCmsWeb.CoreComponents do
 
   def error(assigns) do
     ~H"""
-    <p class="phx-no-feedback:hidden mt-3 flex gap-3 text-sm leading-6 text-error">
-      <.icon name="exclamation-circle" class="mt-0.5 h-5 w-5 flex-none fill-error" />
+    <p class="text-error mt-3 flex gap-3 text-sm leading-6 phx-no-feedback:hidden">
+      <.icon name="exclamation-circle" class="fill-error mt-0.5 h-5 w-5 flex-none" />
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -492,7 +492,7 @@ defmodule OrangeCmsWeb.CoreComponents do
 
     ~H"""
     <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
-      <table class="table mt-11 w-[40rem] sm:w-full">
+      <table class="w-[40rem] mt-11 table sm:w-full">
         <thead class="">
           <tr>
             <th :for={col <- @col}><%= col[:label] %></th>
@@ -541,7 +541,7 @@ defmodule OrangeCmsWeb.CoreComponents do
     <div class="mt-14">
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 sm:gap-8">
-          <dt class="w-1/4 flex-none text-[0.8125rem] leading-6 text-zinc-500"><%= item.title %></dt>
+          <dt class="text-[0.8125rem] w-1/4 flex-none leading-6 text-zinc-500"><%= item.title %></dt>
           <dd class="text-sm leading-6 text-zinc-700"><%= render_slot(item) %></dd>
         </div>
       </dl>
@@ -566,7 +566,7 @@ defmodule OrangeCmsWeb.CoreComponents do
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <.icon name="arrow-left" solid class="w-3 h-3 stroke-current inline" />
+        <.icon name="arrow-left" solid class="inline h-3 w-3 stroke-current" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>

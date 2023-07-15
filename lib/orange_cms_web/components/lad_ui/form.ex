@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Form do
+defmodule OrangeCmsWeb.Components.LadUI.Form do
   @moduledoc """
   Implement of form component
 
@@ -37,7 +37,7 @@ defmodule OrangeCmsWeb.Components.Form do
             </.form>
       </div>
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :label, :string, default: nil
   attr :description, :string, default: nil

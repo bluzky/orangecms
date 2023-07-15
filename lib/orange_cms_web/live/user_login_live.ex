@@ -4,7 +4,7 @@ defmodule OrangeCmsWeb.UserLoginLive do
 
   def render(assigns) do
     ~H"""
-    <div class="w-full h-screen flex items-center bg-background">
+    <div class="bg-background flex h-screen w-full items-center">
       <div class="mx-auto max-w-sm">
         <.card>
           <.card_header class="text-center text-2xl">
@@ -43,7 +43,7 @@ defmodule OrangeCmsWeb.UserLoginLive do
             <!--<div class="mt-4 text-sm">
               Don't have an account? <.link
                 navigate={~p"/register"}
-                class="font-semibold text-brand hover:underline"
+                class="text-brand font-semibold hover:underline"
               >
           Sign up now
         </.link>.

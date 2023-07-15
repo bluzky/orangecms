@@ -3,7 +3,6 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Accounts
-  alias OrangeCmsWeb.Components.Input
 
   @impl true
   def render(assigns) do
@@ -29,7 +28,7 @@ defmodule OrangeCmsWeb.UserLive.FormComponent do
         <.form_item field={@form[:password]} label="Password">
           <Input.input field={@form[:password]} type="text" />
         </.form_item>
-        <div class="w-full flex flex-row-reverse">
+        <div class="flex w-full flex-row-reverse">
           <.button icon="inbox_arrow_down" phx-disable-with="Saving...">Save User</.button>
         </div>
       </.form>

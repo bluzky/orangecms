@@ -1,13 +1,10 @@
-defmodule OrangeCmsWeb.Components.AlertDialog do
+defmodule OrangeCmsWeb.Components.LadUI.AlertDialog do
   @moduledoc """
   Implement of card components from https://ui.shadcn.com/docs/components/card
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
-  import OrangeCmsWeb.Components.Button
-
-  alias OrangeCmsWeb.Components.LadJS
-  alias Phoenix.LiveView.JS
+  import OrangeCmsWeb.Components.LadUI.Button
 
   attr :id, :string, required: true
   attr :class, :string, default: nil
@@ -77,16 +74,16 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_content(assigns) do
     ~H"""
-    <div class="alert-content-wrapper hidden relative">
+    <div class="alert-content-wrapper relative hidden">
       <.alert_dialog_overlay />
       <div
-        class="fixed min-w-screen min-h-screen z-50 inset-0 overflow-y-auto flex items-center justify-center"
+        class="min-w-screen fixed inset-0 z-50 flex min-h-screen items-center justify-center overflow-y-auto"
         role="dialog"
         aria-modal="true"
         tabindex="0"
       >
         <.focus_wrap
-          id={OrangeCmsWeb.Components.ComponentHelpers.generate_id(prefix: "alert-")}
+          id={generate_id(prefix: "alert-")}
           class={[
             "alert-content fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
             @class
@@ -175,7 +172,7 @@ defmodule OrangeCmsWeb.Components.AlertDialog do
 
   def alert_dialog_overlay(assigns) do
     ~H"""
-    <div class="sheet-overlay fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" aria-hidden="true">
+    <div class="sheet-overlay bg-background/80 fixed inset-0 z-50 backdrop-blur-sm" aria-hidden="true">
     </div>
     """
   end

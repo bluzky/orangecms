@@ -1,10 +1,10 @@
-defmodule OrangeCmsWeb.Components.Display do
+defmodule OrangeCmsWeb.Components.LadUI.Display do
   @moduledoc """
   Some display utility component includes:
 
   - separator
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr(:class, :string, default: nil)
   attr(:orientation, :string, values: ["horizontal", "vertical"], default: "horizontal")

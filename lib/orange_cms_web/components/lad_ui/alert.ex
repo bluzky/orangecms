@@ -1,8 +1,8 @@
-defmodule OrangeCmsWeb.Components.Alert do
+defmodule OrangeCmsWeb.Components.LadUI.Alert do
   @moduledoc false
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
-  import OrangeCmsWeb.Components.Icon
+  import OrangeCmsWeb.Components.LadUI.Icon
 
   @doc """
   Render alert
@@ -42,7 +42,7 @@ defmodule OrangeCmsWeb.Components.Alert do
       ]}
       {@rest}
     >
-      <div class="w-full flex gap-2">
+      <div class="flex w-full gap-2">
         <.icon :if={not is_nil(@icon)} name={@icon} />
         <div>
           <%= render_slot(@inner_block) %>

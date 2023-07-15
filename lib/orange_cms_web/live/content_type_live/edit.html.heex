@@ -89,7 +89,7 @@
               class="space-y-6"
             >
               <.inputs_for :let={field} field={f[:frontmatter_schema]}>
-                <% id = OrangeCmsWeb.Components.ComponentHelpers.generate_id()
+                <% id = OrangeCmsWeb.Components.LadUI.Helpers.generate_id()
                 key = Phoenix.HTML.Form.input_value(field, :key) %>
                 <.collapsible id={id} class="group" open={true} data-id={key}>
                   <div class="flex gap-2 cursor-pointer font-semibold text-sm">
@@ -116,7 +116,6 @@
                           <div class="col-span-4">
                             <.form_item label="Data type" field={field[:type]}>
                               <.simple_select
-                                default={:string}
                                 field={field[:type]}
                                 options={OrangeCms.Content.InputType.values()}
                                 phx-change={%JS{}}

@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Tabs do
+defmodule OrangeCmsWeb.Components.LadUI.Tabs do
   @moduledoc """
   Implement of card components from https://ui.shadcn.com/docs/components/card
 
@@ -27,9 +27,7 @@ defmodule OrangeCmsWeb.Components.Tabs do
       </.tabs_content>
       </.tabs>
   """
-  use Phoenix.Component
-
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr(:id, :string, required: true, doc: "id for root tabs tag")
   attr(:default, :string, required: true, doc: "default active tab")

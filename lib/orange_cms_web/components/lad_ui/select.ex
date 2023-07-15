@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Select do
+defmodule OrangeCmsWeb.Components.LadUI.Select do
   @moduledoc """
   Implement of select components from https://ui.shadcn.com/docs/components/select
   This component require javascript to work properly.
@@ -51,10 +51,7 @@ defmodule OrangeCmsWeb.Components.Select do
           </.select>
         </.form_item>
   """
-  use Phoenix.Component
-
-  alias OrangeCmsWeb.Components.ComponentHelpers
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Ready to use select component with all required parts.
@@ -64,11 +61,14 @@ defmodule OrangeCmsWeb.Components.Select do
   attr(:placeholder, :string, default: nil)
   attr(:disabled, :boolean, default: false)
   attr(:options, :list, required: true)
+  attr(:name, :string)
   attr(:value, :any)
+  attr(:default, :any, default: nil)
   attr(:rest, :global)
 
   def simple_select(assigns) do
-    assigns = ComponentHelpers.prepare_assign(assigns)
+    assigns = prepare_assign(assigns)
+    assigns = assign(assigns, :value, assigns[:value] || assigns[:default])
 
     ~H"""
     <.select {@rest} {Map.drop(assigns, [ :rest, :field, :options])}>
@@ -79,9 +79,7 @@ defmodule OrangeCmsWeb.Components.Select do
         <.select_group>
           <.select_item
             :for={item <- @options}
-            field={@field}
             value={item}
-            name={@name}
             selected={item == @value}
           >
             <%= item %>
@@ -114,7 +112,7 @@ defmodule OrangeCmsWeb.Components.Select do
     >
       <input
         type="text"
-        class="hidden select-input"
+        class="select-input hidden"
         name={@name}
         value={@value}
         phx-change={assigns[:"phx-change"]}
@@ -140,7 +138,7 @@ defmodule OrangeCmsWeb.Components.Select do
       {@rest}
     >
       <%= render_slot(@inner_block) %>
-      <Heroicons.chevron_down class="w-4 h-4 opacity-50" />
+      <Heroicons.chevron_down class="h-4 w-4 opacity-50" />
     </button>
     """
   end
@@ -172,7 +170,7 @@ defmodule OrangeCmsWeb.Components.Select do
       ]}
       {@rest}
     >
-      <div class="p-1 w-full relative">
+      <div class="relative w-full p-1">
         <%= render_slot(@inner_block) %>
       </div>
     </div>

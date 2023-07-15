@@ -1,10 +1,8 @@
-defmodule OrangeCmsWeb.Components.Input do
+defmodule OrangeCmsWeb.Components.LadUI.Input do
   @moduledoc """
   Implement of form component
   """
-  use Phoenix.Component
-
-  alias OrangeCmsWeb.Components.ComponentHelpers
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr(:id, :any, default: nil)
   attr(:name, :any)
@@ -22,7 +20,7 @@ defmodule OrangeCmsWeb.Components.Input do
   attr(:rest, :global)
 
   def input(assigns) do
-    assigns = ComponentHelpers.prepare_assign(assigns)
+    assigns = prepare_assign(assigns)
 
     ~H"""
     <input
@@ -56,7 +54,7 @@ defmodule OrangeCmsWeb.Components.Input do
   attr(:rest, :global)
 
   def textarea(assigns) do
-    assigns = ComponentHelpers.prepare_assign(assigns)
+    assigns = prepare_assign(assigns)
 
     ~H"""
     <textarea
@@ -89,7 +87,7 @@ defmodule OrangeCmsWeb.Components.Input do
   def checkbox(assigns) do
     assigns =
       assigns
-      |> ComponentHelpers.prepare_assign()
+      |> prepare_assign()
       |> assign_new(:checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns.value)
       end)
@@ -133,7 +131,7 @@ defmodule OrangeCmsWeb.Components.Input do
   def switch(assigns) do
     assigns =
       assigns
-      |> ComponentHelpers.prepare_assign()
+      |> prepare_assign()
       |> assign_new(:checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns.value)
       end)
@@ -147,11 +145,11 @@ defmodule OrangeCmsWeb.Components.Input do
         name={@name}
         value="true"
         checked={@checked}
-        class="sr-only peer"
+        class="peer sr-only"
       />
-      <span class="absolute inset-0 shrink-0 cursor-pointer rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 peer-checked:bg-primary bg-input">
+      <span class="bg-input absolute inset-0 shrink-0 cursor-pointer rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 peer-checked:bg-primary">
       </span>
-      <span class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform peer-checked:translate-x-5 translate-x-0">
+      <span class="bg-background pointer-events-none block h-5 w-5 translate-x-0 rounded-full shadow-lg ring-0 transition-transform peer-checked:translate-x-5">
       </span>
     </label>
     """

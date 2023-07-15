@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Collapsible do
+defmodule OrangeCmsWeb.Components.LadUI.Collapsible do
   @moduledoc """
   Collapsible component https://ui.shadcn.com/docs/components/collapsible
 
@@ -29,9 +29,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
           </.collapsible_content>
         </.collapsible>
   """
-  use Phoenix.Component
-
-  alias OrangeCmsWeb.Components.LadJS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :open, :boolean, default: false, doc: "Whether the collapsible is open or not"
   attr(:class, :string, default: nil)

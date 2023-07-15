@@ -38,7 +38,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
             <.form_message field={@form[:key]} />
           </.form_item>
 
-          <div class="w-full flex flex-row-reverse">
+          <div class="flex w-full flex-row-reverse">
             <.button icon_right="arrow-right" phx-disable-with="Fetching content...">
               Next
             </.button>
@@ -62,7 +62,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
             <% end %>
           </div>
         </.scroll_area>
-        <div class="w-full flex justify-between">
+        <div class="flex w-full justify-between">
           <.button icon="arrow-left" phx-click="back" phx-target={@myself} variant="secondary">
             Back
           </.button>
@@ -75,9 +75,9 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
 
       <div :if={@step == :import_content && @import_status == :processing} class="space-y-6">
         <div class="flex justify-center">
-          <Heroicons.sun class="h-20 w-22 animate-spin" />
+          <Heroicons.sun class="w-22 h-20 animate-spin" />
         </div>
-        <p class="text-center text-lg text-muted-foreground">
+        <p class="text-muted-foreground text-center text-lg">
           Importing content...
         </p>
       </div>
@@ -87,7 +87,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
         <.alert kind={kind}>
           <%= msg %>
         </.alert>
-        <div class="w-full flex justify-center">
+        <div class="flex w-full justify-center">
           <.link navigate={scoped_path(assigns, "/content/#{@content_type.key}")}>
             <.button phx-click="back" phx-target={@myself}>
               Close

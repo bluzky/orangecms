@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Tooltip do
+defmodule OrangeCmsWeb.Components.LadUI.Tooltip do
   @moduledoc """
   Tooltip component
 
@@ -14,7 +14,7 @@ defmodule OrangeCmsWeb.Components.Tooltip do
         </.tooltip_content>
       </.tooltip>
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :class, :string, default: nil
   slot :inner_block, required: true

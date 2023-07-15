@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.Components.Sheet do
+defmodule OrangeCmsWeb.Components.LadUI.Sheet do
   @moduledoc """
   Implement Sheet componet https://ui.shadcn.com/docs/components/sheet
 
@@ -37,11 +37,7 @@ defmodule OrangeCmsWeb.Components.Sheet do
         </.sheet_content>
       </.sheet>
   """
-  use Phoenix.Component
-
-  import OrangeCmsWeb.Components.ComponentHelpers
-
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   attr :show, :boolean, default: false, doc: "Show the sheet on mount"
   attr :class, :string, default: "inline-block"
@@ -143,10 +139,10 @@ defmodule OrangeCmsWeb.Components.Sheet do
           <% else %>
             <button
               type="button"
-              class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+              class="ring-offset-background absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-ring focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
               phx-click={hide_sheet(@id, @side)}
             >
-              <Heroicons.x_mark class="w-4 h-4 no-collapse" />
+              <Heroicons.x_mark class="no-collapse h-4 w-4" />
               <span class="sr-only">Close</span>
             </button>
           <% end %>

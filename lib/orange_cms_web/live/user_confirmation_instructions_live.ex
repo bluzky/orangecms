@@ -21,7 +21,7 @@ defmodule OrangeCmsWeb.UserConfirmationInstructionsLive do
         </:actions>
       </.simple_form>
 
-      <p class="text-center mt-4">
+      <p class="mt-4 text-center">
         <!--<.link href={~p"/register"}>Register</.link> | -->
         <.link href={~p"/log_in"}>Log in</.link>
       </p>

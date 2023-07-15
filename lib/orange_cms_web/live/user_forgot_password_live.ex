@@ -6,7 +6,7 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <div class="w-full h-screen flex items-center bg-background">
+    <div class="bg-background flex h-screen w-full items-center">
       <div class="mx-auto max-w-sm">
         <.card>
           <.card_header class="text-center">
@@ -23,7 +23,7 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
                 </.button>
               </:actions>
             </.simple_form>
-            <p class="text-center text-sm mt-4">
+            <p class="mt-4 text-center text-sm">
               <!-- <.link href={~p"/register"}>Register</.link> | -->
               <.link href={~p"/log_in"}>Log in</.link>
             </p>

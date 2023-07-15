@@ -1,12 +1,10 @@
-defmodule OrangeCmsWeb.Components.DropdownMenu do
+defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
   @moduledoc """
   Implement of dropdown menu components from
   https://ui.shadcn.com/docs/components/dropdown-menu
 
   """
-  use Phoenix.Component
-
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Render dropdown menu

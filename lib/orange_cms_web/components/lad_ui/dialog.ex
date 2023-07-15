@@ -1,10 +1,8 @@
-defmodule OrangeCmsWeb.Components.Dialog do
+defmodule OrangeCmsWeb.Components.LadUI.Dialog do
   @moduledoc """
   Implement of card components from https://ui.shadcn.com/docs/components/card
   """
-  use Phoenix.Component
-
-  alias Phoenix.LiveView.JS
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Card component
@@ -55,11 +53,11 @@ defmodule OrangeCmsWeb.Components.Dialog do
     >
       <div
         id={"#{@id}-bg"}
-        class="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
+        class="bg-background/80 fixed inset-0 backdrop-blur-sm transition-opacity"
         aria-hidden="true"
       />
       <div
-        class="fixed inset-0 overflow-y-auto flex items-center justify-center"
+        class="fixed inset-0 flex items-center justify-center overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
         aria-describedby={"#{@id}-description"}
         role="dialog"
@@ -84,10 +82,10 @@ defmodule OrangeCmsWeb.Components.Dialog do
 
             <button
               type="button"
-              class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+              class="ring-offset-background absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-ring focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
               phx-click={hide_modal(@on_cancel, @id)}
             >
-              <Heroicons.x_mark class="w-4 h-4 no-collapse" />
+              <Heroicons.x_mark class="no-collapse h-4 w-4" />
               <span class="sr-only">Close</span>
             </button>
           </div>

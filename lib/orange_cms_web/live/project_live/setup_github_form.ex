@@ -87,7 +87,7 @@ defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
           <Input.input field={@form[:repo_full_name]} phx-debounce="blur" placeholder="owner/repo" />
         </.form_item>
 
-        <div class="w-full flex flex-row-reverse">
+        <div class="flex w-full flex-row-reverse">
           <.button icon_right="arrow-right" phx-disable-with="Checking...">
             Next
           </.button>

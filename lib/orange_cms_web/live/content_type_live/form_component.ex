@@ -27,7 +27,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
           <Input.input field={@form[:key]} placeholder="eg: blog-post" />
         </.form_item>
 
-        <div class="w-full flex flex-row-reverse">
+        <div class="flex w-full flex-row-reverse">
           <.button icon_right="arrow-right" phx-disable-with="Checking...">
             Next
           </.button>

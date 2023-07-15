@@ -1,8 +1,8 @@
-defmodule OrangeCmsWeb.Components.Table do
+defmodule OrangeCmsWeb.Components.LadUI.Table do
   @moduledoc """
   Implement of table components from https://ui.shadcn.com/docs/components/table
   """
-  use Phoenix.Component
+  use OrangeCmsWeb.Components.LadUI, :component
 
   @doc """
   Card component
