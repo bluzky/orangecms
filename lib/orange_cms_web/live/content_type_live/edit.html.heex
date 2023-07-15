@@ -36,7 +36,7 @@
         </.tabs_content>
 
         <.tabs_content value="image-settings" class="p-6">
-          <.form :let={f} for={@form} phx-submit="save" class="space-y-4">
+          <.form :let={f} for={@form} phx-submit="save" phx-change="validate" class="space-y-4">
             <.inputs_for :let={field} field={f[:github_config]}>
               <.form_item
                 field={field[:upload_dir]}
@@ -82,71 +82,82 @@
             class="space-y-6 mt-6"
             id="schema-form"
           >
-            <.inputs_for :let={field} field={f[:frontmatter_schema]}>
-              <% id = OrangeCmsWeb.Components.ComponentHelpers.generate_id() %>
-              <.collapsible id={id} class="group" open={is_nil(field.data.key)}>
-                <div class="flex gap-2 cursor-pointer font-semibold text-sm">
-                  <.collapsible_trigger root={id} class="flex-1 flex gap-2">
-                    <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
-                    <Heroicons.minus class="w-5 h-5 text-gray-400 transition duration-300 hidden group-open:block" />
-                    <span><%= field[:name].value || field[:key].value %></span>
-                  </.collapsible_trigger>
-                  <span class="btn btn-ghost btn-sm">
-                    <Heroicons.bars_2 class="w-4 h-4" />
-                  </span>
-                </div>
+            <div
+              phx-hook="Sortable"
+              phx-event="save_field_order"
+              id="schema-fields"
+              class="space-y-6"
+            >
+              <.inputs_for :let={field} field={f[:frontmatter_schema]}>
+                <% id = OrangeCmsWeb.Components.ComponentHelpers.generate_id()
+                key = Phoenix.HTML.Form.input_value(field, :key) %>
+                <.collapsible id={id} class="group" open={true} data-id={key}>
+                  <div class="flex gap-2 cursor-pointer font-semibold text-sm">
+                    <.collapsible_trigger root={id} class="flex-1 flex gap-2">
+                      <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
+                      <Heroicons.minus class="w-5 h-5 text-gray-400 transition duration-300 hidden group-open:block" />
+                      <span><%= field[:name].value || field[:key].value %></span>
+                    </.collapsible_trigger>
+                    <span class="btn btn-ghost btn-sm">
+                      <Heroicons.bars_2 class="w-4 h-4" />
+                    </span>
+                  </div>
 
-                <.collapsible_content>
-                  <.card class="mt-4 p-6">
-                    <div class="grid grid-cols-12 gap-x-4 gap-y-2">
-                      <div class="col-span-6">
-                        <.form_item label="Key" field={field[:key]}>
-                          <Input.input field={field[:key]} />
-                        </.form_item>
+                  <.collapsible_content>
+                    <.card class="mt-2 p-4">
+                      <div class="flex gap-2">
+                        <div class="grow grid grid-cols-12 gap-2">
+                          <div class="col-span-4">
+                            <.form_item label="Key" field={field[:key]}>
+                              <Input.input field={field[:key]} phx-debounce="blur" />
+                            </.form_item>
+                          </div>
+
+                          <div class="col-span-4">
+                            <.form_item label="Data type" field={field[:type]}>
+                              <.simple_select
+                                default={:string}
+                                field={field[:type]}
+                                options={OrangeCms.Content.InputType.values()}
+                                phx-change={%JS{}}
+                                class="w-full"
+                              />
+                            </.form_item>
+                          </div>
+
+                          <div class="col-span-4">
+                            <%= if field[:type].value  in [:checkbox, :select, :array] do %>
+                              <.form_item label="Options" field={field[:option_str]}>
+                                <Input.input
+                                  field={field[:options_str]}
+                                  placeholder="Separated by commas"
+                                />
+                              </.form_item>
+                            <% else %>
+                              <.form_item label="Default value" field={field[:default_value]}>
+                                <Input.input field={field[:default_value]} />
+                              </.form_item>
+                            <% end %>
+                          </div>
+                        </div>
+
+                        <div class="flex mt-2 items-center">
+                          <a
+                            href="#"
+                            class="btn-action text-xs text-destructive ml-auto flex gap-2"
+                            phx-click="remove_field"
+                            phx-value-index={field.index}
+                            data-confirm="Are you sure?"
+                          >
+                            <Heroicons.trash class="w-4 h-4" />
+                          </a>
+                        </div>
                       </div>
-
-                      <div class="col-span-6">
-                        <.form_item label="Data type" field={field[:type]}>
-                          <.simple_select
-                            default={:string}
-                            field={field[:type]}
-                            options={OrangeCms.Content.InputType.values()}
-                            class="w-full"
-                          />
-                        </.form_item>
-                      </div>
-
-                      <div class="col-span-12">
-                        <%= if field[:type].value  in [:checkbox, :select, :array] do %>
-                          <.form_item label="Options" field={field[:option_str]}>
-                            <Input.input
-                              field={field[:options_str]}
-                              placeholder="Separated by commas"
-                            />
-                          </.form_item>
-                        <% else %>
-                          <.form_item label="Default value" field={field[:default_value]}>
-                            <Input.input field={field[:default_value]} />
-                          </.form_item>
-                        <% end %>
-                      </div>
-                    </div>
-
-                    <div class="flex mt-2">
-                      <a
-                        href="#"
-                        class="btn-action text-xs text-destructive ml-auto flex gap-2"
-                        phx-click="remove_field"
-                        phx-value-index={field.index}
-                        data-confirm="Are you sure?"
-                      >
-                        <Heroicons.trash class="w-4 h-4" /> Delete field
-                      </a>
-                    </div>
-                  </.card>
-                </.collapsible_content>
-              </.collapsible>
-            </.inputs_for>
+                    </.card>
+                  </.collapsible_content>
+                </.collapsible>
+              </.inputs_for>
+            </div>
 
             <div class="mt-3">
               <.button

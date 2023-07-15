@@ -83,7 +83,6 @@ export default function initLad(liveSocket) {
     enhance(target, ops) {
       ops.forEach(([op, args]) => {
         let { to, ...rest } = args;
-
         switch (op) {
           case "exec":
             [rest, to] = args;
@@ -112,6 +111,14 @@ export default function initLad(liveSocket) {
       if (targetSelector) {
         this.exec(null, { attr: cbAttr, to: targetSelector });
       }
+    },
+
+    // exec command with context of target element
+
+    exec_as(currentTarget, { to, ops }) {
+      queryDom(currentTarget, to, (node) => {
+        _liveSocket.execJS(node, JSON.stringify(ops), "exec");
+      });
     },
 
     // toggle class

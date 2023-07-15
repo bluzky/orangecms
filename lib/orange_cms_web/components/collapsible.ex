@@ -54,7 +54,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
   def collapsible_trigger(assigns) do
     ~H"""
     <div
-      class={["relative", @class]}
+      class={["", @class]}
       {@rest}
       phx-click={
         LadJS.toggle_attribute({"data-state", {"open", "closed"}}, to: "closest(.collapsible-root)")
@@ -73,7 +73,7 @@ defmodule OrangeCmsWeb.Components.Collapsible do
     ~H"""
     <div
       class={[
-        "transition ease-in-out duration-3000 opacity-0 h-0 -translate-y-1/4 overflow-hidden group-data-[state=open]:opacity-100 group-data-[state=open]:h-auto group-data-[state=open]:overflow-visible group-data-[state=open]:-translate-y-0",
+        "transition ease-in-out duration-3000 opacity-0 h-0  overflow-hidden group-data-[state=open]:opacity-100 group-data-[state=open]:h-auto group-data-[state=open]:overflow-visible",
         @class
       ]}
       {@rest}
