@@ -73,10 +73,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Dialog do
         >
           <div
             role="dialog"
-            class={classes([
-              "relative z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg",
-              @class
-            ])}
+            class={
+              classes([
+                "relative z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg",
+                @class
+              ])
+            }
           >
             <%= render_slot(@inner_block) %>
 

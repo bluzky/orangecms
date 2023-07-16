@@ -77,10 +77,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
   defp sheet_overlay(assigns) do
     ~H"""
     <div
-      class={classes([
-        "sheet-overlay fixed hidden inset-0 z-50 bg-background/80 backdrop-blur-sm",
-        @class
-      ])}
+      class={
+        classes([
+          "sheet-overlay fixed hidden inset-0 z-50 bg-background/80 backdrop-blur-sm",
+          @class
+        ])
+      }
       aria-hidden="true"
     >
     </div>
@@ -123,11 +125,13 @@ defmodule OrangeCmsWeb.Components.LadUI.Sheet do
         phx-key="escape"
         phx-click-away={JS.exec("phx-hide-sheet", to: "#" <> @id)}
         role="sheet"
-        class={classes([
-          "sheet-content-wrap hidden fixed z-50 bg-background shadow-lg transition",
-          @variant_class,
-          @class
-        ])}
+        class={
+          classes([
+            "sheet-content-wrap hidden fixed z-50 bg-background shadow-lg transition",
+            @variant_class,
+            @class
+          ])
+        }
       >
         <div class={classes(["relative h-full"])}>
           <div class={classes(["p-6 overflow-y-auto h-full", @class])}>

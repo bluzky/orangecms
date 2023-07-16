@@ -74,10 +74,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Form do
   def form_label(assigns) do
     ~H"""
     <label
-      class={classes([
-        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-        @class
-      ])}
+      class={
+        classes([
+          "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+          @class
+        ])
+      }
       {@rest}
     >
       <%= render_slot(@inner_block) %>

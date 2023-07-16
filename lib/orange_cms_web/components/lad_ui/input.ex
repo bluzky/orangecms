@@ -24,10 +24,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Input do
 
     ~H"""
     <input
-      class={classes([
-        "flex h-10 w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-        @class
-      ])}
+      class={
+        classes([
+          "flex h-10 w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          @class
+        ])
+      }
       id={@id}
       type={@type}
       name={@name}
@@ -58,10 +60,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Input do
 
     ~H"""
     <textarea
-      class={classes([
-        "flex min-h-[80px] w-full px-3 py-2 rounded-md border border-input bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-        @class
-      ])}
+      class={
+        classes([
+          "flex min-h-[80px] w-full px-3 py-2 rounded-md border border-input bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          @class
+        ])
+      }
       id={@id}
       name={@name}
       {@rest}
@@ -96,10 +100,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Input do
     <input type="hidden" name={@name} value="false" />
     <input
       type="checkbox"
-      class={classes([
-        "peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary",
-        @class
-      ])}
+      class={
+        classes([
+          "peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus:ring-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-primary",
+          @class
+        ])
+      }
       id={@id || @name}
       name={@name}
       value="true"
@@ -137,7 +143,10 @@ defmodule OrangeCmsWeb.Components.LadUI.Input do
       end)
 
     ~H"""
-    <label class={classes(["relative inline-flex items-center p-0.5 h-[24px] w-[44px]", @class])} {@rest}>
+    <label
+      class={classes(["relative inline-flex items-center p-0.5 h-[24px] w-[44px]", @class])}
+      {@rest}
+    >
       <input type="hidden" name={@name} value="false" />
       <input
         type="checkbox"

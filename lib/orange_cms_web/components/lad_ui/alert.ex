@@ -35,11 +35,13 @@ defmodule OrangeCmsWeb.Components.LadUI.Alert do
     # We have to specify full class name for tailwind to extract class name
     ~H"""
     <div
-      class={classes([
-        "rounded-lg border px-4 py-3 text-sm bg-background text-foreground",
-        @class,
-        @kind == "error" && "border-destructive/50 text-destructive dark:border-destructive"
-      ])}
+      class={
+        classes([
+          "rounded-lg border px-4 py-3 text-sm bg-background text-foreground",
+          @class,
+          @kind == "error" && "border-destructive/50 text-destructive dark:border-destructive"
+        ])
+      }
       {@rest}
     >
       <div class="flex w-full gap-2">

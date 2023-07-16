@@ -4,7 +4,7 @@
     <:actions>
       <.link patch={~p"/p/new"}>
         <.button>
-          <Heroicons.plus class="w-5 h-5" /> New project
+          <Heroicons.plus class="h-5 w-5" /> New project
         </.button>
       </.link>
     </:actions>
@@ -12,7 +12,7 @@
 
   <div
     :if={Enum.count(@streams.projects) == 0}
-    class="w-full max-w-2xl min-h-[275px] bg-accent mx-auto mt-24 flex flex-col items-center justify-center rounded-lg p-20"
+    class="min-h-[275px] bg-accent mx-auto mt-24 flex w-full max-w-2xl flex-col items-center justify-center rounded-lg p-20"
   >
     <Heroicons.fire class="h-20 w-20" />
     <h3 class="text-xl">Welcome to OrangeCMS</h3>
@@ -25,7 +25,7 @@
   </div>
 
   <div
-    class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-10"
+    class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4"
     phx-update="stream"
     id="project-list"
   >

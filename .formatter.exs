@@ -5,6 +5,6 @@
     :phoenix
   ],
   subdirectories: ["priv/*/migrations"],
-  plugins: [Phoenix.LiveView.HTMLFormatter, Styler, TailwindFormatter],
+  plugins: [TailwindFormatter.MultiFormatter, Styler],
   inputs: ["*.{heex,ex,exs}", "{config,lib,test}/**/*.{heex,ex,exs}", "priv/*/seeds.exs"]
 ]

@@ -1,5 +1,5 @@
-<div class="w-full flex">
-  <div class="w-64 h-screen p-4 overflow-y-auto border-r border-border">
+<div class="flex w-full">
+  <div class="border-border h-screen w-64 overflow-y-auto border-r p-4">
     <.header class="mt-2">
       Collections
     </.header>
@@ -11,21 +11,21 @@
     <.button
       variant="outline"
       icon="plus"
-      class="w-full mt-4"
+      class="mt-4 w-full"
       phx-click={JS.patch(scoped_path(assigns, "/content/#{@content_type.key}/new_content_type"))}
     >
       New collection
     </.button>
   </div>
-  <div class="grow h-screen overflow-y-auto">
+  <div class="h-screen grow overflow-y-auto">
     <div class="p-6">
       <.header>
-        <div class="flex gap-2 items-center">
+        <div class="flex items-center gap-2">
           <%= @content_type.name %> entries
           <.link navigate={scoped_path(assigns, "/content_types/#{@content_type.id}")}>
             <.tooltip>
               <.icon
-                class="w-5 h-5 text-muted-foreground hover:text-foreground"
+                class="text-muted-foreground h-5 w-5 hover:text-foreground"
                 name="cog-6-tooth"
               />
               <.tooltip_content position="right" class="whitespace-nowrap">
@@ -63,7 +63,7 @@
                   navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")}
                   class="btn-action"
                 >
-                  <Heroicons.pencil_square class="w-4 h-4" /> Edit
+                  <Heroicons.pencil_square class="h-4 w-4" /> Edit
                 </.link>
 
                 <.link
@@ -71,7 +71,7 @@
                   data-confirm="Are you sure?"
                   class="btn-action"
                 >
-                  <Heroicons.x_mark class="w-4 h-4" /> Delete
+                  <Heroicons.x_mark class="h-4 w-4" /> Delete
                 </.link>
               </.table_cell>
             </.table_row>

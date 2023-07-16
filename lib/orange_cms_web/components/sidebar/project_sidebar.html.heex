@@ -3,9 +3,9 @@
     <.tooltip>
       <.link
         navigate={~p"/p"}
-        class="flex justify-center px-2 py-3 hover:bg-accent hover:text-accent-foreground rounded-xl border-2 border-primary"
+        class="border-primary flex justify-center rounded-xl border-2 px-2 py-3 hover:bg-accent hover:text-accent-foreground"
       >
-        <.icon name="rocket-launch" class="w-5 h-5" />
+        <.icon name="rocket-launch" class="h-5 w-5" />
       </.link>
       <.tooltip_content position="right">
         Projects
@@ -18,9 +18,9 @@
       <.tooltip>
         <.link
           navigate={scoped_path(assigns, "/content")}
-          class="flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+          class="flex justify-center rounded-xl px-2 py-3 hover:bg-accent hover:text-accent-foreground"
         >
-          <.icon name="inbox" class="w-5 h-5" />
+          <.icon name="inbox" class="h-5 w-5" />
         </.link>
         <.tooltip_content position="right">
           Collections
@@ -32,9 +32,9 @@
       <.tooltip>
         <.link
           navigate={scoped_path(assigns, "/content_types")}
-          class="flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+          class="flex justify-center rounded-xl px-2 py-3 hover:bg-accent hover:text-accent-foreground"
         >
-          <.icon name="document_text" class="w-5 h-5" />
+          <.icon name="document_text" class="h-5 w-5" />
         </.link>
         <.tooltip_content position="right">
           Content types
@@ -46,9 +46,9 @@
       <.tooltip>
         <.link
           navigate={scoped_path(assigns, "/members")}
-          class="flex justify-center px-2 py-3 rounded-xl hover:bg-accent hover:text-accent-foreground"
+          class="flex justify-center rounded-xl px-2 py-3 hover:bg-accent hover:text-accent-foreground"
         >
-          <.icon name="users" class="w-5 h-5" />
+          <.icon name="users" class="h-5 w-5" />
         </.link>
         <.tooltip_content position="right">
           Members

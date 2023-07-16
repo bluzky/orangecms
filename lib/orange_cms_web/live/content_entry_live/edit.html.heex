@@ -2,21 +2,21 @@
   <.form :let={f} for={@form} phx-submit="save" phx-change="autosave" class="space-y-4">
     <% frontmatter = Phoenix.HTML.Form.input_value(f, :frontmatter) || %{} %>
 
-    <div class="max-w-4xl mx-auto h-screen flex flex-col">
-      <div class="grow overflow-x-hidden overflow-y-auto pt-8">
+    <div class="mx-auto flex h-screen max-w-4xl flex-col">
+      <div class="grow overflow-y-auto overflow-x-hidden pt-8">
         <div class="p-5">
           <h2 class="text-6xl font-medium">
             <Input.input
               field={f[:title]}
               phx-debounce="blur"
               placeholder="Your post title"
-              class="w-full text-4xl px-8 py-6 border-0 bg-muted/80"
+              class="bg-muted/80 w-full border-0 px-8 py-6 text-4xl"
             />
           </h2>
 
           <.sheet class="mt-4 inline-block">
             <.sheet_trigger target="frontmatter">
-              <span class="p-1 px-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent hover:bg-accent cursor-pointer font-semibold text-sm">
+              <span class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent p-1 px-2 text-sm font-semibold hover:bg-accent">
                 <Heroicons.adjustments_horizontal class="h-4 w-4" /> Edit frontmatter
               </span>
             </.sheet_trigger>
@@ -46,13 +46,13 @@
               </.sheet_footer>
 
               <:custom_close_btn>
-                <.sheet_close target="frontmatter" class="absolute right-0 top-16">
+                <.sheet_close target="frontmatter" class="absolute top-16 right-0">
                   <.button
                     type="button"
                     variant="secondary"
-                    class="rounded-r-full translate-x-full"
+                    class="translate-x-full rounded-r-full"
                   >
-                    <Heroicons.x_mark class="w-5 h-5" />
+                    <Heroicons.x_mark class="h-5 w-5" />
                   </.button>
                 </.sheet_close>
               </:custom_close_btn>
@@ -77,7 +77,7 @@
           </div>
 
           <div
-            class="editor-menu rounded-lg bg-background border border-border shadow-sm px-4 py-2"
+            class="editor-menu bg-background border-border rounded-lg border px-4 py-2 shadow-sm"
             style="visibility: visible;"
           >
             <div class="flex gap-0.5">
@@ -88,42 +88,42 @@
                 role="menu-item"
                 data-command="bold"
               >
-                <Lucideicons.bold class="w-4 h-4" />
+                <Lucideicons.bold class="h-4 w-4" />
               </.button>
               <span
                 class="btn btn-square btn-ghost btn-sm italic"
                 role="menu-item"
                 data-command="italic"
               >
-                <Lucideicons.italic class="w-4 h-4" />
+                <Lucideicons.italic class="h-4 w-4" />
               </span>
               <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="strike">
-                <Lucideicons.strikethrough class="w-4 h-4" />
+                <Lucideicons.strikethrough class="h-4 w-4" />
               </span>
               <div class="divider divider-horizontal mx-0"></div>
               <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="link">
-                <Lucideicons.link class="w-4 h-4" />
+                <Lucideicons.link class="h-4 w-4" />
               </span>
               <span
                 class="btn btn-square btn-ghost btn-sm hidden"
                 role="menu-item"
                 data-command="unlink"
               >
-                <Lucideicons.unlink class="w-4 h-4" />
+                <Lucideicons.unlink class="h-4 w-4" />
               </span>
               <span
                 class="btn btn-square btn-ghost btn-sm"
                 role="menu-item"
                 data-command="blockquote"
               >
-                <Lucideicons.quote class="w-4 h-4" />
+                <Lucideicons.quote class="h-4 w-4" />
               </span>
               <span
                 class="btn btn-square btn-ghost btn-sm"
                 role="menu-item"
                 data-command="codeBlock"
               >
-                <Lucideicons.code class="w-4 h-4" />
+                <Lucideicons.code class="h-4 w-4" />
               </span>
               <div class="divider divider-horizontal mx-0"></div>
               <span
@@ -131,14 +131,14 @@
                 role="menu-item"
                 data-command="bulletList"
               >
-                <Lucideicons.list class="w-5 h-5" />
+                <Lucideicons.list class="h-5 w-5" />
               </span>
               <span
                 class="btn btn-square btn-ghost btn-sm"
                 role="menu-item"
                 data-command="orderedList"
               >
-                <Lucideicons.list_ordered class="w-5 h-5" />
+                <Lucideicons.list_ordered class="h-5 w-5" />
               </span>
 
               <div class="divider divider-horizontal mx-0"></div>
@@ -147,26 +147,26 @@
                 role="menu-item"
                 data-command="paragraph"
               >
-                <Lucideicons.pilcrow class="w-4 h-4" />
+                <Lucideicons.pilcrow class="h-4 w-4" />
               </span>
               <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h1">
-                <Lucideicons.heading_1 class="w-5 h-5" />
+                <Lucideicons.heading_1 class="h-5 w-5" />
               </span>
               <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h2">
-                <Lucideicons.heading_2 class="w-5 h-5" />
+                <Lucideicons.heading_2 class="h-5 w-5" />
               </span>
               <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h3">
-                <Lucideicons.heading_3 class="w-5 h-5" />
+                <Lucideicons.heading_3 class="h-5 w-5" />
               </span>
               <span class="btn btn-square btn-ghost btn-sm" role="menu-item" data-command="h4">
-                <Lucideicons.heading_4 class="w-5 h-5" />
+                <Lucideicons.heading_4 class="h-5 w-5" />
               </span>
             </div>
             <div class="">
-              <div class="link-form flex gap-1 p-2 hidden">
+              <div class="link-form flex hidden gap-1 p-2">
                 <input type="text" placeholder="Past your link here" class="input input-sm" />
-                <!-- <span class="btn btn-ghost btn-sm gap-1 bg-white"><Heroicons.check class="w-5 h-5 text-success" /> Add</span> -->
-        <!-- <span class="btn btn-square btn-outline btn-sm"><Heroicons.x_mark class="w-4 h-4" /></span> -->
+                <!-- <span class="btn btn-ghost btn-sm gap-1 bg-white"><Heroicons.check class="text-success h-5 w-5" /> Add</span> -->
+        <!-- <span class="btn btn-square btn-outline btn-sm"><Heroicons.x_mark class="h-4 w-4" /></span> -->
               </div>
             </div>
           </div>
@@ -174,7 +174,7 @@
         </div>
       </div>
       <!-- Action button -->
-      <div class="px-10 py-4 flex flex-row-reverse">
+      <div class="flex flex-row-reverse px-10 py-4">
         <.button type="submit" icon="arrow-up-on-square">
           Publish
         </.button>

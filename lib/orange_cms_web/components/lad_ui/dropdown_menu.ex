@@ -100,7 +100,11 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
 
   def dropdown_menu_separator(assigns) do
     ~H"""
-    <div role="separator" aria-orientation="horizontal" class={classes(["-mx-1 my-1 h-px bg-muted", @class])}>
+    <div
+      role="separator"
+      aria-orientation="horizontal"
+      class={classes(["-mx-1 my-1 h-px bg-muted", @class])}
+    >
     </div>
     """
   end
@@ -123,11 +127,13 @@ defmodule OrangeCmsWeb.Components.LadUI.DropdownMenu do
   def dropdown_menu_item(assigns) do
     ~H"""
     <div
-      class={classes([
-        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
-        @disabled && "pointer-events-none opacity-50",
-        @class
-      ])}
+      class={
+        classes([
+          "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
+          @disabled && "pointer-events-none opacity-50",
+          @class
+        ])
+      }
       {@rest}
     >
       <%= render_slot(@inner_block) %>

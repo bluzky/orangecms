@@ -1,12 +1,12 @@
 <.page class="bg-muted">
-  <div class="max-w-2xl w-full mx-auto">
+  <div class="mx-auto w-full max-w-2xl">
     <.header>
       <div class="flex items-center gap-2">
         Content types / <%= @content_type.name %>
         <.link navigate={scoped_path(assigns, "/content/#{@content_type.key}")}>
           <.tooltip>
             <.icon
-              class="w-5 h-5 text-muted-foreground hover:text-foreground"
+              class="text-muted-foreground h-5 w-5 hover:text-foreground"
               name="arrow-top-right-on-square"
             />
             <.tooltip_content position="right" class="whitespace-nowrap">
@@ -17,7 +17,7 @@
       </div>
     </.header>
 
-    <.card class="p-6 mt-8">
+    <.card class="mt-8 p-6">
       <.tabs default="frontmatter" id="settings">
         <.tabs_list class="grid grid-cols-3 gap-2">
           <.tabs_trigger root="settings" value="general" class="hover:bg-background/60">
@@ -40,8 +40,8 @@
               <Input.input type="text" field={f[:key]} placeholder="Key" />
             </.form_item>
 
-            <div class="flex mt-4">
-              <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
+            <div class="mt-4 flex">
+              <.button type="submit" class="btn-secondary btn-md ml-auto" icon="inbox-arrow-down">
                 Save
               </.button>
             </div>
@@ -74,13 +74,13 @@
                 </div>
                 <.form_description>
                   Using raw file url eg:
-                  <code class="italic text-primary">https://raw.githubcontent.xxxxx</code>
+                  <code class="text-primary italic">https://raw.githubcontent.xxxxx</code>
                   instead of relative path to uploaded files
                 </.form_description>
               </.form_item>
             </.inputs_for>
-            <div class="flex mt-4">
-              <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
+            <div class="mt-4 flex">
+              <.button type="submit" class="btn-secondary btn-md ml-auto" icon="inbox-arrow-down">
                 Save
               </.button>
             </div>
@@ -92,7 +92,7 @@
             for={@form}
             phx-submit="save"
             phx-change="validate"
-            class="space-y-6 mt-6"
+            class="mt-6 space-y-6"
             id="schema-form"
           >
             <div
@@ -105,21 +105,21 @@
                 <% id = OrangeCmsWeb.Components.LadUI.Helpers.generate_id()
                 key = Phoenix.HTML.Form.input_value(field, :key) %>
                 <.collapsible id={id} class="group" open={true} data-id={key}>
-                  <div class="flex gap-2 cursor-pointer font-semibold text-sm">
-                    <.collapsible_trigger root={id} class="flex-1 flex gap-2">
-                      <Heroicons.plus class="w-5 h-5 text-gray-400 transition duration-300 group-open:hidden " />
-                      <Heroicons.minus class="w-5 h-5 text-gray-400 transition duration-300 hidden group-open:block" />
+                  <div class="flex cursor-pointer gap-2 text-sm font-semibold">
+                    <.collapsible_trigger root={id} class="flex flex-1 gap-2">
+                      <Heroicons.plus class="h-5 w-5 text-gray-400 transition duration-300 group-open:hidden" />
+                      <Heroicons.minus class="hidden h-5 w-5 text-gray-400 transition duration-300 group-open:block" />
                       <span><%= field[:name].value || field[:key].value %></span>
                     </.collapsible_trigger>
                     <span class="btn btn-ghost btn-sm">
-                      <Heroicons.bars_2 class="w-4 h-4" />
+                      <Heroicons.bars_2 class="h-4 w-4" />
                     </span>
                   </div>
 
                   <.collapsible_content>
                     <.card class="mt-2 p-4">
                       <div class="flex gap-2">
-                        <div class="grow grid grid-cols-12 gap-2">
+                        <div class="grid grow grid-cols-12 gap-2">
                           <div class="col-span-4">
                             <.form_item label="Key" field={field[:key]}>
                               <Input.input field={field[:key]} phx-debounce="blur" />
@@ -153,15 +153,15 @@
                           </div>
                         </div>
 
-                        <div class="flex mt-2 items-center">
+                        <div class="mt-2 flex items-center">
                           <a
                             href="#"
-                            class="btn-action text-xs text-destructive ml-auto flex gap-2"
+                            class="btn-action text-destructive ml-auto flex gap-2 text-xs"
                             phx-click="remove_field"
                             phx-value-index={field.index}
                             data-confirm="Are you sure?"
                           >
-                            <Heroicons.trash class="w-4 h-4" />
+                            <Heroicons.trash class="h-4 w-4" />
                           </a>
                         </div>
                       </div>
@@ -183,8 +183,8 @@
               </.button>
             </div>
 
-            <div class="flex mt-4">
-              <.button type="submit" class="ml-auto btn-secondary btn-md" icon="inbox-arrow-down">
+            <div class="mt-4 flex">
+              <.button type="submit" class="btn-secondary btn-md ml-auto" icon="inbox-arrow-down">
                 Save
               </.button>
             </div>

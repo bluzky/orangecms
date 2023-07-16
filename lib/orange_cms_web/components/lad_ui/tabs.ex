@@ -50,10 +50,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Tabs do
   def tabs_list(assigns) do
     ~H"""
     <div
-      class={classes([
-        "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
-        @class
-      ])}
+      class={
+        classes([
+          "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+          @class
+        ])
+      }
       {@rest}
     >
       <%= render_slot(@inner_block) %>
@@ -71,10 +73,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Tabs do
   def tabs_trigger(assigns) do
     ~H"""
     <button
-      class={classes([
-        "tabs-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
-        @class
-      ])}
+      class={
+        classes([
+          "tabs-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+          @class
+        ])
+      }
       disabled={@disabled}
       data-value={@value}
       phx-click={show_tab(@root, @value)}
@@ -93,10 +97,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Tabs do
   def tabs_content(assigns) do
     ~H"""
     <div
-      class={classes([
-        "tabs-content hidden mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        @class
-      ])}
+      class={
+        classes([
+          "tabs-content hidden mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          @class
+        ])
+      }
       data-value={@value}
       {@rest}
     >

@@ -39,11 +39,22 @@ defmodule OrangeCmsWeb.ContentTypeLive.CreateGithubCollectionForm do
           </.form_item>
 
           <div class="flex w-full justify-between">
-            <.button icon="folder-plus" variant="outline" name="action" value="create_new" phx-disable-with="Processing ...">
+            <.button
+              icon="folder-plus"
+              variant="outline"
+              name="action"
+              value="create_new"
+              phx-disable-with="Processing ..."
+            >
               Create new
             </.button>
 
-            <.button icon_right="arrow-right" name="action" value="import_check_content" phx-disable-with="Processing ...">
+            <.button
+              icon_right="arrow-right"
+              name="action"
+              value="import_check_content"
+              phx-disable-with="Processing ..."
+            >
               Import from Github
             </.button>
           </div>

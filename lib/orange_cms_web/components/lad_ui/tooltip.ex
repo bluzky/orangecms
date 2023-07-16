@@ -44,11 +44,13 @@ defmodule OrangeCmsWeb.Components.LadUI.Tooltip do
 
     ~H"""
     <span
-      class={classes([
-        "absolute rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block",
-        @class,
-        @position_class
-      ])}
+      class={
+        classes([
+          "absolute rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block",
+          @class,
+          @position_class
+        ])
+      }
       {@rest}
     >
       <%= render_slot(@inner_block) %>
