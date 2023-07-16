@@ -28,8 +28,9 @@ defmodule OrangeCmsWeb.Components.LadUI.Tooltip do
     """
   end
 
-  slot :inner_block, required: true
   attr :position, :string, values: ["top", "bottom", "left", "right"], default: "top"
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
   attr :rest, :global
 
   @postion_classes %{
@@ -39,13 +40,14 @@ defmodule OrangeCmsWeb.Components.LadUI.Tooltip do
     "right" => "left-full ml-4 top-1/2 -translate-y-1/2"
   }
   def tooltip_content(assigns) do
-    assigns = assign(assigns, class: @postion_classes[assigns.position])
+    assigns = assign(assigns, position_class: @postion_classes[assigns.position])
 
     ~H"""
     <span
       class={classes([
         "absolute rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hidden group-hover:block",
-        @class
+        @class,
+        @position_class
       ])}
       {@rest}
     >

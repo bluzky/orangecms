@@ -3,38 +3,47 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
   use OrangeCmsWeb, :live_view
 
   alias OrangeCms.Content
+  alias OrangeCms.Content.ContentType
   alias OrangeCms.ContentEntryLive.ContentTypeList
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     content_types = Content.list_content_types(socket.assigns.current_project.id)
 
-    {:ok,
-     assign(socket,
-       content_types: content_types,
-       content_type: nil,
-       content_entries: []
-     )}
+    if params["type"] do
+      content_type = Enum.find(content_types, &(&1.key == params["type"]))
+
+      # load content entries
+      content_entries =
+        Content.list_content_entries(socket.assigns.current_project.id,
+          content_type_id: content_type.id
+        )
+
+      {:ok,
+       socket
+       |> assign(
+         content_types: content_types,
+         content_type: content_type
+       )
+       |> stream(:content_entries, content_entries)}
+    else
+      {:ok, push_navigate(socket, to: scoped_path(socket, "/content/#{hd(content_types).key}"))}
+    end
   end
 
   @impl true
-  def handle_params(params, _uri, socket) do
-    content_type =
-      if params["type"] do
-        Content.find_content_type(socket.assigns.current_project.id, key: params["type"])
-      else
-        hd(socket.assigns.content_types)
-      end
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
 
-    content_entries =
-      Content.list_content_entries(socket.assigns.current_project.id,
-        content_type_id: content_type.id
-      )
+  defp apply_action(socket, :new_content_type, _params) do
+    socket
+    |> assign(:page_title, "New Collection")
+    |> assign(:content_type, %ContentType{project_id: socket.assigns.current_project.id})
+  end
 
-    {:noreply,
-     socket
-     |> assign(:content_type, content_type)
-     |> stream(:content_entries, content_entries)}
+  defp apply_action(socket, :index, _params) do
+    assign(socket, :page_title, socket.assigns.content_type.name)
   end
 
   def handle_event("create_entry", _params, socket) do

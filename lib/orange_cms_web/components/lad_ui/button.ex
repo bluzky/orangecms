@@ -43,9 +43,9 @@ defmodule OrangeCmsWeb.Components.LadUI.Button do
       ])}
       {@rest}
     >
-      <.icon :if={not is_nil(@icon)} name={@icon} class="h-5 w-5" />
+      <.icon :if={not is_nil(@icon)} name={@icon} class="h-4 w-4" />
       <%= render_slot(@inner_block) %>
-      <.icon :if={not is_nil(@icon_right)} name={@icon_right} class="h-5 w-5" />
+      <.icon :if={not is_nil(@icon_right)} name={@icon_right} class="h-4 w-4" />
     </button>
     """
   end

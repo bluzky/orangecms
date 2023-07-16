@@ -8,11 +8,32 @@
       current_type={@content_type}
       route_fn={scoped_path_fn(assigns)}
     />
+    <.button
+      variant="outline"
+      icon="plus"
+      class="w-full mt-4"
+      phx-click={JS.patch(scoped_path(assigns, "/content/#{@content_type.key}/new_content_type"))}
+    >
+      New collection
+    </.button>
   </div>
   <div class="grow h-screen overflow-y-auto">
     <div class="p-6">
       <.header>
-        <%= @content_type.name %>
+        <div class="flex gap-2 items-center">
+          <%= @content_type.name %> entries
+          <.link navigate={scoped_path(assigns, "/content_types/#{@content_type.id}")}>
+            <.tooltip>
+              <.icon
+                class="w-5 h-5 text-muted-foreground hover:text-foreground"
+                name="cog-6-tooth"
+              />
+              <.tooltip_content position="right" class="whitespace-nowrap">
+                Edit content type
+              </.tooltip_content>
+            </.tooltip>
+          </.link>
+        </div>
         <:actions>
           <.button icon="document-plus" phx-click="create_entry">
             New entry
@@ -60,3 +81,25 @@
     </div>
   </div>
 </div>
+
+<.dialog
+  :if={@live_action in [:new_content_type]}
+  id="new_content_type"
+  show
+  on_cancel={JS.navigate(scoped_path(assigns, "/content"))}
+>
+  <.dialog_content>
+    <.dialog_header>
+      <.dialog_title>New collection</.dialog_title>
+      <.dialog_description>
+        You can import existing content from Github or create a new one.
+      </.dialog_description>
+    </.dialog_header>
+    <.live_component
+      module={OrangeCmsWeb.ContentTypeLive.CreateGithubCollectionForm}
+      id={@current_project.id}
+      action={@live_action}
+      project={@current_project}
+    />
+  </.dialog_content>
+</.dialog>

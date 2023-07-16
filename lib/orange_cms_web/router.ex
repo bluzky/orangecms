@@ -78,8 +78,9 @@ defmodule OrangeCmsWeb.Router do
         live("/setup/github_import_content", ProjectLive.Show, :github_import_content)
 
         scope "/content/", ContentEntryLive do
-          live("/", Index)
-          live("/:type", Index)
+          live("/", Index, :index)
+          live("/:type", Index, :index)
+          live("/:type/new_content_type", Index, :new_content_type)
           live("/:type/:id", Edit)
         end
 

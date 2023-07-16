@@ -1,7 +1,20 @@
 <.page class="bg-muted">
   <div class="max-w-2xl w-full mx-auto">
     <.header>
-      Content types / <%= @content_type.name %>
+      <div class="flex items-center gap-2">
+        Content types / <%= @content_type.name %>
+        <.link navigate={scoped_path(assigns, "/content/#{@content_type.key}")}>
+          <.tooltip>
+            <.icon
+              class="w-5 h-5 text-muted-foreground hover:text-foreground"
+              name="arrow-top-right-on-square"
+            />
+            <.tooltip_content position="right" class="whitespace-nowrap">
+              View content
+            </.tooltip_content>
+          </.tooltip>
+        </.link>
+      </div>
     </.header>
 
     <.card class="p-6 mt-8">

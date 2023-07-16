@@ -53,7 +53,6 @@ defmodule OrangeCmsWeb.ContentTypeLive.FormComponent do
       socket.assigns.content_type
       |> Content.change_content_type(params)
       |> Map.put(:action, :validate)
-      |> IO.inspect()
 
     {:noreply, assign_form(socket, changeset)}
   end
