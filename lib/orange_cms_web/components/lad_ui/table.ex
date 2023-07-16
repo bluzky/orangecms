@@ -87,7 +87,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Table do
   def table_row(assigns) do
     ~H"""
     <tr
-      class={classes(["border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", @class])}
+      class={
+        classes([
+          "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+          @class
+        ])
+      }
       {@rest}
     >
       <%= render_slot(@inner_block) %>
@@ -102,10 +107,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Table do
   def table_head(assigns) do
     ~H"""
     <th
-      class={classes([
-        "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-        @class
-      ])}
+      class={
+        classes([
+          "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+          @class
+        ])
+      }
       {@rest}
     >
       <%= render_slot(@inner_block) %>

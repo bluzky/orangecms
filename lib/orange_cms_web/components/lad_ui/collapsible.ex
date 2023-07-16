@@ -38,7 +38,11 @@ defmodule OrangeCmsWeb.Components.LadUI.Collapsible do
 
   def collapsible(assigns) do
     ~H"""
-    <div class={classes(["group collapsible-root", @class])} {@rest} data-state={(@open && "open") || "closed"}>
+    <div
+      class={classes(["group collapsible-root", @class])}
+      {@rest}
+      data-state={(@open && "open") || "closed"}
+    >
       <%= render_slot(@inner_block) %>
     </div>
     """
@@ -70,10 +74,12 @@ defmodule OrangeCmsWeb.Components.LadUI.Collapsible do
   def collapsible_content(assigns) do
     ~H"""
     <div
-      class={classes([
-        "transition ease-in-out duration-3000 opacity-0 h-0  overflow-hidden group-data-[state=open]:opacity-100 group-data-[state=open]:h-auto group-data-[state=open]:overflow-visible",
-        @class
-      ])}
+      class={
+        classes([
+          "transition ease-in-out duration-3000 opacity-0 h-0  overflow-hidden group-data-[state=open]:opacity-100 group-data-[state=open]:h-auto group-data-[state=open]:overflow-visible",
+          @class
+        ])
+      }
       {@rest}
     >
       <%= render_slot(@inner_block) %>

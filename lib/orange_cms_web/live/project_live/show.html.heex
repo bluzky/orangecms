@@ -3,7 +3,7 @@
     Dashboard
   </.header>
 
-  <div class="p-6 flex gap-8">
+  <div class="flex gap-8 p-6">
     <.card>
       <.card_header class="pb-2">
         <.card_title>Total entries</.card_title>
@@ -58,7 +58,7 @@
       </.dialog_description>
     </.dialog_header>
     <.live_component
-      module={OrangeCmsWeb.ProjectLive.GithubImportContentForm}
+      module={OrangeCmsWeb.ContentTypeLive.CreateGithubCollectionForm}
       id={@project.id}
       action={@live_action}
       project={@project}

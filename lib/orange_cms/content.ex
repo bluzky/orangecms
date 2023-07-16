@@ -2,6 +2,8 @@ defmodule OrangeCms.Content do
   @moduledoc false
   use OrangeCms, :context
 
+  import Ecto.Query
+
   alias OrangeCms.Content.ContentEntry
   alias OrangeCms.Content.ContentType
 
@@ -121,6 +123,7 @@ defmodule OrangeCms.Content do
     ContentEntry
     |> Filtery.filter(:project_id, project_id)
     |> Filtery.apply(filters)
+    |> order_by(desc: :inserted_at)
     |> Repo.all()
   end
 

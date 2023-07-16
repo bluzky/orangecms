@@ -1,4 +1,4 @@
-defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
+defmodule OrangeCmsWeb.ContentTypeLive.CreateGithubCollectionForm do
   @moduledoc false
   use OrangeCmsWeb, :live_component
 
@@ -15,7 +15,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
           class="space-y-6"
           for={@form}
           phx-change="validate"
-          phx-submit="check_content"
+          phx-submit="submit"
           id="github-import-form"
           phx-target={@myself}
         >
@@ -38,9 +38,24 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
             <.form_message field={@form[:key]} />
           </.form_item>
 
-          <div class="flex w-full flex-row-reverse">
-            <.button icon_right="arrow-right" phx-disable-with="Fetching content...">
-              Next
+          <div class="flex w-full justify-between">
+            <.button
+              icon="folder-plus"
+              variant="outline"
+              name="action"
+              value="create_new"
+              phx-disable-with="Processing ..."
+            >
+              Create new
+            </.button>
+
+            <.button
+              icon_right="arrow-right"
+              name="action"
+              value="import_check_content"
+              phx-disable-with="Processing ..."
+            >
+              Import from Github
             </.button>
           </div>
         </.form>
@@ -132,7 +147,23 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
   @doc """
   Check if the content directory exists and contains markdown files
   """
-  def handle_event("check_content", %{"content_type" => params}, socket) do
+  # create new content type local
+  def handle_event("submit", %{"action" => "create_new", "content_type" => params}, socket) do
+    case Content.create_content_type(socket.assigns.project, params) do
+      {:ok, entry} ->
+        {:noreply,
+         push_navigate(socket,
+           to: scoped_path(socket, "/content_types/#{entry.id}"),
+           flash: {:info, "Content type created"}
+         )}
+
+      {:error, changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  # validate content source from github
+  def handle_event("submit", %{"content_type" => params}, socket) do
     %{project: project} = socket.assigns
 
     changeset = Content.change_content_type(%ContentType{project_id: socket.assigns.project.id}, params)
@@ -205,8 +236,8 @@ defmodule OrangeCmsWeb.ProjectLive.GithubImportContentForm do
       # import content
       OrangeCms.Shared.Github.import_content(assigns.project, content_type)
 
-      send_update(pid, OrangeCmsWeb.ProjectLive.GithubImportContentForm, %{
-        id: assigns.project.id,
+      send_update(pid, OrangeCmsWeb.ContentTypeLive.CreateGithubCollectionForm, %{
+        id: assigns.id,
         import_status: :done,
         message: {:success, "Content import completed"}
       })
