@@ -156,15 +156,27 @@ defmodule OrangeCmsWeb.Components.LadUI.Select do
   end
 
   attr(:class, :string, default: nil)
+  attr :side, :string, values: ~w(top right bottom left), default: "bottom"
   slot(:inner_block, required: true)
+
   attr(:rest, :global)
 
   def select_content(assigns) do
+    position_class =
+      case assigns.side do
+        "top" -> "bottom-full mb-2"
+        "bottom" -> "top-full mt-2"
+      end
+
+    assigns = assign(assigns, :position_class, position_class)
+
     ~H"""
     <div
+      data-side={@side}
       class={
         classes([
-          "select-content hidden group-data-[state=open]/select:block transition-all duration-150 ease-in-out absolute top-full mt-2 left-0 w-full z-50 min-w-[8rem] max-h-[285px] overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md",
+          "select-content hidden group-data-[state=open]/select:block transition-all duration-150 ease-in-out absolute left-0 w-full z-50 min-w-[8rem] max-h-[285px] overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md",
+          @position_class,
           @class
         ])
       }
@@ -205,6 +217,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Select do
   attr(:selected, :boolean, default: false)
   attr(:disabled, :boolean, default: false)
   attr(:class, :string, default: nil)
+  attr :"phx-click", JS, default: %JS{}
   slot(:inner_block, required: true)
 
   attr(:rest, :global)
@@ -229,7 +242,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Select do
         ])
       }
       {%{"data-disabled": @disabled}}
-      phx-click={JS.dispatch("select-change")}
+      phx-click={assigns[:"phx-click"] |> JS.dispatch("select-change")}
       data-selected={@selected && "true"}
       data-value={@value}
       {@rest}

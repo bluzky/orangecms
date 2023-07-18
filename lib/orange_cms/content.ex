@@ -119,12 +119,12 @@ defmodule OrangeCms.Content do
       [%ContentEntry{}, ...]
 
   """
-  def list_content_entries(project_id, filters) do
+  def list_content_entries(project_id, filters, opts \\ []) do
     ContentEntry
     |> Filtery.filter(:project_id, project_id)
     |> Filtery.apply(filters)
     |> order_by(desc: :inserted_at)
-    |> Repo.all()
+    |> Repo.paginate(opts)
   end
 
   @doc """

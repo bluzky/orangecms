@@ -32,6 +32,7 @@ defmodule OrangeCmsWeb.Components.LadUI do
       import OrangeCmsWeb.Components.LadUI.Form
       import OrangeCmsWeb.Components.LadUI.Icon
       import OrangeCmsWeb.Components.LadUI.Input, except: [input: 1]
+      import OrangeCmsWeb.Components.LadUI.Pagination
       import OrangeCmsWeb.Components.LadUI.ScrollArea
       import OrangeCmsWeb.Components.LadUI.Select
       import OrangeCmsWeb.Components.LadUI.Sheet

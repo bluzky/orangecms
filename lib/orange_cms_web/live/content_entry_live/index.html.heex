@@ -41,42 +41,52 @@
         </:actions>
       </.header>
 
-      <div class="mt-4">
-        <.stable>
-          <.table_header class="uppercase">
-            <.table_row>
-              <.table_head>Title</.table_head>
-              <.table_head class="text-right">Action</.table_head>
-            </.table_row>
-          </.table_header>
-          <.table_body phx-update="stream">
-            <.table_row :for={{id, entry} <- @streams.content_entries} id={id}>
-              <.table_cell>
-                <.link navigate={
-                  scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")
-                }>
-                  <%= entry.title %>
-                </.link>
-              </.table_cell>
-              <.table_cell class="text-right">
-                <.link
-                  navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")}
-                  class="btn-action"
-                >
-                  <Heroicons.pencil_square class="h-4 w-4" /> Edit
-                </.link>
+      <div class="mt-4 space-y-4">
+        <div class="rounded-md border">
+          <.stable>
+            <.table_header class="uppercase">
+              <.table_row>
+                <.table_head>Title</.table_head>
+                <.table_head class="text-right">Action</.table_head>
+              </.table_row>
+            </.table_header>
+            <.table_body id="entries">
+              <.table_row :for={entry <- @content_entries} id={entry.id}>
+                <.table_cell>
+                  <.link navigate={
+                    scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")
+                  }>
+                    <%= entry.title %>
+                  </.link>
+                </.table_cell>
+                <.table_cell class="text-right">
+                  <.link
+                    navigate={scoped_path(assigns, "/content/#{@content_type.key}/#{entry.id}")}
+                    class="btn-action"
+                  >
+                    <Heroicons.pencil_square class="h-4 w-4" /> Edit
+                  </.link>
 
-                <.link
-                  phx-click={JS.push("delete", value: %{id: entry.id})}
-                  data-confirm="Are you sure?"
-                  class="btn-action"
-                >
-                  <Heroicons.x_mark class="h-4 w-4" /> Delete
-                </.link>
-              </.table_cell>
-            </.table_row>
-          </.table_body>
-        </.stable>
+                  <.link
+                    phx-click={JS.push("delete", value: %{id: entry.id})}
+                    data-confirm="Are you sure?"
+                    class="btn-action"
+                  >
+                    <Heroicons.x_mark class="h-4 w-4" /> Delete
+                  </.link>
+                </.table_cell>
+              </.table_row>
+            </.table_body>
+          </.stable>
+        </div>
+
+        <.pagination
+          :if={@pagination}
+          {Map.take(@pagination, [:page_number, :page_size, :total_pages, :total_entries])}
+          on_click_fn={
+            fn page, size -> JS.patch(build_url(@current_uri, page: page, page_size: size)) end
+          }
+        />
       </div>
     </div>
   </div>

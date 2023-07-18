@@ -30,4 +30,25 @@ defmodule OrangeCmsWeb.ViewHelper do
   def scoped_path_fn(socket_or_conn) do
     fn relative_path -> scoped_path(socket_or_conn, relative_path) end
   end
+
+  @doc """
+  Rebuild URL with new params and return final URL as string
+
+  params accepts map or keyword list, atom keys will be converted to string and remove duplicated
+  """
+  def build_url(%URI{} = uri, params) do
+    query =
+      (uri.query || "")
+      |> URI.decode_query()
+      |> Map.merge(Map.new(params, fn {k, v} -> {to_string(k), v} end))
+      |> URI.encode_query()
+
+    URI.to_string(%{uri | query: query})
+  end
+
+  def build_url(url, params) when is_binary(url) do
+    url
+    |> URI.parse()
+    |> build_url(params)
+  end
 end
