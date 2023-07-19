@@ -2,6 +2,8 @@ defmodule OrangeCms.Content.ContentEntry do
   @moduledoc false
   use OrangeCms, :schema
 
+  alias OrangeCms.Content.ContentEntry
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "content_entries" do
@@ -33,6 +35,41 @@ defmodule OrangeCms.Content.ContentEntry do
     ])
     |> cast_embed(:integration_info)
     |> validate_required([:title, :content_type_id, :project_id])
+  end
+
+  @filterable_fields [:title, :slug, :body, :content_type_id, :project_id]
+  @doc """
+  Base query
+  """
+  def query do
+    ContentEntry
+  end
+
+  @doc """
+  compose query
+  """
+  def add_filter(query, filters) when is_map(filters) do
+    filters
+    |> Enum.filter(fn {k, v} -> k in @filterable_fields end)
+    |> Enum.reduce(query, fn {k, v}, query ->
+      add_filter(query, k, v)
+    end)
+  end
+
+  def add_filter(query, field, value) when field in @filterable_fields do
+    filter_by(query, field, value)
+  end
+
+  def filter_by(query, :title, value) do
+    if value not in [nil, ""] do
+      where(query, [c], ilike(c.title, ^"%#{value}%"))
+    else
+      query
+    end
+  end
+
+  def filter_by(query, field, value) do
+    Filtery.filter(query, field, value)
   end
 end
 

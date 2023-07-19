@@ -10,22 +10,15 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
   def mount(params, _session, socket) do
     content_types = Content.list_content_types(socket.assigns.current_project.id)
 
+    # TODO replace by stream when stream_reset released
     if params["type"] do
-      content_type = Enum.find(content_types, &(&1.key == params["type"]))
-
-      # load content entries
-      content_entries =
-        Content.list_content_entries(socket.assigns.current_project.id,
-          content_type_id: content_type.id
-        )
-
       {:ok,
-       socket
-       |> assign(
+       assign(socket,
          content_types: content_types,
-         content_type: content_type
-       )
-       |> stream(:content_entries, content_entries)}
+         content_type: %ContentType{project_id: socket.assigns.current_project.id},
+         pagination: nil,
+         content_entries: []
+       )}
     else
       {:ok, push_navigate(socket, to: scoped_path(socket, "/content/#{hd(content_types).key}"))}
     end
@@ -42,8 +35,30 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
     |> assign(:content_type, %ContentType{project_id: socket.assigns.current_project.id})
   end
 
-  defp apply_action(socket, :index, _params) do
-    assign(socket, :page_title, socket.assigns.content_type.name)
+  defp apply_action(socket, :index, %{"type" => type} = params) do
+    content_type = Enum.find(socket.assigns.content_types, &(&1.key == type))
+
+    # load content entries
+    page =
+      Content.filter_content_entries(
+        socket.assigns.current_project.id,
+        %{content_type_id: content_type.id, title: params["title"]},
+        params
+      )
+
+    socket
+    |> assign(
+      content_type: content_type,
+      pagination: Map.delete(page, :entries),
+      page_title: content_type.name,
+      content_entries: page.entries
+    )
+    |> assign_search_form(params)
+  end
+
+  @impl true
+  def handle_event("apply_filter", %{"filter" => filter}, socket) do
+    {:noreply, push_patch(socket, to: current_path(socket.assigns.current_uri, filter))}
   end
 
   def handle_event("create_entry", _params, socket) do
@@ -73,8 +88,11 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
   def handle_event("delete", %{"id" => id}, socket) do
     entry = Content.get_content_entry!(id)
     Content.delete_content_entry(entry)
-    socket = stream_delete(socket, :content_entries, entry)
 
-    {:noreply, socket}
+    {:noreply, push_patch(socket, to: socket.assigns.current_uri.path)}
+  end
+
+  defp assign_search_form(socket, params) do
+    assign(socket, :search_form, to_form(params, as: "filter"))
   end
 end

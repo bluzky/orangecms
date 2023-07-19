@@ -62,7 +62,8 @@ defmodule OrangeCms.MixProject do
       {:filtery, "~> 0.2.3"},
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:styler, "~> 0.7", only: [:dev, :test], runtime: false},
-      {:tailwind_formatter, "~> 0.3", only: [:dev, :test], runtime: false}
+      {:tailwind_formatter, "~> 0.3", only: [:dev, :test], runtime: false},
+      {:scrivener_ecto, "~> 2.7"}
     ]
   end
 
@@ -75,8 +76,8 @@ defmodule OrangeCms.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "db.setup", "assets.setup", "assets.build"],
-      "db.setup": ["ash_postgres.create", "ash_postgres.migrate", "run priv/repo/seeds.exs"],
-      "db.reset": ["ash_postgres.drop", "ecto.setup"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "cmd \"cd assets && yarn && cd -\""],
       "assets.build": ["tailwind default", "cmd \"cd assets && yarn build && cd -\""],
