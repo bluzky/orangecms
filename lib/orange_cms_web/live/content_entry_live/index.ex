@@ -40,14 +40,25 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
 
     # load content entries
     page =
-      Content.list_content_entries(socket.assigns.current_project.id, %{content_type_id: content_type.id}, params)
+      Content.filter_content_entries(
+        socket.assigns.current_project.id,
+        %{content_type_id: content_type.id, title: params["title"]},
+        params
+      )
 
-    assign(socket,
+    socket
+    |> assign(
       content_type: content_type,
       pagination: Map.delete(page, :entries),
       page_title: content_type.name,
       content_entries: page.entries
     )
+    |> assign_search_form(params)
+  end
+
+  @impl true
+  def handle_event("apply_filter", %{"filter" => filter}, socket) do
+    {:noreply, push_patch(socket, to: current_path(socket.assigns.current_uri, filter))}
   end
 
   def handle_event("create_entry", _params, socket) do
@@ -79,5 +90,9 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
     Content.delete_content_entry(entry)
 
     {:noreply, push_patch(socket, to: socket.assigns.current_uri.path)}
+  end
+
+  defp assign_search_form(socket, params) do
+    assign(socket, :search_form, to_form(params, as: "filter"))
   end
 end

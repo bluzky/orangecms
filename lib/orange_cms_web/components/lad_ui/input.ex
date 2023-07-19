@@ -33,7 +33,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Input do
       id={@id}
       type={@type}
       name={@name}
-      value={@value}
+      value={assigns[:value]}
       {@rest}
     />
     """

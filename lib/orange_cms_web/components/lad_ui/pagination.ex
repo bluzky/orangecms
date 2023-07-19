@@ -50,7 +50,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Pagination do
             variant="outline"
             class="hidden h-8 w-8 p-0 lg:flex"
             disabled={@page_number == 1}
-            phx-click={@on_click_fn.(@page_number - 1, @page_size)}
+            phx-click={@on_click_fn.(1, @page_size)}
           >
             <span class="sr-only">Go to first page</span>
             <.icon name="chevron-double-left" class="h-4 w-4" />
@@ -59,7 +59,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Pagination do
             variant="outline"
             class="h-8 w-8 p-0"
             disabled={@page_number == 1}
-            phx-click={@on_click_fn.(1, @page_size)}
+            phx-click={@on_click_fn.(@page_number - 1, @page_size)}
           >
             <span class="sr-only">Go to previous page</span>
             <.icon name="chevron-left" class="h-4 w-4" />

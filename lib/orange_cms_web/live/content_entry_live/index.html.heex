@@ -42,6 +42,19 @@
       </.header>
 
       <div class="mt-4 space-y-4">
+        <.form :let={f} for={@search_form} phx-submit="apply_filter" phx-change="apply_filter">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-1 items-center space-x-2">
+              <Input.input
+                field={f[:title]}
+                placeholder="Filter title ..."
+                class="w-[150px] h-8 lg:w-[250px]"
+                phx-debounce="1000"
+                required
+              />
+            </div>
+          </div>
+        </.form>
         <div class="rounded-md border">
           <.stable>
             <.table_header class="uppercase">
@@ -84,7 +97,7 @@
           :if={@pagination}
           {Map.take(@pagination, [:page_number, :page_size, :total_pages, :total_entries])}
           on_click_fn={
-            fn page, size -> JS.patch(build_url(@current_uri, page: page, page_size: size)) end
+            fn page, size -> JS.patch(current_url(@current_uri, page: page, page_size: size)) end
           }
         />
       </div>

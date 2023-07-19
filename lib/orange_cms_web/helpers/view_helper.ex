@@ -36,7 +36,7 @@ defmodule OrangeCmsWeb.ViewHelper do
 
   params accepts map or keyword list, atom keys will be converted to string and remove duplicated
   """
-  def build_url(%URI{} = uri, params) do
+  def current_url(%URI{} = uri, params) do
     query =
       (uri.query || "")
       |> URI.decode_query()
@@ -46,9 +46,14 @@ defmodule OrangeCmsWeb.ViewHelper do
     URI.to_string(%{uri | query: query})
   end
 
-  def build_url(url, params) when is_binary(url) do
+  def current_url(url, params) when is_binary(url) do
     url
     |> URI.parse()
-    |> build_url(params)
+    |> current_url(params)
+  end
+
+  def current_path(uri, params) do
+    uri = uri |> current_url(params) |> URI.parse()
+    Enum.join([uri.path, uri.query], "?")
   end
 end
