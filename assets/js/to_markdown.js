@@ -1,8 +1,3 @@
-function inspect(a) {
-  console.log(a);
-  return a;
-}
-
 const Serializer = {
   blockquote(node, nested) {
     nested = nested || 1;
@@ -122,8 +117,6 @@ const Serializer = {
       const rs = serializer(node);
       if (rs) {
         return rs;
-      } else {
-        console.log(node);
       }
     } else {
       throw "not supported node";
