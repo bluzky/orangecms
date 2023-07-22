@@ -2,6 +2,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@import "./highlight-nord.css";
 
 /* ----- START SETTING ----- */
 :root {
@@ -60,89 +61,6 @@
 /* This file is for your main application CSS */
 /* @import easymde/dist/easymde.min.css"; */
 
-/* remove border for code mirror */
-
-.collapsible.sidebar,
-.collapsible .sidebar {
-    @apply transition-all duration-500;
-}
-
-.collapsible .collapsible-item {
-    @apply flex gap-0 items-center transition-all duration-500;
-}
-
-.collapsible .collapsible-item .no-collapse {
-    @apply shrink-0;
-}
-
-.collapsible .collapsible-item .will-collapse {
-    @apply w-auto pl-2 opacity-100 transition-all duration-500;
-}
-
-.collapsible .collapsed-visible {
-    display: none;
-}
-
-.collapsed.sidebar,
-.collapsed .sidebar {
-    @apply w-16;
-}
-
-.collapsed .collapsible-item .will-collapse {
-    @apply w-0 opacity-0 pl-0;
-}
-
-.collapsed .collapsed-visible {
-    display: block;
-}
-
-.collapsed .collapsed-hidden {
-    @apply transition-all duration-500;
-    display: none;
-}
-
-.collapsed.sidebar details {
-    @apply relative;
-}
-
-.collapsed.sidebar details ul.menu {
-    @apply absolute top-0 left-full bg-white w-52 p-2 rounded-xl drop-shadow-lg;
-}
-
-.EasyMDEContainer .CodeMirror {
-    border: transparent;
-    padding: 0;
-}
-
-ul.menu li {
-    @apply py-0.5;
-}
-
-ul.menu li> :where(:not(ul)) {
-    @apply rounded-xl;
-}
-
-.textarea {
-    @apply leading-6;
-}
-
-.tabs>.tab.tab-active {
-    @apply font-bold border-b-2;
-}
-
-.tab-content {
-    @apply p-4;
-}
-
-.table tr td,
-.table tr th {
-    @apply text-sm;
-}
-
 .btn-action {
     @apply inline-flex gap-1 items-center rounded-lg hover:bg-secondary border border-transparent hover:border-border px-1;
-}
-
-.label {
-    @apply justify-start;
 }

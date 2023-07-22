@@ -1,11 +1,67 @@
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
+import CodeBlockLowLight from "@tiptap/extension-code-block-lowlight";
 import { CustomImage } from "./editor/image";
 import Link from "@tiptap/extension-link";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
+import { Extension } from "@tiptap/core";
+import { Plugin } from "prosemirror-state";
+
 import MarkdownIt from "markdown-it";
 import Commands from "./editor/commands";
 import suggestion from "./editor/suggestion";
+import { lowlight } from "lowlight/lib/core";
+import elixir from "highlight.js/lib/languages/elixir";
+
+lowlight.registerLanguage("elixir", elixir);
+
+const CustomCodeBlock = CodeBlockLowLight.extend({
+  addKeyboardShortcuts() {
+    return {
+      Tab: () => {
+        this.editor
+          .chain()
+          .command(({ tr }) => {
+            tr.insertText("  ");
+            return true;
+          })
+          .run();
+        return true;
+      },
+    };
+  },
+});
+
+const disableDefaultTabBehavior = () => {
+  function preventTab(e) {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+
+  let setupComplete = false;
+
+  return new Plugin({
+    view: () => ({
+      update: () => {
+        if (setupComplete) return;
+
+        window.addEventListener("keydown", preventTab);
+        setupComplete = true;
+      },
+      destroy: () => {
+        window.removeEventListener("keydown", preventTab);
+      },
+    }),
+  });
+};
+
+const DisableDefaultTab = Extension.create({
+  addProseMirrorPlugins() {
+    return [disableDefaultTabBehavior()];
+  },
+});
 
 // Override function
 
@@ -148,7 +204,8 @@ export function initEditor(options) {
   const editor = new Editor({
     element: options.element,
     extensions: [
-      StarterKit,
+      StarterKit.configure({ codeBlock: false }),
+      CustomCodeBlock.configure({ lowlight }),
       CustomImage.configure({
         inline: true,
         previewEndpoint: options.previewEndpoint,
@@ -165,6 +222,7 @@ export function initEditor(options) {
       Commands.configure({
         suggestion,
       }),
+      DisableDefaultTab,
     ],
     editorProps: {
       attributes: {
@@ -180,15 +238,3 @@ export function initEditor(options) {
   initMenu(editor, menuElement);
   return editor;
 }
-
-// const editor = initEditor({
-//   el: document.querySelector(".tt-editor"),
-//   content: document.getElementById("editor").value,
-//   classes:
-//     "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl m-5 focus:outline-none",
-//   tiptapOptions: {
-//     onUpdate({ editor }) {
-//       console.log(toMarkdown(editor.getJSON()));
-//     },
-//   },
-// });
