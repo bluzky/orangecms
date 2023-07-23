@@ -1,3 +1,4 @@
+import SvelteEditor from "./editor/Editor.svelte";
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import CodeBlockLowLight from "@tiptap/extension-code-block-lowlight";
@@ -201,40 +202,48 @@ export function initEditor(options) {
   const html = new MarkdownIt().render(options.content);
   const menuElement = document.querySelector(".editor-menu");
 
-  const editor = new Editor({
-    element: options.element,
-    extensions: [
-      StarterKit.configure({ codeBlock: false }),
-      CustomCodeBlock.configure({ lowlight }),
-      CustomImage.configure({
-        inline: true,
-        previewEndpoint: options.previewEndpoint,
-      }),
-      Link.configure({
-        openOnClick: false,
-      }),
-      BubbleMenu.configure({
-        element: menuElement,
-        tippyOptions: {
-          maxWidth: "none",
-        },
-      }),
-      Commands.configure({
-        suggestion,
-      }),
-      DisableDefaultTab,
-    ],
-    editorProps: {
-      attributes: {
-        class: options.classes,
-        spellcheck: "false",
-      },
+  // const editor = new Editor({
+  //   element: options.element,
+  //   extensions: [
+  //     StarterKit.configure({ codeBlock: false }),
+  //     CustomCodeBlock.configure({ lowlight }),
+  //     CustomImage.configure({
+  //       inline: true,
+  //       previewEndpoint: options.previewEndpoint,
+  //     }),
+  //     Link.configure({
+  //       openOnClick: false,
+  //     }),
+  //     BubbleMenu.configure({
+  //       element: menuElement,
+  //       tippyOptions: {
+  //         maxWidth: "none",
+  //       },
+  //     }),
+  //     Commands.configure({
+  //       suggestion,
+  //     }),
+  //     DisableDefaultTab,
+  //   ],
+  //   editorProps: {
+  //     attributes: {
+  //       class: options.classes,
+  //       spellcheck: "false",
+  //     },
+  //   },
+  //   content: html,
+  //   uploadFunc: (file) => uploadFile(file, options),
+  //   ...options.tiptapOptions,
+  // });
+
+  // initMenu(editor, menuElement);
+  const component = new SvelteEditor({
+    target: options.element,
+    hydrate: false,
+    props: {
+      html: html,
     },
-    content: html,
-    uploadFunc: (file) => uploadFile(file, options),
-    ...options.tiptapOptions,
   });
 
-  initMenu(editor, menuElement);
-  return editor;
+  return component.getEditor();
 }
