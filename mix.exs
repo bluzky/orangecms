@@ -19,7 +19,7 @@ defmodule OrangeCms.MixProject do
   def application do
     [
       mod: {OrangeCms.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :observer, :wx]
     ]
   end
 
@@ -43,7 +43,6 @@ defmodule OrangeCms.MixProject do
       {:heroicons, "~> 0.5"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.7.2"},
-      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2.1", runtime: Mix.env() == :dev},
       {:tails, "~> 0.1.5"},
       {:swoosh, "~> 1.3"},

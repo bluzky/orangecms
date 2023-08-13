@@ -3,6 +3,8 @@
 @import "tailwindcss/utilities";
 
 @import "./highlight-nord.css";
+@import "./md-editor-viewer.css";
+@import "../vendor/bytemd/dist/index.css";
 
 /* ----- START SETTING ----- */
 :root {

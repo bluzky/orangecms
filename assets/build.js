@@ -10,14 +10,17 @@ const loader = {
 };
 
 const plugins = [
-  // Add and configure plugins here
-  sveltePlugin({ filterWarnings: (_warning) => false }),
-  // ... other plugins such as postCss, etc.
+  sveltePlugin({
+    filterWarnings: (_warning) => false,
+    compilerOptions: { css: "external" },
+  }),
 ];
 
 let opts = {
   entryPoints: ["js/app.js"],
-  // mainFields: ["svelte", "browser", "module", "main"],
+  mainFields: ["svelte", "module", "main"],
+  conditions: ["svelte"],
+  nodePaths: ["./vendor"],
   bundle: true,
   minify: false,
   target: "es2017",
@@ -32,6 +35,7 @@ if (watch) {
     ...opts,
     sourcemap: "inline",
   };
+  console.log(opts);
 
   esbuild.context(opts).then((context) => {
     context.watch();

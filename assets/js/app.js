@@ -28,6 +28,7 @@ import { debounce } from "./utils";
 import { FileUpload } from "./fileUpload";
 import componentHooks from "./componentHooks";
 import initLad from "./lad";
+import { createMdEditor } from "./md_editor";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -37,6 +38,14 @@ let csrfToken = document
 const Hooks = {
   ...componentHooks,
   MdEditor: {
+    mounted() {
+      const editor = createMdEditor({
+        element: document.getElementById("editor"),
+        content: this.el.value,
+      });
+    },
+  },
+  WritterEditor: {
     mounted() {
       const autoSave = debounce((editor, textarea) => {
         textarea.value = toMarkdown(editor.getJSON());
@@ -87,7 +96,7 @@ const Hooks = {
           const ids = elements.map((elm) => elm.getAttribute("data-id"));
           this.pushEvent(
             this.el.getAttribute("phx-event") || "update-sorting",
-            { ids: ids }
+            { ids: ids },
           );
         },
       });

@@ -15,7 +15,6 @@ config :orange_cms, OrangeCms.Repo,
 #
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
-# with esbuild to bundle .js and .css sources.
 config :orange_cms, OrangeCmsWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
@@ -25,7 +24,6 @@ config :orange_cms, OrangeCmsWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "Jwa9efdCeTCdhTKzuVdA+DS9v5fBgB8+KT+RcLJ3puS6n2CppCldhkATTUNBd/Qc",
   watchers: [
-    # esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     node: ["build.js", "--watch", cd: Path.expand("../assets", __DIR__)],
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
