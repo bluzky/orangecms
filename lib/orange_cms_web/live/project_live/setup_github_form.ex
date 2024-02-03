@@ -25,7 +25,7 @@ defmodule OrangeCmsWeb.ProjectLive.GithubInfo do
   defp validate_token(changeset) do
     case fetch_change(changeset, :access_token) do
       {:ok, access_token} ->
-        if String.starts_with?(access_token, "github_pat_") do
+        if String.starts_with?(access_token, "ghp_") do
           changeset
         else
           add_error(changeset, :access_token, "Invalid access access_token")
@@ -53,6 +53,7 @@ end
 
 defmodule OrangeCmsWeb.ProjectLive.SetupGithubForm do
   @moduledoc false
+
   use OrangeCmsWeb, :live_component
 
   alias Ecto.Changeset
