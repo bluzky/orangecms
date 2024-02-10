@@ -27,6 +27,15 @@ defmodule OrangeCms do
     end
   end
 
+  def query do
+    quote do
+      import Ecto.Query, warn: false
+
+      alias OrangeCms.Repo
+      alias OrangeCms.Shared.Filter
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate context/schema/service/repo/finder
   """

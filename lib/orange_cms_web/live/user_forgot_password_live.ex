@@ -39,7 +39,7 @@ defmodule OrangeCmsWeb.UserForgotPasswordLive do
   end
 
   def handle_event("send_email", %{"user" => %{"email" => email}}, socket) do
-    if user = Accounts.get_user_by_email(email) do
+    with {:ok, user} <- Accounts.find_user(email: email) do
       Accounts.deliver_user_reset_password_instructions(
         user,
         &url(~p"/users/reset_password/#{&1}")

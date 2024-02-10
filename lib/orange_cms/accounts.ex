@@ -7,9 +7,7 @@ defmodule OrangeCms.Accounts do
   alias OrangeCms.Accounts.UserToken
 
   def list_users do
-    User
-    |> order_by([u], u.first_name)
-    |> Repo.all()
+    OrangeCms.Accounts.ListUsersUsecase.call(%{})
   end
 
   def delete_user(user) do
@@ -19,19 +17,19 @@ defmodule OrangeCms.Accounts do
   ## Database getters
 
   @doc """
-  Gets a user by email.
+  Gets a user by filter.
 
   ## Examples
 
-      iex> get_user_by_email("foo@example.com")
-      %User{}
+      iex> find_user(email: "foo@example.com")
+      {:ok, %User{}}
 
-      iex> get_user_by_email("unknown@example.com")
-      nil
+      iex> find_user(email: "unknown@example.com")
+      {:error, :not_found}
 
   """
-  def get_user_by_email(email) when is_binary(email) do
-    Repo.get_by(User, email: email)
+  def find_user(filters) do
+    OrangeCms.Accounts.FindUserUsecase.call(filters)
   end
 
   @doc """
@@ -39,16 +37,15 @@ defmodule OrangeCms.Accounts do
 
   ## Examples
 
-      iex> get_user_by_email_and_password("foo@example.com", "correct_password")
-      %User{}
+      iex> authorize_user("foo@example.com", "correct_password")
+      {:ok, %User{}}
 
-      iex> get_user_by_email_and_password("foo@example.com", "invalid_password")
-      nil
+      iex> authorize_user("foo@example.com", "invalid_password")
+      {:error, :unauthorized}
 
   """
-  def get_user_by_email_and_password(email, password) when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
-    if User.valid_password?(user, password), do: user
+  def authorize_user(email, password) do
+    OrangeCms.Accounts.AuthorizeUserUsecase.call(email, password)
   end
 
   @doc """

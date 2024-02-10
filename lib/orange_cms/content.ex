@@ -119,7 +119,7 @@ defmodule OrangeCms.Content do
       [%ContentEntry{}, ...]
 
   """
-  def list_content_entries(project_id, filters, opts \\ []) do
+  def list_content_entries(project_id, filters, _opts \\ []) do
     ContentEntry
     |> Filtery.filter(:project_id, project_id)
     |> Filtery.apply(filters)

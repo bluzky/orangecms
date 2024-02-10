@@ -65,29 +65,29 @@ defmodule OrangeCms.AccountsTest do
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
-      refute Accounts.get_user_by_email("unknown@example.com")
+      assert {error, :not_found} = Accounts.find_user(email: "unknown@example.com")
     end
 
     test "returns the user if the email exists" do
       %{id: id} = user = user_fixture()
-      assert %User{id: ^id} = Accounts.get_user_by_email(user.email)
+      assert {:ok, %User{id: ^id}} = Accounts.find_user(email: user.email)
     end
   end
 
-  describe "get_user_by_email_and_password/2" do
+  describe "authorize_user/2" do
     test "does not return the user if the email does not exist" do
-      refute Accounts.get_user_by_email_and_password("unknown@example.com", "hello world!")
+      assert {:error, :not_found} = Accounts.authorize_user("unknown@example.com", "hello world!")
     end
 
     test "does not return the user if the password is not valid" do
       user = user_fixture()
-      refute Accounts.get_user_by_email_and_password(user.email, "invalid")
+      assert {:error, :unauthorized} = Accounts.authorize_user(user.email, "invalid")
     end
 
     test "returns the user if the email and password are valid" do
       %{id: id} = user = user_fixture()
 
-      assert %User{id: ^id} = Accounts.get_user_by_email_and_password(user.email, valid_user_password())
+      assert {:ok, %User{id: ^id}} = Accounts.authorize_user(user.email, valid_user_password())
     end
   end
 
@@ -346,7 +346,7 @@ defmodule OrangeCms.AccountsTest do
         })
 
       assert is_nil(user.password)
-      assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
+      assert Accounts.authorize_user(user.email, "new valid password")
     end
 
     test "deletes all tokens for the given user", %{user: user} do
@@ -541,7 +541,7 @@ defmodule OrangeCms.AccountsTest do
     test "updates the password", %{user: user} do
       {:ok, updated_user} = Accounts.reset_user_password(user, %{password: "new valid password"})
       assert is_nil(updated_user.password)
-      assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
+      assert Accounts.authorize_user(user.email, "new valid password")
     end
 
     test "deletes all tokens for the given user", %{user: user} do
