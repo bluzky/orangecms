@@ -33,7 +33,6 @@ defmodule OrangeCmsWeb.Components.LadUI.Pagination do
             <.select_content side="top">
               <.select_item
                 :for={page_size <- [10, 20, 30, 40, 50]}
-                key={page_size}
                 value={page_size}
                 phx-click={@on_click_fn.(1, page_size)}
               >

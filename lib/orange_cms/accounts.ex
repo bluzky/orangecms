@@ -6,11 +6,7 @@ defmodule OrangeCms.Accounts do
   alias OrangeCms.Accounts.UserNotifier
   alias OrangeCms.Accounts.UserToken
 
-  def list_users do
-    User
-    |> order_by([u], u.first_name)
-    |> Repo.all()
-  end
+  def list_users(filters \\ %{}), do: OrangeCms.Accounts.ListUsersUsecase.call(filters)
 
   def delete_user(user) do
     Repo.delete(user)
@@ -19,19 +15,19 @@ defmodule OrangeCms.Accounts do
   ## Database getters
 
   @doc """
-  Gets a user by email.
+  Gets a user by filter.
 
   ## Examples
 
-      iex> get_user_by_email("foo@example.com")
-      %User{}
+      iex> find_user(email: "foo@example.com")
+      {:ok, %User{}}
 
-      iex> get_user_by_email("unknown@example.com")
-      nil
+      iex> find_user(email: "unknown@example.com")
+      {:error, :not_found}
 
   """
-  def get_user_by_email(email) when is_binary(email) do
-    Repo.get_by(User, email: email)
+  def find_user(filters) do
+    OrangeCms.Accounts.FindUserUsecase.call(filters)
   end
 
   @doc """
@@ -39,17 +35,14 @@ defmodule OrangeCms.Accounts do
 
   ## Examples
 
-      iex> get_user_by_email_and_password("foo@example.com", "correct_password")
-      %User{}
+      iex> authorize_user("foo@example.com", "correct_password")
+      {:ok, %User{}}
 
-      iex> get_user_by_email_and_password("foo@example.com", "invalid_password")
-      nil
+      iex> authorize_user("foo@example.com", "invalid_password")
+      {:error, :unauthorized}
 
   """
-  def get_user_by_email_and_password(email, password) when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
-    if User.valid_password?(user, password), do: user
-  end
+  def authorize_user(email, password), do: OrangeCms.Accounts.AuthorizeUserUsecase.call(email, password)
 
   @doc """
   Gets a single user.
@@ -67,27 +60,13 @@ defmodule OrangeCms.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
-  def search_user(keyword) do
-    User
-    |> Filtery.apply(%{email: {:ilike, keyword}})
-    |> Repo.all()
-  end
-
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
 
-  def create_user(attrs) do
-    %User{}
-    |> change_user(attrs)
-    |> Repo.insert()
-  end
+  def create_user(attrs), do: OrangeCms.Accounts.CreateUserUsecase.call(attrs)
 
-  def update_user(%User{} = user, attrs) do
-    user
-    |> change_user(attrs)
-    |> Repo.update()
-  end
+  def update_user(%User{} = user, attrs), do: OrangeCms.Accounts.UpdateUserUsecase.call(user, attrs)
 
   ## User registration
 
@@ -103,13 +82,10 @@ defmodule OrangeCms.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
-  end
+  def register_user(attrs), do: OrangeCms.Accounts.RegisterUserUsecase.call(attrs)
 
   @doc """
+  TODO: move to application layer
   Returns an `%Ecto.Changeset{}` for tracking user changes.
 
   ## Examples
@@ -125,6 +101,7 @@ defmodule OrangeCms.Accounts do
   ## Settings
 
   @doc """
+  TODO: move to application layer
   Returns an `%Ecto.Changeset{}` for changing the user email.
 
   ## Examples
@@ -138,6 +115,7 @@ defmodule OrangeCms.Accounts do
   end
 
   @doc """
+  TODO: refactor
   Emulates that the email will change without actually changing
   it in the database.
 
@@ -164,26 +142,7 @@ defmodule OrangeCms.Accounts do
   The confirmed_at date is also updated to the current time.
   """
   def update_user_email(user, token) do
-    context = "change:#{user.email}"
-
-    with {:ok, query} <- UserToken.verify_change_email_token_query(token, context),
-         %UserToken{sent_to: email} <- Repo.one(query),
-         {:ok, _} <- Repo.transaction(user_email_multi(user, email, context)) do
-      :ok
-    else
-      _ -> :error
-    end
-  end
-
-  defp user_email_multi(user, email, context) do
-    changeset =
-      user
-      |> User.email_changeset(%{email: email})
-      |> User.confirm_changeset()
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, [context]))
+    OrangeCms.Accounts.UpdateUserEmailUsecase.call(user, token)
   end
 
   @doc ~S"""
@@ -329,11 +288,8 @@ defmodule OrangeCms.Accounts do
       {:ok, %{to: ..., body: ...}}
 
   """
-  def deliver_user_reset_password_instructions(%User{} = user, reset_password_url_fun)
-      when is_function(reset_password_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
-    Repo.insert!(user_token)
-    UserNotifier.deliver_reset_password_instructions(user, reset_password_url_fun.(encoded_token))
+  def deliver_user_reset_password_instructions(current_email, update_email_url_fun) do
+    OrangeCms.Accounts.ForgotPasswordUsecase.call(current_email, update_email_url_fun)
   end
 
   @doc """
@@ -369,14 +325,5 @@ defmodule OrangeCms.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def reset_user_password(user, attrs) do
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.password_changeset(user, attrs))
-    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, :all))
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
-    end
-  end
+  def reset_user_password(user, attrs), do: OrangeCms.Accounts.ResetUserPasswordUsecase.call(user, attrs)
 end

@@ -16,7 +16,7 @@ defmodule OrangeCms.Content.ContentEntry do
     embeds_one :integration_info, OrangeCms.Content.GithubInfo, on_replace: :update
 
     belongs_to :content_type, OrangeCms.Content.ContentType
-    belongs_to :project, OrangeCms.Project
+    belongs_to :project, OrangeCms.Projects.Project
 
     timestamps()
   end
@@ -50,7 +50,7 @@ defmodule OrangeCms.Content.ContentEntry do
   """
   def add_filter(query, filters) when is_map(filters) do
     filters
-    |> Enum.filter(fn {k, v} -> k in @filterable_fields end)
+    |> Enum.filter(fn {k, _v} -> k in @filterable_fields end)
     |> Enum.reduce(query, fn {k, v}, query ->
       add_filter(query, k, v)
     end)

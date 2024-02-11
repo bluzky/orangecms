@@ -7,7 +7,8 @@ defmodule OrangeCmsWeb.UserLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :users, Accounts.list_users())}
+    {_, users} = Accounts.list_users()
+    {:ok, stream(socket, :users, users)}
   end
 
   @impl true
