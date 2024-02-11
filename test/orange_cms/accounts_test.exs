@@ -263,7 +263,7 @@ defmodule OrangeCms.AccountsTest do
     end
 
     test "updates the email with a valid token", %{user: user, token: token, email: email} do
-      assert Accounts.update_user_email(user, token) == :ok
+      assert {:ok, _} = Accounts.update_user_email(user, token)
       changed_user = Repo.get!(User, user.id)
       assert changed_user.email != user.email
       assert changed_user.email == email
@@ -273,20 +273,20 @@ defmodule OrangeCms.AccountsTest do
     end
 
     test "does not update email with invalid token", %{user: user} do
-      assert Accounts.update_user_email(user, "oops") == :error
+      assert {:error, :invalid_token} = Accounts.update_user_email(user, "oops")
       assert Repo.get!(User, user.id).email == user.email
       assert Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not update email if user email changed", %{user: user, token: token} do
-      assert Accounts.update_user_email(%{user | email: "current@example.com"}, token) == :error
+      assert {:error, :invalid_token} = Accounts.update_user_email(%{user | email: "current@example.com"}, token)
       assert Repo.get!(User, user.id).email == user.email
       assert Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not update email if token expired", %{user: user, token: token} do
       {1, nil} = Repo.update_all(UserToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
-      assert Accounts.update_user_email(user, token) == :error
+      assert Accounts.update_user_email(user, token) == {:error, :invalid_token}
       assert Repo.get!(User, user.id).email == user.email
       assert Repo.get_by(UserToken, user_id: user.id)
     end

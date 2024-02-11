@@ -82,13 +82,10 @@ defmodule OrangeCms.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
-  end
+  def register_user(attrs), do: OrangeCms.Accounts.RegisterUserUsecase.call(attrs)
 
   @doc """
+  TODO: move to application layer
   Returns an `%Ecto.Changeset{}` for tracking user changes.
 
   ## Examples
@@ -104,6 +101,7 @@ defmodule OrangeCms.Accounts do
   ## Settings
 
   @doc """
+  TODO: move to application layer
   Returns an `%Ecto.Changeset{}` for changing the user email.
 
   ## Examples
@@ -117,6 +115,7 @@ defmodule OrangeCms.Accounts do
   end
 
   @doc """
+  TODO: refactor
   Emulates that the email will change without actually changing
   it in the database.
 
@@ -143,26 +142,7 @@ defmodule OrangeCms.Accounts do
   The confirmed_at date is also updated to the current time.
   """
   def update_user_email(user, token) do
-    context = "change:#{user.email}"
-
-    with {:ok, query} <- UserToken.verify_change_email_token_query(token, context),
-         %UserToken{sent_to: email} <- Repo.one(query),
-         {:ok, _} <- Repo.transaction(user_email_multi(user, email, context)) do
-      :ok
-    else
-      _ -> :error
-    end
-  end
-
-  defp user_email_multi(user, email, context) do
-    changeset =
-      user
-      |> User.email_changeset(%{email: email})
-      |> User.confirm_changeset()
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, [context]))
+    OrangeCms.Accounts.UpdateUserEmailUsecase.call(user, token)
   end
 
   @doc ~S"""
@@ -348,14 +328,5 @@ defmodule OrangeCms.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def reset_user_password(user, attrs) do
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.password_changeset(user, attrs))
-    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, :all))
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
-    end
-  end
+  def reset_user_password(user, attrs), do: OrangeCms.Accounts.ResetUserPasswordUsecase.call(user, attrs)
 end
