@@ -122,7 +122,7 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
   @impl true
   def handle_event("search_user", %{"search_str" => search_str}, socket) do
     if String.trim(search_str) != "" do
-      users = Accounts.search_user(search_str)
+      {_, users} = Accounts.list_users(%{email: {:ilike, search_str}})
 
       {:noreply,
        assign(socket,

@@ -6,9 +6,7 @@ defmodule OrangeCms.Accounts do
   alias OrangeCms.Accounts.UserNotifier
   alias OrangeCms.Accounts.UserToken
 
-  def list_users do
-    OrangeCms.Accounts.ListUsersUsecase.call(%{})
-  end
+  def list_users(filters \\ %{}), do: OrangeCms.Accounts.ListUsersUsecase.call(filters)
 
   def delete_user(user) do
     Repo.delete(user)
@@ -44,9 +42,7 @@ defmodule OrangeCms.Accounts do
       {:error, :unauthorized}
 
   """
-  def authorize_user(email, password) do
-    OrangeCms.Accounts.AuthorizeUserUsecase.call(email, password)
-  end
+  def authorize_user(email, password), do: OrangeCms.Accounts.AuthorizeUserUsecase.call(email, password)
 
   @doc """
   Gets a single user.
@@ -64,27 +60,13 @@ defmodule OrangeCms.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
-  def search_user(keyword) do
-    User
-    |> Filtery.apply(%{email: {:ilike, keyword}})
-    |> Repo.all()
-  end
-
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
 
-  def create_user(attrs) do
-    %User{}
-    |> change_user(attrs)
-    |> Repo.insert()
-  end
+  def create_user(attrs), do: OrangeCms.Accounts.CreateUserUsecase.call(attrs)
 
-  def update_user(%User{} = user, attrs) do
-    user
-    |> change_user(attrs)
-    |> Repo.update()
-  end
+  def update_user(%User{} = user, attrs), do: OrangeCms.Accounts.UpdateUserUsecase.call(user, attrs)
 
   ## User registration
 

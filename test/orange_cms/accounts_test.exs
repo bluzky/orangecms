@@ -12,11 +12,11 @@ defmodule OrangeCms.AccountsTest do
 
     alias OrangeCms.Accounts.User
 
-    @invalid_attrs %{age: nil, name: nil}
+    @invalid_attrs %{email: nil, name: nil}
 
     test "list_users/0 returns all users" do
       user = user_fixture()
-      assert Accounts.list_users() == [user]
+      assert Accounts.list_users() == {:ok, [user]}
     end
 
     test "get_user!/1 returns the user with given id" do
@@ -25,11 +25,10 @@ defmodule OrangeCms.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{age: 42, name: "some name"}
+      valid_attrs = %{email: "demo@example.com", password: "new password", password_confirmation: "new password"}
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
-      assert user.age == 42
-      assert user.name == "some name"
+      assert user.email == "demo@example.com"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -38,11 +37,15 @@ defmodule OrangeCms.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{age: 43, name: "some updated name"}
 
-      assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
-      assert user.age == 43
-      assert user.name == "some updated name"
+      update_attrs = %{
+        age: 43,
+        name: "some updated name",
+        password: "new password",
+        password_confirmation: "new password"
+      }
+
+      assert {:ok, %User{}} = Accounts.update_user(user, update_attrs)
     end
 
     test "update_user/2 with invalid data returns error changeset" do
@@ -65,7 +68,7 @@ defmodule OrangeCms.AccountsTest do
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
-      assert {error, :not_found} = Accounts.find_user(email: "unknown@example.com")
+      assert {:error, :not_found} = Accounts.find_user(email: "unknown@example.com")
     end
 
     test "returns the user if the email exists" do
@@ -94,7 +97,7 @@ defmodule OrangeCms.AccountsTest do
   describe "get_user!/1" do
     test "raises if id is invalid" do
       assert_raise Ecto.NoResultsError, fn ->
-        Accounts.get_user!(-1)
+        Accounts.get_user!(Ecto.UUID.generate())
       end
     end
 
@@ -115,11 +118,11 @@ defmodule OrangeCms.AccountsTest do
     end
 
     test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "not valid"})
+      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "short"})
 
       assert %{
                email: ["must have the @ sign and no spaces"],
-               password: ["should be at least 12 character(s)"]
+               password: ["should be at least 8 character(s)"]
              } = errors_on(changeset)
     end
 
@@ -315,12 +318,12 @@ defmodule OrangeCms.AccountsTest do
     test "validates password", %{user: user} do
       {:error, changeset} =
         Accounts.update_user_password(user, valid_user_password(), %{
-          password: "not valid",
+          password: "short",
           password_confirmation: "another"
         })
 
       assert %{
-               password: ["should be at least 12 character(s)"],
+               password: ["should be at least 8 character(s)"],
                password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
@@ -522,12 +525,12 @@ defmodule OrangeCms.AccountsTest do
     test "validates password", %{user: user} do
       {:error, changeset} =
         Accounts.reset_user_password(user, %{
-          password: "not valid",
+          password: "short",
           password_confirmation: "another"
         })
 
       assert %{
-               password: ["should be at least 12 character(s)"],
+               password: ["should be at least 8 character(s)"],
                password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
