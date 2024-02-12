@@ -170,10 +170,8 @@ defmodule OrangeCms.Accounts do
   @doc """
   Generates a session token.
   """
-  def generate_user_session_token(user) do
-    {token, user_token} = UserToken.build_session_token(user)
-    Repo.insert!(user_token)
-    token
+  def log_in_user(user) do
+    OrangeCms.Accounts.LogInUserUsecase.call(user)
   end
 
   @doc """
@@ -184,11 +182,10 @@ defmodule OrangeCms.Accounts do
   end
 
   @doc """
-  Deletes the signed token with the given context.
+  logout the user by the given token.
   """
-  def delete_user_session_token(token) do
-    Repo.delete_all(UserToken.token_and_context_query(token, "session"))
-    :ok
+  def logout_user(token) do
+    OrangeCms.Accounts.LogoutUserUsecase.call(token)
   end
 
   ## Confirmation

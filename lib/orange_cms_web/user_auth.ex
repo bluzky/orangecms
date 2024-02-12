@@ -27,7 +27,7 @@ defmodule OrangeCmsWeb.UserAuth do
   if you are not using LiveView.
   """
   def log_in_user(conn, user, params \\ %{}) do
-    token = Accounts.generate_user_session_token(user)
+    token = Accounts.log_in_user(user)
     user_return_to = get_session(conn, :user_return_to)
 
     conn
@@ -73,7 +73,7 @@ defmodule OrangeCmsWeb.UserAuth do
   """
   def log_out_user(conn) do
     user_token = get_session(conn, :user_token)
-    user_token && Accounts.delete_user_session_token(user_token)
+    user_token && Accounts.logout_user(user_token)
 
     if live_socket_id = get_session(conn, :live_socket_id) do
       OrangeCmsWeb.Endpoint.broadcast(live_socket_id, "disconnect", %{})
