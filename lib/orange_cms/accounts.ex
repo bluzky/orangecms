@@ -3,7 +3,6 @@ defmodule OrangeCms.Accounts do
   use OrangeCms, :context
 
   alias OrangeCms.Accounts.User
-  alias OrangeCms.Accounts.UserNotifier
   alias OrangeCms.Accounts.UserToken
 
   def list_users(filters \\ %{}), do: OrangeCms.Accounts.ListUsersUsecase.call(filters)
@@ -163,19 +162,7 @@ defmodule OrangeCms.Accounts do
 
   """
   def update_user_password(user, password, attrs) do
-    changeset =
-      user
-      |> User.password_changeset(attrs)
-      |> User.validate_current_password(password)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, :all))
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
-    end
+    OrangeCms.Accounts.UpdateUserPasswordUsecase.call(user, password, attrs)
   end
 
   ## Session
@@ -193,8 +180,7 @@ defmodule OrangeCms.Accounts do
   Gets the user with the given signed token.
   """
   def get_user_by_session_token(token) do
-    {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+    OrangeCms.Accounts.GetUserBySessionTokenUsecase.call(token)
   end
 
   @doc """
@@ -219,15 +205,8 @@ defmodule OrangeCms.Accounts do
       {:error, :already_confirmed}
 
   """
-  def deliver_user_confirmation_instructions(%User{} = user, confirmation_url_fun)
-      when is_function(confirmation_url_fun, 1) do
-    if user.confirmed_at do
-      {:error, :already_confirmed}
-    else
-      {encoded_token, user_token} = UserToken.build_email_token(user, "confirm")
-      Repo.insert!(user_token)
-      UserNotifier.deliver_confirmation_instructions(user, confirmation_url_fun.(encoded_token))
-    end
+  def deliver_user_confirmation_instructions(email, confirmation_url_fun) do
+    OrangeCms.Accounts.SendConfirmationInstructionUsecase.call(email, confirmation_url_fun)
   end
 
   @doc """

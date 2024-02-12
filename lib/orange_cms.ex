@@ -44,6 +44,14 @@ defmodule OrangeCms do
     end
   end
 
+  def usecase do
+    quote do
+      import Ecto.Query, warn: false
+
+      alias OrangeCms.Repo
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate context/schema/service/repo/finder
   """
