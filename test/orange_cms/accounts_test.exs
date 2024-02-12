@@ -189,12 +189,12 @@ defmodule OrangeCms.AccountsTest do
     end
 
     test "requires email to change", %{user: user} do
-      {:error, changeset} = Accounts.apply_user_email(user, valid_user_password(), %{})
+      {:error, changeset} = user |> User.email_changeset(%{}) |> Ecto.Changeset.apply_action(:update)
       assert %{email: ["did not change"]} = errors_on(changeset)
     end
 
     test "validates email", %{user: user} do
-      {:error, changeset} = Accounts.apply_user_email(user, valid_user_password(), %{email: "not valid"})
+      {:error, changeset} = user |> User.email_changeset(%{email: "not valid"}) |> Ecto.Changeset.apply_action(:update)
 
       assert %{email: ["must have the @ sign and no spaces"]} = errors_on(changeset)
     end
@@ -202,50 +202,46 @@ defmodule OrangeCms.AccountsTest do
     test "validates maximum value for email for security", %{user: user} do
       too_long = String.duplicate("db", 100)
 
-      {:error, changeset} = Accounts.apply_user_email(user, valid_user_password(), %{email: too_long})
+      {:error, changeset} = user |> User.email_changeset(%{email: too_long}) |> Ecto.Changeset.apply_action(:update)
 
       assert "should be at most 160 character(s)" in errors_on(changeset).email
     end
 
     test "validates email uniqueness", %{user: user} do
       %{email: email} = user_fixture()
-      password = valid_user_password()
 
-      {:error, changeset} = Accounts.apply_user_email(user, password, %{email: email})
+      {:error, changeset} = user |> User.email_changeset(%{email: email}) |> Ecto.Changeset.apply_action(:update)
 
       assert "has already been taken" in errors_on(changeset).email
     end
 
     test "validates current password", %{user: user} do
-      {:error, changeset} = Accounts.apply_user_email(user, "invalid", %{email: unique_user_email()})
+      {:error, changeset} =
+        user
+        |> User.email_changeset(%{email: unique_user_email()})
+        |> User.validate_current_password("invalid")
+        |> Ecto.Changeset.apply_action(:update)
 
       assert %{current_password: ["is not valid"]} = errors_on(changeset)
-    end
-
-    test "applies the email without persisting it", %{user: user} do
-      email = unique_user_email()
-      {:ok, user} = Accounts.apply_user_email(user, valid_user_password(), %{email: email})
-      assert user.email == email
-      assert Accounts.get_user!(user.id).email != email
     end
   end
 
   describe "deliver_user_update_email_instructions/3" do
     setup do
-      %{user: user_fixture()}
+      %{user: user_fixture(), password: valid_user_password(), new_email: unique_user_email()}
     end
 
-    test "sends token through notification", %{user: user} do
+    test "sends token through notification", %{user: user, password: password, new_email: email} do
       token =
         extract_user_token(fn url ->
-          Accounts.deliver_user_update_email_instructions(user, "current@example.com", url)
+          Accounts.deliver_user_update_email_instructions(user, password, %{email: email}, url)
         end)
 
       {:ok, token} = Base.url_decode64(token, padding: false)
       assert user_token = Repo.get_by(UserToken, token: :crypto.hash(:sha256, token))
       assert user_token.user_id == user.id
-      assert user_token.sent_to == user.email
-      assert user_token.context == "change:current@example.com"
+      assert user_token.sent_to == email
+      assert user_token.context == "change:#{user.email}"
     end
   end
 
@@ -256,7 +252,7 @@ defmodule OrangeCms.AccountsTest do
 
       token =
         extract_user_token(fn url ->
-          Accounts.deliver_user_update_email_instructions(%{user | email: email}, user.email, url)
+          Accounts.deliver_user_update_email_instructions(user, valid_user_password(), %{email: email}, url)
         end)
 
       %{user: user, token: token, email: email}

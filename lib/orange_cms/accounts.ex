@@ -115,27 +115,6 @@ defmodule OrangeCms.Accounts do
   end
 
   @doc """
-  TODO: refactor
-  Emulates that the email will change without actually changing
-  it in the database.
-
-  ## Examples
-
-      iex> apply_user_email(user, "valid password", %{email: ...})
-      {:ok, %User{}}
-
-      iex> apply_user_email(user, "invalid password", %{email: ...})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def apply_user_email(user, password, attrs) do
-    user
-    |> User.email_changeset(attrs)
-    |> User.validate_current_password(password)
-    |> Ecto.Changeset.apply_action(:update)
-  end
-
-  @doc """
   Updates the user email using the given token.
 
   If the token matches, the user email is updated and the token is deleted.
@@ -154,12 +133,8 @@ defmodule OrangeCms.Accounts do
       {:ok, %{to: ..., body: ...}}
 
   """
-  def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
-      when is_function(update_email_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
-
-    Repo.insert!(user_token)
-    UserNotifier.deliver_update_email_instructions(user, update_email_url_fun.(encoded_token))
+  def deliver_user_update_email_instructions(%User{} = user, password, attrs, update_email_url_fun) do
+    OrangeCms.Accounts.SendUpdateEmailInstructionUsecase.call(user, password, attrs, update_email_url_fun)
   end
 
   @doc """
