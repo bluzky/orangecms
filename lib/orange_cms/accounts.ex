@@ -3,8 +3,6 @@ defmodule OrangeCms.Accounts do
   use OrangeCms, :context
 
   alias OrangeCms.Accounts.User
-  alias OrangeCms.Accounts.UserNotifier
-  alias OrangeCms.Accounts.UserToken
 
   def list_users(filters \\ %{}), do: OrangeCms.Accounts.ListUsersUsecase.call(filters)
 
@@ -115,27 +113,6 @@ defmodule OrangeCms.Accounts do
   end
 
   @doc """
-  TODO: refactor
-  Emulates that the email will change without actually changing
-  it in the database.
-
-  ## Examples
-
-      iex> apply_user_email(user, "valid password", %{email: ...})
-      {:ok, %User{}}
-
-      iex> apply_user_email(user, "invalid password", %{email: ...})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def apply_user_email(user, password, attrs) do
-    user
-    |> User.email_changeset(attrs)
-    |> User.validate_current_password(password)
-    |> Ecto.Changeset.apply_action(:update)
-  end
-
-  @doc """
   Updates the user email using the given token.
 
   If the token matches, the user email is updated and the token is deleted.
@@ -154,15 +131,13 @@ defmodule OrangeCms.Accounts do
       {:ok, %{to: ..., body: ...}}
 
   """
-  def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
-      when is_function(update_email_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
-
-    Repo.insert!(user_token)
-    UserNotifier.deliver_update_email_instructions(user, update_email_url_fun.(encoded_token))
+  def deliver_user_update_email_instructions(%User{} = user, password, attrs, update_email_url_fun) do
+    OrangeCms.Accounts.SendUpdateEmailInstructionUsecase.call(user, password, attrs, update_email_url_fun)
   end
 
   @doc """
+  TODO: move to application layer
+
   Returns an `%Ecto.Changeset{}` for changing the user password.
 
   ## Examples
@@ -188,19 +163,7 @@ defmodule OrangeCms.Accounts do
 
   """
   def update_user_password(user, password, attrs) do
-    changeset =
-      user
-      |> User.password_changeset(attrs)
-      |> User.validate_current_password(password)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, :all))
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
-    end
+    OrangeCms.Accounts.UpdateUserPasswordUsecase.call(user, password, attrs)
   end
 
   ## Session
@@ -208,26 +171,22 @@ defmodule OrangeCms.Accounts do
   @doc """
   Generates a session token.
   """
-  def generate_user_session_token(user) do
-    {token, user_token} = UserToken.build_session_token(user)
-    Repo.insert!(user_token)
-    token
+  def log_in_user(user) do
+    OrangeCms.Accounts.LogInUserUsecase.call(user)
   end
 
   @doc """
   Gets the user with the given signed token.
   """
   def get_user_by_session_token(token) do
-    {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+    OrangeCms.Accounts.GetUserBySessionTokenUsecase.call(token)
   end
 
   @doc """
-  Deletes the signed token with the given context.
+  logout the user by the given token.
   """
-  def delete_user_session_token(token) do
-    Repo.delete_all(UserToken.token_and_context_query(token, "session"))
-    :ok
+  def logout_user(token) do
+    OrangeCms.Accounts.LogoutUserUsecase.call(token)
   end
 
   ## Confirmation
@@ -244,15 +203,8 @@ defmodule OrangeCms.Accounts do
       {:error, :already_confirmed}
 
   """
-  def deliver_user_confirmation_instructions(%User{} = user, confirmation_url_fun)
-      when is_function(confirmation_url_fun, 1) do
-    if user.confirmed_at do
-      {:error, :already_confirmed}
-    else
-      {encoded_token, user_token} = UserToken.build_email_token(user, "confirm")
-      Repo.insert!(user_token)
-      UserNotifier.deliver_confirmation_instructions(user, confirmation_url_fun.(encoded_token))
-    end
+  def deliver_user_confirmation_instructions(email, confirmation_url_fun) do
+    OrangeCms.Accounts.SendConfirmationInstructionUsecase.call(email, confirmation_url_fun)
   end
 
   @doc """
@@ -262,19 +214,7 @@ defmodule OrangeCms.Accounts do
   and the token is deleted.
   """
   def confirm_user(token) do
-    with {:ok, query} <- UserToken.verify_email_token_query(token, "confirm"),
-         %User{} = user <- Repo.one(query),
-         {:ok, %{user: user}} <- Repo.transaction(confirm_user_multi(user)) do
-      {:ok, user}
-    else
-      _ -> :error
-    end
-  end
-
-  defp confirm_user_multi(user) do
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.confirm_changeset(user))
-    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, ["confirm"]))
+    OrangeCms.Accounts.ConfirmUserUsecase.call(token)
   end
 
   ## Reset password
@@ -298,19 +238,14 @@ defmodule OrangeCms.Accounts do
   ## Examples
 
       iex> get_user_by_reset_password_token("validtoken")
-      %User{}
+      {:ok, %User{}}
 
       iex> get_user_by_reset_password_token("invalidtoken")
-      nil
+      {:error, :invalid_token}
 
   """
   def get_user_by_reset_password_token(token) do
-    with {:ok, query} <- UserToken.verify_email_token_query(token, "reset_password"),
-         %User{} = user <- Repo.one(query) do
-      user
-    else
-      _ -> nil
-    end
+    OrangeCms.Accounts.FindUserByResetPasswordTokenUsecase.call(token)
   end
 
   @doc """

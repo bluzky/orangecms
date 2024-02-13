@@ -55,7 +55,7 @@ defmodule OrangeCmsWeb.ConnCase do
   It returns an updated `conn`.
   """
   def log_in_user(conn, user) do
-    token = OrangeCms.Accounts.generate_user_session_token(user)
+    token = OrangeCms.Accounts.log_in_user(user)
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})

@@ -50,24 +50,6 @@ defmodule OrangeCms.Accounts.UserToken do
   end
 
   @doc """
-  Checks if the token is valid and returns its underlying lookup query.
-
-  The query returns the user found by the token, if any.
-
-  The token is valid if it matches the value in the database and it has
-  not expired (after @session_validity_in_days).
-  """
-  def verify_session_token_query(token) do
-    query =
-      from token in token_and_context_query(token, "session"),
-        join: user in assoc(token, :user),
-        where: token.inserted_at > ago(@session_validity_in_days, "day"),
-        select: user
-
-    {:ok, query}
-  end
-
-  @doc """
   Builds a token and its hash to be delivered to the user's email.
 
   The non-hashed token is sent to the user email while the
@@ -129,8 +111,23 @@ defmodule OrangeCms.Accounts.UserToken do
     end
   end
 
-  defp days_for_context("confirm"), do: @confirm_validity_in_days
-  defp days_for_context("reset_password"), do: @reset_password_validity_in_days
+  def days_for_context("confirm"), do: @confirm_validity_in_days
+  def days_for_context("session"), do: @session_validity_in_days
+  def days_for_context("reset_password"), do: @reset_password_validity_in_days
+
+  @doc """
+  decode the token and hash it to compare with the database
+  """
+  def from_email_token(token) do
+    case Base.url_decode64(token, padding: false) do
+      {:ok, decoded_token} ->
+        hashed_token = :crypto.hash(@hash_algorithm, decoded_token)
+        {:ok, hashed_token}
+
+      _ ->
+        {:error, :invalid_token}
+    end
+  end
 
   @doc """
   Checks if the token is valid and returns its underlying lookup query.
