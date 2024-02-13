@@ -3,7 +3,6 @@ defmodule OrangeCms.Accounts do
   use OrangeCms, :context
 
   alias OrangeCms.Accounts.User
-  alias OrangeCms.Accounts.UserToken
 
   def list_users(filters \\ %{}), do: OrangeCms.Accounts.ListUsersUsecase.call(filters)
 
@@ -137,6 +136,8 @@ defmodule OrangeCms.Accounts do
   end
 
   @doc """
+  TODO: move to application layer
+
   Returns an `%Ecto.Changeset{}` for changing the user password.
 
   ## Examples
@@ -237,19 +238,14 @@ defmodule OrangeCms.Accounts do
   ## Examples
 
       iex> get_user_by_reset_password_token("validtoken")
-      %User{}
+      {:ok, %User{}}
 
       iex> get_user_by_reset_password_token("invalidtoken")
-      nil
+      {:error, :invalid_token}
 
   """
   def get_user_by_reset_password_token(token) do
-    with {:ok, query} <- UserToken.verify_email_token_query(token, "reset_password"),
-         %User{} = user <- Repo.one(query) do
-      user
-    else
-      _ -> nil
-    end
+    OrangeCms.Accounts.FindUserByResetPasswordTokenUsecase.call(token)
   end
 
   @doc """
