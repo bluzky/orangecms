@@ -116,6 +116,20 @@ defmodule OrangeCms.Accounts.UserToken do
   def days_for_context("reset_password"), do: @reset_password_validity_in_days
 
   @doc """
+  decode the token and hash it to compare with the database
+  """
+  def from_email_token(token) do
+    case Base.url_decode64(token, padding: false) do
+      {:ok, decoded_token} ->
+        hashed_token = :crypto.hash(@hash_algorithm, decoded_token)
+        {:ok, hashed_token}
+
+      _ ->
+        {:error, :invalid_token}
+    end
+  end
+
+  @doc """
   Checks if the token is valid and returns its underlying lookup query.
 
   The query returns the user found by the token, if any.

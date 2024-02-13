@@ -452,14 +452,14 @@ defmodule OrangeCms.AccountsTest do
     end
 
     test "does not confirm with invalid token", %{user: user} do
-      assert Accounts.confirm_user("oops") == :error
+      assert Accounts.confirm_user("oops") == {:error, :invalid_token}
       refute Repo.get!(User, user.id).confirmed_at
       assert Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not confirm email if token expired", %{user: user, token: token} do
       {1, nil} = Repo.update_all(UserToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
-      assert Accounts.confirm_user(token) == :error
+      assert Accounts.confirm_user(token) == {:error, :invalid_token}
       refute Repo.get!(User, user.id).confirmed_at
       assert Repo.get_by(UserToken, user_id: user.id)
     end
