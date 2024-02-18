@@ -1,10 +1,12 @@
 # OrangeCMS - CMS admin for your static site
 
+![Demo post page](./docs/img/posts.jpg)
+
 > **OrangeCMS is a admin app for static site on github. Instead of creating/editing file on your local and push to git repo. You are now can manage your content with Web UI and your content editors don't have to know anything about git**
 
 ## DEMO
 
-- [Admin page](http://demo-orangecms.pawtools.org/) username: demo1@example.com, password: 123123123
+- [Admin page](https://orangecms.fly.dev) username: demo1@example.com, password: 123123123
 - [Content page](http://orange-demo-site.pawtools.org/)
 - [Github repo](https://github.com/bluzky/orange-demo-site)
 
@@ -76,6 +78,6 @@ Then run `fly launch`
 
 - [Phoenix framework](https://phoenixframework.org/)
 - [Tailwind css](https://tailwindcss.com/)
-- [Daisy UI](https://daisyui.com/)
 - [Lucide icons](https://lucide.dev/)
-- And lots of other libraries
+- And lots of libraries
+
