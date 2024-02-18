@@ -12,7 +12,7 @@ defmodule OrangeCms.Accounts.FindUserUsecase do
   end
 
   defp handle_result(nil) do
-    {:error, :not_found}
+    {:error, :user_not_found}
   end
 
   defp handle_result(user) do

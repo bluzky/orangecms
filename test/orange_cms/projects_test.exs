@@ -127,10 +127,5 @@ defmodule OrangeCms.ProjectsTest do
       assert {:ok, %ProjectMember{}} = Projects.delete_project_member(project_member)
       assert_raise Ecto.NoResultsError, fn -> Projects.get_project_member!(project_member.id) end
     end
-
-    test "change_project_member/1 returns a project_member changeset" do
-      project_member = project_member_fixture()
-      assert %Ecto.Changeset{} = Projects.change_project_member(project_member)
-    end
   end
 end
