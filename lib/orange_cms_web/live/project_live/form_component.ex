@@ -3,6 +3,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   use OrangeCmsWeb, :live_component
 
   alias OrangeCms.Projects
+  alias OrangeCms.Projects.Project
 
   @impl true
   def render(assigns) do
@@ -31,7 +32,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
 
   @impl true
   def update(%{project: project} = assigns, socket) do
-    changeset = Projects.change_project(project)
+    changeset = Project.changeset(project, %{})
 
     {:ok,
      socket
@@ -43,7 +44,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   def handle_event("validate", %{"project" => project_params}, socket) do
     changeset =
       socket.assigns.project
-      |> Projects.change_project(project_params)
+      |> Project.changeset(project_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
@@ -54,7 +55,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   end
 
   defp save_project(socket, :new, project_params) do
-    case Projects.create_project(project_params) do
+    case Projects.create_project(project_params, OrangeCms.get_actor()) do
       {:ok, project} ->
         notify_parent({:saved, project})
 

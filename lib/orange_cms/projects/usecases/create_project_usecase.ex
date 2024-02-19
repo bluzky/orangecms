@@ -5,9 +5,7 @@ defmodule OrangeCms.Projects.CreateProjectUsecase do
   Add creator as the project owner
   """
 
-  def call(attrs) do
-    actor = OrangeCms.get_actor()
-
+  def call(attrs, actor) do
     attrs
     |> OrangeCms.Projects.CreateProjectCommand.call(actor)
     |> handle_result()

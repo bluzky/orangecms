@@ -9,7 +9,7 @@ defmodule OrangeCms.Projects.ProjectQuery do
   @doc """
   List all project that user was assigned
   """
-  def list_my_projects(user) do
+  def list_user_projects(user, filters \\ %{}) do
     query =
       from(p in Project,
         join: pm in assoc(p, :project_members),
@@ -17,6 +17,8 @@ defmodule OrangeCms.Projects.ProjectQuery do
         order_by: [asc: p.name]
       )
 
-    Repo.all(query)
+    query
+    |> Filter.with_filters(filters)
+    |> Repo.all()
   end
 end

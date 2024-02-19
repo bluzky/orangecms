@@ -7,17 +7,18 @@ defmodule OrangeCms.ProjectsFixtures do
   @doc """
   Generate a project.
   """
-  def project_fixture(attrs \\ %{}) do
-    {:ok, project} =
-      attrs
-      |> Enum.into(%{
+  def project_fixture(creator, attrs \\ %{}) do
+    attrs =
+      Enum.into(attrs, %{
         github_config: %{},
         image: "some image",
         name: "some name",
         setup_completed: true,
-        type: "some type"
+        type: :headless_cms
       })
-      |> OrangeCms.Projects.create_project()
+
+    {:ok, project} =
+      OrangeCms.Projects.create_project(attrs, creator)
 
     project
   end
@@ -25,14 +26,11 @@ defmodule OrangeCms.ProjectsFixtures do
   @doc """
   Generate a project_member.
   """
-  def project_member_fixture(attrs \\ %{}) do
+  def project_member_fixture(project, user, attrs \\ %{}) do
+    params = Enum.into(attrs, %{is_owner: true, role: :admin, user_id: user.id})
+
     {:ok, project_member} =
-      attrs
-      |> Enum.into(%{
-        is_owner: true,
-        role: "some role"
-      })
-      |> OrangeCms.Projects.create_project_member()
+      OrangeCms.Projects.add_project_member(project, params)
 
     project_member
   end
