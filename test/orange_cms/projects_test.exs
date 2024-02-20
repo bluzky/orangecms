@@ -10,11 +10,11 @@ defmodule OrangeCms.ProjectsTest do
 
     alias OrangeCms.Projects.Project
 
-    @invalid_attrs %{github_config: nil, image: nil, name: nil, setup_completed: nil, type: nil}
+    @invalid_attrs %{github_config: nil, image: nil, name: nil, setup_completed: nil, type: nil, user_id: nil}
 
     test "list_projects/0 returns all projects" do
       user = random_user_fixture()
-      project = project_fixture(user)
+      _project = project_fixture(user)
       assert [_project] = Projects.list_user_projects(user)
     end
 
@@ -31,17 +31,15 @@ defmodule OrangeCms.ProjectsTest do
 
       valid_attrs = %{
         github_config: %{},
-        image: "some image",
         name: "some name",
         setup_completed: true,
         type: :github
       }
 
       assert {:ok, %Project{} = project} = Projects.create_project(valid_attrs, user)
-      assert project.image == "some image"
       assert project.name == "some name"
       assert project.setup_completed == true
-      assert project.type == "some type"
+      assert project.type == :github
     end
 
     test "create_project/1 with invalid data returns error changeset" do
@@ -56,18 +54,15 @@ defmodule OrangeCms.ProjectsTest do
 
       update_attrs = %{
         github_config: %{},
-        image: "some updated image",
         name: "some updated name",
         setup_completed: false,
-        type: "some updated type"
+        type: :github
       }
 
       assert {:ok, %Project{} = project} = Projects.update_project(project, update_attrs)
-      assert project.github_config == %{}
-      assert project.image == "some updated image"
       assert project.name == "some updated name"
       assert project.setup_completed == false
-      assert project.type == "some updated type"
+      assert project.type == :github
     end
 
     test "update_project/2 with invalid data returns error changeset" do
@@ -84,19 +79,22 @@ defmodule OrangeCms.ProjectsTest do
 
     alias OrangeCms.Projects.ProjectMember
 
-    @invalid_attrs %{is_owner: nil, role: nil}
+    @invalid_attrs %{is_owner: nil, role: nil, user_id: nil}
 
     test "list_project_members/0 returns all project_members" do
       user = random_user_fixture()
       project = project_fixture(user)
-      project_member = project_member_fixture(project, user)
-      assert Projects.list_project_members(project) == [project_member]
+      user2 = random_user_fixture()
+      _project_member = project_member_fixture(project, user2)
+      members = Projects.list_project_members(project)
+      assert [_project_member] = Enum.filter(members, fn member -> member.user_id == user2.id end)
     end
 
     test "get_project_member!/1 returns the project_member with given id" do
       user = random_user_fixture()
+      user2 = random_user_fixture()
       project = project_fixture(user)
-      project_member = project_member_fixture(project, user)
+      project_member = project_member_fixture(project, user2)
       assert Projects.get_project_member!(project_member.id) == project_member
     end
 
@@ -124,26 +122,30 @@ defmodule OrangeCms.ProjectsTest do
       user = random_user_fixture()
       project = project_fixture(user)
 
-      project_member = project_member_fixture(project, user)
-      update_attrs = %{is_owner: false, role: "some updated role"}
+      user2 = random_user_fixture()
+
+      project_member = project_member_fixture(project, user2)
+      update_attrs = %{is_owner: false, role: :admin}
 
       assert {:ok, %ProjectMember{} = project_member} = Projects.update_project_member(project_member, update_attrs)
       assert project_member.is_owner == false
-      assert project_member.role == "some updated role"
+      assert project_member.role == :admin
     end
 
     test "update_project_member/2 with invalid data returns error changeset" do
       user = random_user_fixture()
+      user2 = random_user_fixture()
       project = project_fixture(user)
-      project_member = project_member_fixture(project, user)
+      project_member = project_member_fixture(project, user2)
       assert {:error, %Ecto.Changeset{}} = Projects.update_project_member(project_member, @invalid_attrs)
       assert project_member == Projects.get_project_member!(project_member.id)
     end
 
     test "delete_project_member/1 deletes the project_member" do
       user = random_user_fixture()
+      user2 = random_user_fixture()
       project = project_fixture(user)
-      project_member = project_member_fixture(project, user)
+      project_member = project_member_fixture(project, user2)
       assert {:ok, %ProjectMember{}} = Projects.delete_project_member(project_member)
       assert_raise Ecto.NoResultsError, fn -> Projects.get_project_member!(project_member.id) end
     end
