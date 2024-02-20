@@ -4,6 +4,7 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
 
   alias OrangeCms.Accounts
   alias OrangeCms.Projects
+  alias OrangeCms.Projects.ProjectMember
 
   @impl true
   def render(assigns) do
@@ -95,7 +96,7 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
 
   @impl true
   def update(%{project_member: project_member} = assigns, socket) do
-    changeset = Projects.change_project_member(project_member)
+    changeset = ProjectMember.changeset(project_member, %{})
 
     {:ok,
      socket
@@ -156,7 +157,7 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
   def handle_event("validate", %{"project_member" => project_member_params}, socket) do
     changeset =
       socket.assigns.project
-      |> Projects.change_project_member(project_member_params)
+      |> ProjectMember.changeset(project_member_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
@@ -182,12 +183,7 @@ defmodule OrangeCmsWeb.ProjectMemberLive.FormComponent do
   end
 
   defp save_member(socket, :new, params) do
-    params =
-      Map.merge(params, %{
-        "project_id" => socket.assigns.current_project.id
-      })
-
-    case Projects.create_project_member(params) do
+    case Projects.add_project_member(socket.assigns.current_project, params) do
       {:ok, project_member} ->
         notify_parent({:saved, project_member})
 

@@ -63,7 +63,8 @@ defmodule OrangeCms.MixProject do
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:styler, "~> 0.7", only: [:dev, :test], runtime: false},
       {:tailwind_formatter, "~> 0.3", only: [:dev, :test], runtime: false},
-      {:scrivener_ecto, "~> 2.7"}
+      {:scrivener_ecto, "~> 2.7"},
+      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false}
     ]
   end
 

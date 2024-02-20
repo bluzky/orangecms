@@ -3,8 +3,6 @@ defmodule OrangeCms.Projects do
   use OrangeCms, :context
 
   alias OrangeCms.Projects.Project
-  # TODO: update query for my project
-  # TODO: find proper way to get actor
   alias OrangeCms.Projects.ProjectMember
 
   @doc """
@@ -12,21 +10,12 @@ defmodule OrangeCms.Projects do
 
   ## Examples
 
-      iex> list_projects()
+      iex> list_user_projects()
       [%Project{}, ...]
 
   """
-  def list_my_projects do
-    actor = OrangeCms.get_actor()
-
-    query =
-      from(p in Project,
-        join: pm in assoc(p, :project_members),
-        where: pm.user_id == ^actor.id,
-        order_by: [asc: p.name]
-      )
-
-    Repo.all(query)
+  def list_user_projects(user) do
+    OrangeCms.Projects.ListUserProjectUsecase.call(user)
   end
 
   @doc """
@@ -57,16 +46,8 @@ defmodule OrangeCms.Projects do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_project(attrs \\ %{}) do
-    actor = OrangeCms.get_actor()
-
-    # add default member
-    attrs = Map.put(attrs, "project_members", [%{user_id: actor.id, role: :admin, is_owner: true}])
-
-    %Project{owner_id: actor.id}
-    |> Project.changeset(attrs)
-    |> Project.change_members()
-    |> Repo.insert()
+  def create_project(attrs, creator) do
+    OrangeCms.Projects.CreateProjectUsecase.call(attrs, creator)
   end
 
   @doc """
@@ -82,54 +63,19 @@ defmodule OrangeCms.Projects do
 
   """
   def update_project(%Project{} = project, attrs) do
-    project
-    |> Project.changeset(attrs)
-    |> Repo.update()
+    OrangeCms.Projects.UpdateProjectUsecase.call(project, attrs)
   end
 
   @doc """
-  Deletes a project.
+  List all project members for a specific project.
 
   ## Examples
 
-      iex> delete_project(project)
-      {:ok, %Project{}}
-
-      iex> delete_project(project)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_project(%Project{} = project) do
-    Repo.delete(project)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking project changes.
-
-  ## Examples
-
-      iex> change_project(project)
-      %Ecto.Changeset{data: %Project{}}
-
-  """
-  def change_project(%Project{} = project, attrs \\ %{}) do
-    Project.changeset(project, attrs)
-  end
-
-  @doc """
-  Returns the list of project_members.
-
-  ## Examples
-
-      iex> list_project_members()
+      iex> list_project_members(project)
       [%ProjectMember{}, ...]
-
   """
-  def list_project_members(project) do
-    ProjectMember
-    |> Filtery.filter(:project_id, project.id)
-    |> Repo.all()
-    |> Repo.preload(:user)
+  def list_project_members(project, filters \\ %{}) do
+    OrangeCms.Projects.ListProjectMembersUsecase.call(project.id, filters)
   end
 
   @doc """
@@ -153,17 +99,15 @@ defmodule OrangeCms.Projects do
 
   ## Examples
 
-      iex> create_project_member(%{field: value})
+      iex> add_project_member(project, %{field: value})
       {:ok, %ProjectMember{}}
 
-      iex> create_project_member(%{field: bad_value})
+      iex> add_project_member(project, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_project_member(attrs \\ %{}) do
-    %ProjectMember{}
-    |> ProjectMember.changeset(attrs)
-    |> Repo.insert()
+  def add_project_member(project, attrs) do
+    OrangeCms.Projects.AddUserToProjectUsecase.call(project, attrs)
   end
 
   @doc """
@@ -179,9 +123,7 @@ defmodule OrangeCms.Projects do
 
   """
   def update_project_member(%ProjectMember{} = project_member, attrs) do
-    project_member
-    |> ProjectMember.changeset(attrs)
-    |> Repo.update()
+    OrangeCms.Projects.UpdateProjectMemberUsecase.call(project_member, attrs)
   end
 
   @doc """
@@ -197,19 +139,6 @@ defmodule OrangeCms.Projects do
 
   """
   def delete_project_member(%ProjectMember{} = project_member) do
-    Repo.delete(project_member)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking project_member changes.
-
-  ## Examples
-
-      iex> change_project_member(project_member)
-      %Ecto.Changeset{data: %ProjectMember{}}
-
-  """
-  def change_project_member(%ProjectMember{} = project_member, attrs \\ %{}) do
-    ProjectMember.changeset(project_member, attrs)
+    OrangeCms.Projects.RemoveProjectMemberUsecase.call(project_member)
   end
 end
