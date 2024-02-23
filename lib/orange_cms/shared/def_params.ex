@@ -23,14 +23,6 @@ defmodule OrangeCms.Params do
   Inside a `defparams` block, each field is defined through the `field/2`
   macro.
 
-  ## Options
-
-    * `enforce` - if set to true, sets `enforce: true` to all fields by default.
-      This can be overridden by setting `enforce: false` or a default value on
-      individual fields.
-    * `opaque` - if set to true, creates an opaque type for the struct.
-    * `module` - if set, creates the struct in a submodule named `module`.
-
   ## Examples
 
       defmodule MyStruct do
