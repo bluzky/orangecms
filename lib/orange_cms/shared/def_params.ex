@@ -1,47 +1,3 @@
-# result:
-
-# - struct
-# - field list
-# - functions
-# + new(map)
-# + to_map()
-
-defmodule CreateParams do
-  @moduledoc """
-  defparams CreateOrderParams do
-    field :name, :string, required: true
-    field :email, :string, required: true, pattern: ~r/.+@gmail.com/
-    field :phone, :string, pattern: ~r/\d{3}-\d{3}-\d{4}/
-    field :address, :string, default: nil
-  end
-  """
-  @enforce_keys [:name, :email]
-  defstruct name: nil, email: nil, phone: nil, address: nil
-
-  @field_list [
-    name: [type: :string, required: true],
-    email: [type: :string, required: true, pattern: ~r/./],
-    phone: [type: :string, pattern: ~r/./],
-    address: [type: :string, default: nil]
-  ]
-
-  def new(map) do
-    struct(__MODULE__, map)
-  end
-
-  # def cast(params) when is_map(params) do
-  #   Tarams.cast(params, @field_list)
-  # end
-
-  def to_map(%CreateParams{} = params) do
-    Map.from_struct(params)
-  end
-
-  def __schema__(:fields) do
-    @field_list
-  end
-end
-
 defmodule OrangeCms.Params do
   @moduledoc """
   Borrow from https://github.com/ejpcmac/typed_struct/blob/main/lib/typed_struct.ex
@@ -85,6 +41,7 @@ defmodule OrangeCms.Params do
           field :field_two, :integer, required: true
           field :field_three, :boolean, required: true
           field :field_four, :atom, default: :hey
+          field :update_time, :naive_datetime, default: &NaiveDateTime.utc_now/0
         end
       end
 
@@ -93,30 +50,63 @@ defmodule OrangeCms.Params do
       defmodule MyModule do
         use OrangeCms.Params
 
-        defparams Struct do
+        defparams Comment do
+          field :user_id, :integer, required: true
+          field :content, :string, required: true
+        end
+
+        defparams Post do
           field :field_one, :string
           field :field_two, :integer, required: true
           field :field_three, :boolean, required: true
-          field :field_four, :atom, default: :hey
+          field :field_four, :string, default: "hello"
+          field :update_time, :naive_datetime, default: &NaiveDateTime.utc_now/0
+          field :comment, Comment, required: true
         end
       end
+
+      MyModule.Post.cast(%{field_two: 1, field_three: true, comment: %{user_id: 1, content: "hello"}})
+
   """
   defmacro defparams(module \\ nil, do: block) do
     ast = OrangeCms.Params.__typedstruct__(block)
+    method_ast = OrangeCms.Params.__default_functions__()
 
     case module do
       nil ->
         quote do
           # Create a lexical scope.
           (fn -> unquote(ast) end).()
+          unquote(method_ast)
         end
 
       module ->
         quote do
           defmodule unquote(module) do
             unquote(ast)
+
+            unquote(method_ast)
           end
         end
+    end
+  end
+
+  def __default_functions__ do
+    quote do
+      def new(map) do
+        struct(__MODULE__, map)
+      end
+
+      def cast(params) when is_map(params) do
+        case Tarams.cast(params, @ts_fields) do
+          {:ok, params} -> {:ok, new(params)}
+          {:error, errors} -> {:error, errors}
+        end
+      end
+
+      def __schema__(:fields) do
+        @ts_fields
+      end
     end
   end
 
@@ -161,7 +151,7 @@ defmodule OrangeCms.Params do
       non-nullable
   """
   defmacro field(name, type, opts \\ []) do
-    quote bind_quoted: [name: name, type: Macro.escape(type), opts: opts] do
+    quote bind_quoted: [name: name, type: type, opts: opts] do
       OrangeCms.Params.__field__(name, type, opts, __ENV__)
     end
   end
@@ -181,7 +171,7 @@ defmodule OrangeCms.Params do
 
     nullable? = not has_default? and not enforce?
 
-    Module.put_attribute(mod, :ts_fields, {name, opts})
+    Module.put_attribute(mod, :ts_fields, {name, [{:type, type} | opts]})
     Module.put_attribute(mod, :ts_types, {name, type_for(type, nullable?)})
     if enforce?, do: Module.put_attribute(mod, :ts_enforce_keys, name)
   end
