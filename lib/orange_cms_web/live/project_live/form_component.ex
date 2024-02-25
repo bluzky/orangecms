@@ -55,8 +55,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   end
 
   defp save_project(socket, :new, project_params) do
-    with {:ok, parsed_params} <- Projects.CreateProjectParams.cast(project_params),
-         {:ok, project} <- Projects.create_project(parsed_params, OrangeCms.get_actor()) do
+    with {:ok, project} <- Projects.create_project(project_params, context(socket)) do
       notify_parent({:saved, project})
 
       {:noreply,

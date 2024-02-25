@@ -3,6 +3,7 @@ defmodule OrangeCms.ProjectsFixtures do
   This module defines test helpers for creating
   entities via the `OrangeCms.Projects` context.
   """
+  alias OrangeCms.Context
 
   @doc """
   Generate a project.
@@ -17,10 +18,8 @@ defmodule OrangeCms.ProjectsFixtures do
         type: :headless_cms
       })
 
-    {:ok, params} = OrangeCms.Projects.CreateProjectParams.cast(attrs)
-
     {:ok, project} =
-      OrangeCms.Projects.create_project(params, creator)
+      OrangeCms.Projects.create_project(attrs, Context.new(actor: creator))
 
     project
   end

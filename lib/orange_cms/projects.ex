@@ -2,6 +2,7 @@ defmodule OrangeCms.Projects do
   @moduledoc false
   use OrangeCms, :context
 
+  alias OrangeCms.Context
   alias OrangeCms.Projects.Project
   alias OrangeCms.Projects.ProjectMember
 
@@ -46,8 +47,9 @@ defmodule OrangeCms.Projects do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_project(attrs, creator) do
-    OrangeCms.Projects.CreateProjectUsecase.call(attrs, creator)
+  @spec create_project(map, Context.t()) :: {:ok, Project.t()} | {:error, Ecto.Changeset.t()}
+  def create_project(attrs, context) do
+    OrangeCms.Projects.CreateProjectUsecase.call(attrs, context)
   end
 
   @doc """
