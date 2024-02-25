@@ -55,22 +55,22 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
   end
 
   defp save_project(socket, :new, project_params) do
-    case Projects.create_project(project_params, OrangeCms.get_actor()) do
-      {:ok, project} ->
-        notify_parent({:saved, project})
+    with {:ok, parsed_params} <- Projects.CreateProjectParams.cast(project_params),
+         {:ok, project} <- Projects.create_project(parsed_params, OrangeCms.get_actor()) do
+      notify_parent({:saved, project})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Project created successfully")
-         |> push_navigate(to: ~p"/p/#{project.code}")}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+      {:noreply,
+       socket
+       |> put_flash(:info, "Project created successfully")
+       |> push_navigate(to: ~p"/p/#{project.code}")}
+    else
+      {:error, error} ->
+        {:noreply, assign_form(socket, error)}
     end
   end
 
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
+  defp assign_form(socket, changeset) do
+    assign(socket, :form, to_form(changeset, as: "project"))
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

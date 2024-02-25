@@ -38,14 +38,14 @@ defmodule OrangeCms.Value do
       iex> init([1, 2, 3])
       [1, 2, 3]
   """
-  def init(%{__struct__: _} = value) do
+  def new(%{__struct__: _} = value) do
     value
     |> Map.from_struct()
     |> Map.drop([:__meta__, :__struct__])
   end
 
   # Initiate a Value based on a pre-existing Map or List.
-  def init(value) do
+  def new(value) do
     value
   end
 

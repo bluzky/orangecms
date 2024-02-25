@@ -4,9 +4,10 @@ defmodule OrangeCms.Projects.CreateProjectUsecase do
   Create a project with given params
   Add creator as the project owner
   """
+  alias OrangeCms.Projects.CreateProjectParams
 
-  def call(attrs, actor) do
-    attrs
+  def call(%CreateProjectParams{} = params, actor) do
+    params
     |> OrangeCms.Projects.CreateProjectCommand.call(actor)
     |> handle_result()
   end

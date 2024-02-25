@@ -85,6 +85,10 @@ defmodule OrangeCms.Params do
 
   def __default_functions__ do
     quote do
+      def new(struct) when is_struct(struct) do
+        struct(__MODULE__, Map.from_struct(struct))
+      end
+
       def new(map) do
         struct(__MODULE__, map)
       end
@@ -92,7 +96,7 @@ defmodule OrangeCms.Params do
       def cast(params) when is_map(params) do
         case Tarams.cast(params, @ts_fields) do
           {:ok, params} -> {:ok, new(params)}
-          {:error, errors} -> {:error, errors}
+          {:error, errors} -> {:error, %OrangeCms.ParamsError{errors: errors, data: params}}
         end
       end
 

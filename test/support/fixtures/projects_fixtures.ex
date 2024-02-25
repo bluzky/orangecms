@@ -17,8 +17,10 @@ defmodule OrangeCms.ProjectsFixtures do
         type: :headless_cms
       })
 
+    {:ok, params} = OrangeCms.Projects.CreateProjectParams.cast(attrs)
+
     {:ok, project} =
-      OrangeCms.Projects.create_project(attrs, creator)
+      OrangeCms.Projects.create_project(params, creator)
 
     project
   end
