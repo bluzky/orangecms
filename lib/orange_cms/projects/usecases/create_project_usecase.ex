@@ -4,13 +4,14 @@ defmodule OrangeCms.Projects.CreateProjectUsecase do
   Create a project with given params
   Add creator as the project owner
   """
+  alias OrangeCms.Projects.CreateProjectParams
 
-  def call(attrs, actor) do
-    attrs
-    |> OrangeCms.Projects.CreateProjectCommand.call(actor)
-    |> handle_result()
+  def call(params, %{actor: actor} = _context) do
+    with {:ok, parsed_params} <- CreateProjectParams.cast(params),
+         {:ok, project} <- OrangeCms.Projects.CreateProjectCommand.call(parsed_params, actor) do
+      {:ok, project}
+    else
+      {:error, error} -> {:error, error}
+    end
   end
-
-  defp handle_result({:error, changeset}), do: {:error, changeset}
-  defp handle_result({:ok, project}), do: {:ok, project}
 end

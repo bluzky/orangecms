@@ -42,6 +42,7 @@ defmodule OrangeCmsWeb do
         formats: [:html, :json],
         layouts: [html: OrangeCmsWeb.Layouts]
 
+      import OrangeCmsWeb.ControllerHelpers
       import OrangeCmsWeb.Gettext
       import Plug.Conn
 
@@ -61,6 +62,8 @@ defmodule OrangeCmsWeb do
   def live_component do
     quote do
       use Phoenix.LiveComponent
+
+      import OrangeCmsWeb.ControllerHelpers
 
       unquote(html_helpers())
     end

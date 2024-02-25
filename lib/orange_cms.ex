@@ -52,6 +52,12 @@ defmodule OrangeCms do
     end
   end
 
+  def param do
+    quote do
+      use OrangeCms.Params
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate context/schema/service/repo/finder
   """

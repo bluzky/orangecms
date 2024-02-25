@@ -4,14 +4,19 @@ defmodule OrangeCms.Projects.CreateProjectCommand do
   """
   use OrangeCms, :command
 
+  alias OrangeCms.Projects.CreateProjectParams
   alias OrangeCms.Projects.Project
+  alias OrangeCms.Value
 
-  def call(attrs, creator) do
+  def call(%CreateProjectParams{} = params, creator) do
     # add default member
-    attrs = Map.put(attrs, :project_members, [%{user_id: creator.id, role: :admin, is_owner: true}])
+    params =
+      params
+      |> Value.new()
+      |> Map.put(:project_members, [%{user_id: creator.id, role: :admin, is_owner: true}])
 
     %Project{owner_id: creator.id}
-    |> Project.changeset(attrs)
+    |> Project.changeset(params)
     |> Project.change_members()
     |> Repo.insert()
   end

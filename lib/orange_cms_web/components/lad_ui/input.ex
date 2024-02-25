@@ -7,6 +7,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Input do
   attr(:id, :any, default: nil)
   attr(:name, :any)
   attr(:value, :any)
+  attr(:required, :boolean, default: false)
 
   attr(:type, :string,
     default: "text",
@@ -33,6 +34,7 @@ defmodule OrangeCmsWeb.Components.LadUI.Input do
       id={@id}
       type={@type}
       name={@name}
+      required={@required}
       value={assigns[:value]}
       {@rest}
     />
