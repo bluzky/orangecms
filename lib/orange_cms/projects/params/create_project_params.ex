@@ -1,9 +1,9 @@
 defmodule OrangeCms.Projects.CreateProjectParams do
   @moduledoc false
-  use OrangeCms.Params
+  use Skema
 
-  defparams do
+  defschema do
     field :name, :string, required: true
-    field :type, :any, default: "github", in: ["github", "headless_cms", :github, :headless_cms]
+    field :type, :atom, default: :github, in: [:github, :headless_cms]
   end
 end

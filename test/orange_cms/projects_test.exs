@@ -47,7 +47,7 @@ defmodule OrangeCms.ProjectsTest do
 
       params = CreateProjectParams.new(@invalid_attrs)
 
-      assert {:error, %Ecto.Changeset{}} =
+      assert {:error, %Skema.Result{}} =
                Projects.create_project(params, OrangeCms.Context.new(actor: user))
     end
 

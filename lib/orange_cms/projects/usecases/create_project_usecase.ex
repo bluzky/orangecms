@@ -7,9 +7,11 @@ defmodule OrangeCms.Projects.CreateProjectUsecase do
   alias OrangeCms.Projects.CreateProjectParams
 
   def call(%CreateProjectParams{} = params, %{actor: actor}) do
-    params
-    |> OrangeCms.Projects.CreateProjectCommand.call(actor)
-    |> handle_result()
+    with :ok <- Skema.validate(params, CreateProjectParams) do
+      params
+      |> OrangeCms.Projects.CreateProjectCommand.call(actor)
+      |> handle_result()
+    end
   end
 
   defp handle_result({:error, changeset}), do: {:error, changeset}
