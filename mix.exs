@@ -65,7 +65,7 @@ defmodule OrangeCms.MixProject do
       {:tailwind_formatter, "~> 0.3", only: [:dev, :test], runtime: false},
       {:scrivener_ecto, "~> 2.7"},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
-      {:tarams, "~> 1.8"}
+      {:skema, "~> 0.2.0"}
     ]
   end
 

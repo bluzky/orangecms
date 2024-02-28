@@ -6,12 +6,14 @@ defmodule OrangeCms.Projects.CreateProjectUsecase do
   """
   alias OrangeCms.Projects.CreateProjectParams
 
-  def call(params, %{actor: actor} = _context) do
-    with {:ok, parsed_params} <- CreateProjectParams.cast(params),
-         {:ok, project} <- OrangeCms.Projects.CreateProjectCommand.call(parsed_params, actor) do
-      {:ok, project}
-    else
-      {:error, error} -> {:error, error}
+  def call(%CreateProjectParams{} = params, %{actor: actor}) do
+    with :ok <- Skema.validate(params, CreateProjectParams) do
+      params
+      |> OrangeCms.Projects.CreateProjectCommand.call(actor)
+      |> handle_result()
     end
   end
+
+  defp handle_result({:error, changeset}), do: {:error, changeset}
+  defp handle_result({:ok, project}), do: {:ok, project}
 end

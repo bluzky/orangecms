@@ -4,6 +4,7 @@ defmodule OrangeCms.ProjectsTest do
   import OrangeCms.AccountsFixtures
 
   alias OrangeCms.Projects
+  alias OrangeCms.Projects.CreateProjectParams
 
   describe "projects" do
     import OrangeCms.ProjectsFixtures
@@ -29,11 +30,12 @@ defmodule OrangeCms.ProjectsTest do
     test "create_project/1 with valid data creates a project" do
       user = random_user_fixture()
 
-      valid_attrs = %{
-        github_config: %{},
-        name: "some name",
-        type: :github
-      }
+      valid_attrs =
+        CreateProjectParams.new(%{
+          github_config: %{},
+          name: "some name",
+          type: :github
+        })
 
       assert {:ok, %Project{} = project} = Projects.create_project(valid_attrs, OrangeCms.Context.new(actor: user))
       assert project.name == "some name"
@@ -43,8 +45,10 @@ defmodule OrangeCms.ProjectsTest do
     test "create_project/1 with invalid data returns error changeset" do
       user = random_user_fixture()
 
-      assert {:error, %OrangeCms.ParamsError{}} =
-               Projects.create_project(@invalid_attrs, OrangeCms.Context.new(actor: user))
+      params = CreateProjectParams.new(@invalid_attrs)
+
+      assert {:error, %Skema.Result{}} =
+               Projects.create_project(params, OrangeCms.Context.new(actor: user))
     end
 
     test "update_project/2 with valid data updates the project" do
