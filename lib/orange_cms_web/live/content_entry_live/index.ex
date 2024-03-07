@@ -8,7 +8,7 @@ defmodule OrangeCmsWeb.ContentEntryLive.Index do
 
   @impl true
   def mount(params, _session, socket) do
-    content_types = Content.list_content_types(socket.assigns.current_project.id)
+    content_types = Content.list_content_types(%{}, context(socket))
 
     # TODO replace by stream when stream_reset released
     if params["type"] do

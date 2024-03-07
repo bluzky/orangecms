@@ -56,7 +56,7 @@ defmodule OrangeCmsWeb.ProjectLive.FormComponent do
 
   defp save_project(socket, :new, project_params) do
     with {:ok, parsed_params} <- Skema.cast(project_params, Projects.CreateProjectParams),
-         {:ok, project} <- Projects.CreateProjectCommand.call(parsed_params, context(socket)) do
+         {:ok, project} <- Projects.create_project(parsed_params, context(socket)) do
       notify_parent({:saved, project})
 
       {:noreply,
