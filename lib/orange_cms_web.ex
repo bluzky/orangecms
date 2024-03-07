@@ -55,6 +55,8 @@ defmodule OrangeCmsWeb do
       use Phoenix.LiveView,
         layout: {OrangeCmsWeb.Layouts, :app}
 
+      import OrangeCmsWeb.ControllerHelpers
+
       unquote(html_helpers())
     end
   end

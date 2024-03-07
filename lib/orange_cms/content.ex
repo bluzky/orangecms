@@ -16,10 +16,9 @@ defmodule OrangeCms.Content do
       [%ContentType{}, ...]
 
   """
-  def list_content_types(project_id) do
-    ContentType
-    |> Filtery.filter(:project_id, project_id)
-    |> Repo.all()
+  @spec list_content_types(map, OrangeCms.Context.t()) :: list(ContentType.t())
+  def list_content_types(filters, context) do
+    OrangeCms.Content.ListContentTypeUsecase.call(filters, context)
   end
 
   @doc """
@@ -38,11 +37,9 @@ defmodule OrangeCms.Content do
   """
   def get_content_type!(id), do: Repo.get!(ContentType, id)
 
-  def find_content_type(project_id, filter) do
-    ContentType
-    |> Filtery.filter(:project_id, project_id)
-    |> Filtery.apply(filter)
-    |> Repo.one()
+  @spec find_content_type(map, OrangeCms.Context.t()) :: ContentType.t() | nil
+  def find_content_type(filter, context) do
+    OrangeCms.Content.FindContentTypeUsecase.call(filter, context)
   end
 
   @doc """

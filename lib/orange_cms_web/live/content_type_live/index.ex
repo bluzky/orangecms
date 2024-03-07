@@ -7,7 +7,7 @@ defmodule OrangeCmsWeb.ContentTypeLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    entries = Content.list_content_types(socket.assigns.current_project.id)
+    entries = Content.list_content_types(%{}, context(socket))
     {:ok, stream(socket, :content_types, entries)}
   end
 
