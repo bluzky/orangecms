@@ -6,6 +6,8 @@ defmodule OrangeCms.Projects.CreateProjectUsecase do
   """
   alias OrangeCms.Projects.CreateProjectParams
 
+  @spec call(CreateProjectParams.t(), OrangeCms.Accounts.User.t()) ::
+          {:ok, OrangeCms.Projects.Project.t()} | {:error, Ecto.Changeset.t()}
   def call(%CreateProjectParams{} = params, %{actor: actor}) do
     with :ok <- Skema.validate(params, CreateProjectParams) do
       params

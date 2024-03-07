@@ -154,7 +154,7 @@ defmodule OrangeCmsWeb.UserAuth do
   def on_mount(:ensure_authenticated, _params, session, socket) do
     socket = mount_current_user(session, socket)
 
-    if socket.assigns.current_user do
+    if socket.assigns[:current_user] do
       # put current_user in OrangeCms context
       OrangeCms.put_actor(socket.assigns.current_user)
       {:cont, socket}
@@ -179,11 +179,12 @@ defmodule OrangeCmsWeb.UserAuth do
   end
 
   defp mount_current_user(session, socket) do
-    Phoenix.Component.assign_new(socket, :current_user, fn ->
-      if user_token = session["user_token"] do
-        Accounts.get_user_by_session_token(user_token)
-      end
-    end)
+    socket =
+      Phoenix.Component.assign_new(socket, :current_user, fn ->
+        if user_token = session["user_token"] do
+          Accounts.get_user_by_session_token(user_token)
+        end
+      end)
 
     Phoenix.Component.assign_new(socket, :context, fn ->
       OrangeCms.Context.new(user: socket.assigns[:current_user])
